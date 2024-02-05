@@ -2,3 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar {
+    /* Customize the scrollbar width */
+    width: 5px;
+    
+}
+
+::-webkit-scrollbar-track {
+    /* Customize the scrollbar track */
+    /* background-color: #f1f1f1; */
+}
+
+::-webkit-scrollbar-thumb {
+    /* Customize the scrollbar thumb */
+    background-color: rgba(218, 214, 214, 0.767);
+    border-radius: 60px;
+}

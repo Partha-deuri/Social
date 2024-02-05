@@ -1,11 +1,18 @@
 import React from 'react'
 
 import TopBar from '../../components/TopBar';
+import LeftBar from '../../components/LeftBar';
+import Feed from '../../components/Feed';
+import RightBar from '../../components/RightBar';
 const Home = () => {
   return (
-    <div>
+    <div className='h-screen'>
         <TopBar />
-        <h1 className='text-red-500 bg-blue-200'>Home</h1>
+        <div className="flex h-[calc(100vh-56px)]">
+          <LeftBar/>
+          <Feed/>
+          <RightBar/>
+        </div>
         
     </div>
   )
