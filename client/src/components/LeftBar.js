@@ -7,7 +7,7 @@ import EventIcon from '@mui/icons-material/Event';
 
 const LeftBar = () => {
     return (
-        <div className='w-1/5  p-2 overflow-y-scroll' >
+        <div className='w-1/5 p-2 overflow-y-scroll' >
             <div className="">
                 <ul className='flex flex-col gap-4 pl-2 py-2 '>
                     <li className='flex items-center gap-2'>
@@ -25,6 +25,18 @@ const LeftBar = () => {
                     <li className='flex items-center gap-2'>
                         <GroupsIcon />
                         <span className="">Groups</span>
+                    </li>
+                    <li className='flex items-center gap-2'>
+                        <EventIcon />
+                        <span className="">Events</span>
+                    </li>
+                    <li className='flex items-center gap-2'>
+                        <EventIcon />
+                        <span className="">Events</span>
+                    </li>
+                    <li className='flex items-center gap-2'>
+                        <EventIcon />
+                        <span className="">Events</span>
                     </li>
                     <li className='flex items-center gap-2'>
                         <EventIcon />

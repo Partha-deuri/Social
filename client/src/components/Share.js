@@ -7,7 +7,7 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 
 const Share = () => {
     return (
-        <div className='border-2 rounded p-2 shadow-xl mb-2'>
+        <div className='border-2 rounded p-2 shadow-lg mb-2'>
             
             <div className="flex gap-4 px-2">
                 <img

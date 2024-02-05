@@ -4,9 +4,12 @@ import Post from './Post'
 
 const Feed = () => {
     return (
-        <div className='w-3/5 p-2'>
+        <div className='w-3/5 p-2 overflow-y-scroll'>
             <div className="">
                 <Share/>
+                <Post/>
+                <Post/>
+                <Post/>
                 <Post/>
             </div>
         </div>
