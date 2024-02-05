@@ -9,7 +9,7 @@ const TopBar = () => {
     <div className='sticky top-0 bg-violet-700 flex items-center z-10 justify-between h-14'>
       {/* left */}
       <div className="p-3  w-1/4">
-        <span className='text-white cursor-pointer font-bold text-xl outline-dashed hover:outline-red-700 hover:bg-violet-900'>
+        <span className='text-white cursor-pointer font-bold text-xl outline-dashed hover:outline-red-400 '>
           <span className='text-green-400 p-1'>So</span>cial&nbsp;
         </span>
       </div>
