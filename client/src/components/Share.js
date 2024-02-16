@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
@@ -7,7 +7,7 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 
 const Share = () => {
     return (
-        <div className='border-2 rounded p-2 shadow-lg mb-2'>
+        <div className='border-2 rounded p-2 shadow-lg mb-2'> 
             <div className="flex gap-4 px-2">
                 <img
                     className='h-12 w-12 border-2 rounded-full '
