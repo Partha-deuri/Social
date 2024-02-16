@@ -43,7 +43,7 @@ const LeftBar = () => {
                         <span className="">Events</span>
                     </li>
                 </ul>
-                <button className='text-center w-full rounded mb-1 bg-slate-200 font-medium'>Show More</button>
+                <button className='text-center w-full rounded mb-1 bg-slate-200 font-medium py-1'>Show More</button>
                 <hr className='my-1 bg-slate-700 p-[1px] ' />
                 <div className=' mt-2'>
                     <h1 className='font-bold bg-slate-300 rounded p-2 mb-2 sticky top-[-8px] z-10'>Friends</h1>

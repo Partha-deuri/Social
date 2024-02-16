@@ -4,7 +4,8 @@
 
 ::-webkit-scrollbar {
     /* Customize the scrollbar width */
-    width: 5px;
+    width: 4px;
+    height: 4px;
     
 }
 
