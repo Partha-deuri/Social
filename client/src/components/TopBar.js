@@ -28,7 +28,7 @@ const TopBar = () => {
         className="flex items-center">
           <img
             className='rounded-full h-8 w-8 object-cover border-2 border-transparent hover:border-white cursor-pointer'
-            src={"https://avatars.githubusercontent.com/u/130203363?v=4"}
+            src={"https://pwc.tekstac.com/pluginfile.php/19939/user/icon/material_boost/f3?rev=1708272165"}
             alt="DP"
           />
         </Link>
