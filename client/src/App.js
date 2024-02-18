@@ -6,6 +6,7 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import PageNotFound from "./pages/Error/PageNotFound";
 import Messenger from "./pages/messenger/Messenger";
+import PostPage from "./pages/postPage/PostPage";
 
 function App() {
 
@@ -33,6 +34,10 @@ function App() {
     {
       path: '/messenger',
       element : <Messenger/> 
+    },
+    {
+      path: '/post',
+      element : <PostPage/> 
     },
     {
       path: '*',

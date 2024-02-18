@@ -2,6 +2,7 @@ import React from 'react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { Link } from 'react-router-dom';
 
 const Post = () => {
     return (
@@ -42,7 +43,7 @@ const Post = () => {
                     <div className="w-1/2 bg-blue-300 h-8 text-white flex items-center justify-center rounded cursor-pointer">
                         <div className="flex gap-1 items-center">
                             <ChatBubbleOutlineIcon />
-                            <span>9 Comments</span>
+                            <Link to={'/post'}>9 Comments</Link>
                         </div>
                     </div>
                 </div>
