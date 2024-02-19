@@ -26,18 +26,35 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
-    follwers: {
+    followers: {
         type: Array,
         default: [],
     },
-    follwings: {
+    followings: {
         type: Array,
         default: [],
     },
-    isAdmin: { 
+    isAdmin: {
         type: Boolean,
         default: false,
     },
+    desc: {
+        type: String,
+        default: "",
+        max: 200
+    },
+    city: {
+        type: String,
+        max: 50
+    },
+    from: {
+        type: String,
+        max: 50
+    },
+    relationship: {
+        type: Number,
+        enum: [1, 2, 3]
+    }
 
 }, { timestamps: true })
 
