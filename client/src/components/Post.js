@@ -1,10 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { Link } from 'react-router-dom';
+import axios from "axios";
+import { format } from 'timeago.js';
+import useUserStore from '../zustand';
 
-const Post = () => {
+const Post = ({ post }) => {
+    const userId = useUserStore(state => state.userId);
+    const [postOwner, setPostOwner] = useState({});
+    const [likes, setLikes] = useState(post.likes.length);
+    useEffect(() => {
+        const fetchUser = async () => {
+            const res = await axios.get(`/users/${post.userId}`);
+            setPostOwner(res.data)
+        }
+        fetchUser();
+    }, [])
+
+
+    const handleLike = async () => {
+        const res = await axios.put(`/posts/${post._id}/like`, { userId })
+        res.data === "liked successfully" ? setLikes(p => p + 1) : setLikes(p => p - 1)
+    }
     return (
         <div className='p-4 border-2 rounded shadow-lg mt-4'>
             <div className="">
@@ -13,11 +32,11 @@ const Post = () => {
                     <div className="flex items-start gap-2 cursor-pointer">
                         <img
                             className='h-10 w-10 rounded-full border-2'
-                            src="https://avatars.githubusercontent.com/u/130203363?v=4"
+                            src={postOwner.profilePic}
                             alt="" />
                         <div className='flex flex-col gap-0'>
-                            <span className="font-bold ">Partha</span>
-                            <span className='text-sm text-slate-400 cursor-default'>3 minutes ago</span>
+                            <span className="font-bold ">{postOwner.username}</span>
+                            <span className='text-sm text-slate-400 cursor-default'>{format(post.createdAt)}</span>
                         </div>
                     </div>
                     <div className="">
@@ -26,26 +45,28 @@ const Post = () => {
                 </div>
                 {/* image */}
                 <div className="p-2">
-                    {/* <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit molestiae neque molestias! Quia harum enim nostrum laudantium fuga culpa suscipit maxime veniam earum facilis rerum, accusantium recusandae fugiat, debitis necessitatibus.</span> */}
+                    <span>{post.desc}</span>
                     <img
                         className='w-full p-2 object-contain'
-                        src="https://media.istockphoto.com/id/519330110/photo/taj-mahal-agra-india-monument-of-love-in-blue-sky.jpg?s=1024x1024&w=is&k=20&c=1lDmEijlmoTDLmB6gQYfnce55OkD04I9eVuNbUpzCjY="
+                        src={post.image}
                         alt="" />
                 </div>
                 {/* likes */}
                 <div className=" flex gap-1">
-                    <div className="w-1/2 bg-red-300 h-8 text-white flex items-center justify-center rounded cursor-pointer">
-                        <div className="flex gap-1 items-center">
+                    <div
+                        onClick={handleLike}
+                        className="w-1/2 bg-red-300 h-8 text-white flex items-center justify-center rounded cursor-pointer">
+                        <div className="flex gap-1 items-center" >
                             <FavoriteBorderIcon />
-                            <span>32 Likes</span>
+                            <span>{likes || 0} {(likes || 0) > 1 ? "Likes" : "Like"}</span>
                         </div>
                     </div>
-                    <div className="w-1/2 bg-blue-300 h-8 text-white flex items-center justify-center rounded cursor-pointer">
+                    <Link to={`/post/${post._id}`} className="w-1/2 bg-blue-300 h-8 text-white flex items-center justify-center rounded cursor-pointer">
                         <div className="flex gap-1 items-center">
                             <ChatBubbleOutlineIcon />
-                            <Link to={'/post'}>9 Comments</Link>
+                            <span>{post.comments.length} {(post.comments.length) > 1 ? "Comments" : "Comment"}</span>
                         </div>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>

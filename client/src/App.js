@@ -7,8 +7,11 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import PageNotFound from "./pages/Error/PageNotFound";
 import Messenger from "./pages/messenger/Messenger";
 import PostPage from "./pages/postPage/PostPage";
+import axios from "axios";
 
 function App() {
+
+  axios.defaults.baseURL = "http://localhost:5000/api"
 
   const pages = createBrowserRouter([
     {
@@ -16,7 +19,7 @@ function App() {
       element : <Home/> 
     },
     {
-      path: '/profile',
+      path: '/profile/:uid',
       element : <Profile/> 
     },
     {
@@ -36,7 +39,7 @@ function App() {
       element : <Messenger/> 
     },
     {
-      path: '/post',
+      path: '/post/:postid',
       element : <PostPage/> 
     },
     {

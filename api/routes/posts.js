@@ -166,10 +166,10 @@ router.get("/:id/comments/all", async (req, res) => {
 })
 
 // get timeline posts
-router.get("/timeline/all", async (req, res) => {
+router.get("/timeline/:userId", async (req, res) => {
     try {
-        const currUser = await User.findById(req.body.userId);
-        const userPosts = await Post.find({ userId: req.body.userId });
+        const currUser = await User.findById(req.params.userId);
+        const userPosts = await Post.find({ userId: req.params.userId });
         const followingPosts = await Promise.all(
             currUser.followings.map(fId => {
                 return Post.find({ userId: fId });

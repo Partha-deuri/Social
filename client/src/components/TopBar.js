@@ -5,15 +5,19 @@ import MessageIcon from '@mui/icons-material/Message';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
+import useUserStore from '../zustand';
 const TopBar = () => {
+  const userId = useUserStore(s => s.userId);
   return (
     <div className='sticky top-0 bg-violet-700 flex items-center z-10 justify-between h-14'>
       {/* left */}
-      <Link to={'/'} className="p-3  w-1/4">
-        <span className='text-white cursor-pointer font-bold text-xl outline-dashed hover:outline-red-400 '>
-          <span className='text-green-400 p-1'>So</span>cial&nbsp;
-        </span>
-      </Link>
+      <div className="p-3  w-1/4 ">
+        <Link to={'/'}>
+          <span className='text-white cursor-pointer font-bold text-xl outline-dashed hover:outline-red-400 '>
+            <span className='text-green-400 p-1'>So</span>cial&nbsp;
+          </span>
+        </Link>
+      </div>
       {/* center */}
       <div className="w-1/2">
         <label className="bg-white rounded-3xl p-1 flex">
@@ -24,11 +28,11 @@ const TopBar = () => {
       {/* right */}
       <div className="flex gap-4 mr-4  h-8 items-center w-1/4 justify-end">
         <Link
-        to={'/profile'}   
-        className="flex items-center">
+          to={`/profile/${userId}`}
+          className="flex items-center">
           <img
             className='rounded-full h-8 w-8 object-cover border-2 border-transparent hover:border-white cursor-pointer'
-            src={"https://pwc.tekstac.com/pluginfile.php/19939/user/icon/material_boost/f3?rev=1708272165"}
+            src={"https://assets.leetcode.com/users/Partha-deuri/avatar_1708430209.png"}
             alt="DP"
           />
         </Link>
