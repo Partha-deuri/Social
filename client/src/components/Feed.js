@@ -3,14 +3,16 @@ import Share from './Share'
 import Post from './Post'
 import axios from 'axios'
 import useUserStore from '../zustand'
+import { useParams } from 'react-router-dom'
 
 
 const Feed = ({ profile }) => {
     const userId = useUserStore((state) => state.userId);
+    let {uid} = useParams();
     const [posts, setPosts] = useState([]);
     useEffect(() => {
         const fetchF = async () => {
-            const res = await axios.get(`posts/timeline/${userId}`);
+            const res = await axios.get(`posts/${profile?'timeline/'+uid :'feed/'+ userId}`);
             setPosts(res.data);
         }
         fetchF();

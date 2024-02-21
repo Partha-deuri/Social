@@ -133,7 +133,7 @@ router.delete("/:id/comment/:comment", async (req, res) => {
         if (currPost.comments.includes(req.params.comment)) {
             const currComment = await Comment.findById(req.params.comment);
             if (currComment.userId === req.body.userId) {
-                let temp = currPost.comments.filter(items => items!=req.params.comment);
+                let temp = currPost.comments.filter(items => items != req.params.comment);
                 await currPost.updateOne({ $set: { comments: temp } })
                 await currComment.deleteOne();
                 return res.status(200).json("comment deleted successfully");
@@ -170,6 +170,15 @@ router.get("/timeline/:userId", async (req, res) => {
     try {
         const currUser = await User.findById(req.params.userId);
         const userPosts = await Post.find({ userId: req.params.userId });
+        return res.status(200).json(userPosts);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+router.get("/feed/:userId", async (req, res) => {
+    try {
+        const currUser = await User.findById(req.params.userId);
+        const userPosts = await Post.find({ userId: req.params.userId });
         const followingPosts = await Promise.all(
             currUser.followings.map(fId => {
                 return Post.find({ userId: fId });
@@ -179,6 +188,7 @@ router.get("/timeline/:userId", async (req, res) => {
     } catch (err) {
         return res.status(500).json(err);
     }
+
 })
 
 module.exports = router;

@@ -30,7 +30,7 @@ const Share = ({ setPosts, posts }) => {
             <div className="flex gap-4 px-2">
                 <img
                     className='h-12 w-12 border-2 rounded-full '
-                    src={currUser?.profilePic}
+                    src={currUser?.profilePic || ""}
                     alt="" />
                 <textarea
                     id="text-area"
