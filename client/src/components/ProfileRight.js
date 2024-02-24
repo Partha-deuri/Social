@@ -12,7 +12,7 @@ const ProfileRight = ({ currProfile }) => {
                 setFProfile(res.data)
             }
             fetchUser();
-        })
+        },[])
         return (
             <div className='flex flex-col items-center w-[30%] p-1 shadow rounded '>
                 <img

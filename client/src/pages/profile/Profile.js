@@ -16,7 +16,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const res = await axios.get(`/users/${uid}`);
-      setCurrProfile(res.data)
+      setCurrProfile(res.data) 
     }
     fetchUser();
   }, [uid])

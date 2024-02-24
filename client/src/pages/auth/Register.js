@@ -36,21 +36,25 @@ const Register = () => {
             <input type="text"
               onChange={e => setUsername(e.target.value)}
               className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
+              required
               placeholder='Username'
             />
             <input type="text"
               onChange={e => setEmail(e.target.value)}
               className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
+              required
               placeholder='Email'
             />
             <input type="text"
               onChange={e => setPassword(e.target.value)}
               className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
+              required
               placeholder='Password'
             />
             <input type="text"
               onChange={e => setConfirmPassword(e.target.value)}
               className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
+              required
               placeholder='Confirm Password'
             />
             <button

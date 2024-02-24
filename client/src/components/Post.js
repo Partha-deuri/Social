@@ -17,7 +17,7 @@ const Post = ({ post }) => {
             setPostOwner(res.data)
         }
         fetchUser();
-    }, [])
+    }, [post.userId])
 
 
     const handleLike = async () => {
@@ -29,7 +29,7 @@ const Post = ({ post }) => {
             <div className="">
                 {/* top */}
                 <div className="flex justify-between">
-                    <div className="flex items-start gap-2 cursor-pointer">
+                    <Link to={`/profile/${postOwner._id}`} className="flex items-start gap-2 cursor-pointer">
                         <img
                             className='h-10 w-10 rounded-full border-2'
                             src={postOwner.profilePic}
@@ -38,7 +38,7 @@ const Post = ({ post }) => {
                             <span className="font-bold ">{postOwner.username}</span>
                             <span className='text-sm text-slate-400 cursor-default'>{format(post.createdAt)}</span>
                         </div>
-                    </div>
+                    </Link>
                     <div className="">
                         <MoreHorizIcon className='cursor-pointer hover:text-red-200' />
                     </div>

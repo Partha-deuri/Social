@@ -32,7 +32,7 @@ const TopBar = () => {
           className="flex items-center">
           <img
             className='rounded-full h-8 w-8 object-cover border-2 border-transparent hover:border-white cursor-pointer'
-            src={"https://assets.leetcode.com/users/Partha-deuri/avatar_1708430209.png"}
+            src={user?.profilePic}
             alt="DP"
           />
         </Link>

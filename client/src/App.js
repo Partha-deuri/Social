@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, useNavigate } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import Login from "./pages/auth/Login";
@@ -8,43 +8,45 @@ import PageNotFound from "./pages/Error/PageNotFound";
 import Messenger from "./pages/messenger/Messenger";
 import PostPage from "./pages/postPage/PostPage";
 import axios from "axios";
+import { useUserStore } from "./zustand";
+import Loading from "./components/Loading";
 
 function App() {
 
   axios.defaults.baseURL = "http://localhost:5000/api"
-
+  const user = useUserStore(s => s.user);
   const pages = createBrowserRouter([
     {
       path: '/',
-      element : <Home/> 
+      element: user ? <Home /> : <Loading />
     },
     {
       path: '/profile/:uid',
-      element : <Profile/> 
+      element: user ? <Profile /> : <Loading />
     },
     {
       path: '/login',
-      element : <Login/> 
+      element: <Login />
     },
     {
       path: '/register',
-      element : <Register/> 
+      element: <Register />
     },
     {
       path: '/forgot-password',
-      element : <ForgotPassword/> 
+      element: <ForgotPassword />
     },
     {
       path: '/messenger',
-      element : <Messenger/> 
+      element: <Messenger />
     },
     {
       path: '/post/:postid',
-      element : <PostPage/> 
+      element: user?<PostPage />: <Loading/>
     },
     {
       path: '*',
-      element : <PageNotFound /> 
+      element: <PageNotFound />
     }
 
   ])
