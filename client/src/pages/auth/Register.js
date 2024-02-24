@@ -1,7 +1,29 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import {useUserStore} from '../../zustand';
+import axios from 'axios';
 
 const Register = () => {
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const setUser = useUserStore(s => s.setUser);
+  const navigate = useNavigate();
+  const handleRegister = async () => {
+    try {
+      if (confirmPassword === password) {
+        const res = await axios.post(`/auth/register`, { username, email, password })
+        setUser(res.data);
+        navigate('/');
+      } else {
+        console.log("password doesn't match");
+      }
+      // console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return (
     <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
       <div className="w-[70%] flex gap-4 justify-around ">
@@ -12,22 +34,28 @@ const Register = () => {
         <div className="w-2/5  border-2 shadow-xl rounded-lg ">
           <div className="p-4 ">
             <input type="text"
+              onChange={e => setUsername(e.target.value)}
               className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
               placeholder='Username'
             />
             <input type="text"
+              onChange={e => setEmail(e.target.value)}
               className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
               placeholder='Email'
             />
             <input type="text"
+              onChange={e => setPassword(e.target.value)}
               className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
               placeholder='Password'
             />
             <input type="text"
+              onChange={e => setConfirmPassword(e.target.value)}
               className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
               placeholder='Confirm Password'
             />
-            <button className='text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500'>
+            <button
+              onClick={handleRegister}
+              className='text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500'>
               Sign Up
             </button>
           </div>
@@ -35,7 +63,7 @@ const Register = () => {
             <Link to={'/login'} className='text-cyan-500 cursor-pointer'>Already have account?</Link>
           </div>
           <div className="flex justify-center my-2">
-            <span className=''>Created by Partha</span>
+            <span className='text-sm font-bold'>Created by Partha</span>
           </div>
         </div>
       </div>

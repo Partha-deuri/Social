@@ -5,9 +5,9 @@ import MessageIcon from '@mui/icons-material/Message';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
-import useUserStore from '../zustand';
+import {useUserStore} from '../zustand';
 const TopBar = () => {
-  const userId = useUserStore(s => s.userId);
+  const user = useUserStore(s => s.user);
   return (
     <div className='sticky top-0 bg-violet-700 flex items-center z-10 justify-between h-14'>
       {/* left */}
@@ -28,7 +28,7 @@ const TopBar = () => {
       {/* right */}
       <div className="flex gap-4 mr-4  h-8 items-center w-1/4 justify-end">
         <Link
-          to={`/profile/${userId}`}
+          to={`/profile/${user?._id}`}
           className="flex items-center">
           <img
             className='rounded-full h-8 w-8 object-cover border-2 border-transparent hover:border-white cursor-pointer'

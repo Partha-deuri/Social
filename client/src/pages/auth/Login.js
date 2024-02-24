@@ -1,7 +1,31 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import {useUserStore} from '../../zustand';
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const setUser =useUserStore(s=>s.setUser);
+  const user =useUserStore(s=>s.user);
+  const navigate  = useNavigate();
+  useEffect(()=>{
+    if(user!==null){
+      navigate('/')
+    }
+  },[navigate, user])
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post(`/auth/login`, { email, password })
+      setUser(res.data);
+      navigate('/');
+      // console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
   return (
     <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
       <div className="w-[70%] flex gap-4 justify-around ">
@@ -12,14 +36,18 @@ const Login = () => {
         <div className="w-2/5  border-2 shadow-xl rounded-lg ">
           <div className="p-4 ">
             <input type="text"
+              onChange={e => setEmail(e.target.value)}
               className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
               placeholder='Email/Username'
             />
             <input type="text"
+              onChange={e => setPassword(e.target.value)}
               className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
               placeholder='Password'
             />
-            <button className='text-2xl font-semibold text-center w-full bg-violet-700 rounded p-1 mt-4 text-white hover:bg-violet-500'>
+            <button
+              onClick={handleLogin}
+              className='text-2xl font-semibold text-center w-full bg-violet-700 rounded p-1 mt-4 text-white hover:bg-violet-500'>
               Login
             </button>
           </div>
@@ -32,7 +60,7 @@ const Login = () => {
             </Link>
           </div>
           <div className="flex justify-center my-2">
-            <span className=''>Created by Partha</span>
+            <span className='text-sm'>Created by Partha</span>
           </div>
         </div>
       </div>

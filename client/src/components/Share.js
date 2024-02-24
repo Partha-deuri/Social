@@ -1,29 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import useUserStore from '../zustand';
 import axios from 'axios';
+import { useUserStore } from '../zustand';
 
 
 const Share = ({ setPosts, posts }) => {
-    const userId = useUserStore(s => s.userId);
-    const [currUser, setCurrUser] = useState(null);
+    const currUser = useUserStore(s => s.user);
     const [postDesc, setPostDesc] = useState("");
-    useEffect(() => {
-        const fetchUser = async () => {
-            const res = await axios.get(`users/${userId}`)
-            setCurrUser(res.data);
-        }
-        fetchUser();
-    }, [userId])
 
     const handleShare = async () => {
-        const res = await axios.post(`/posts`, { userId, desc: postDesc });
-        setPosts([...posts, res.data]);
-        document.getElementById("text-area").value="";
-        setPostDesc("");
+        if (postDesc !== "") {
+            const res = await axios.post(`/posts`, { userId: currUser?._id, desc: postDesc });
+            setPosts([...posts, res.data]);
+            document.getElementById("text-area").value = "";
+            setPostDesc("");
+        }
     }
     return (
         <div className='border-2 rounded p-2 shadow-lg mb-2'>

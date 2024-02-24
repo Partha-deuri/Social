@@ -5,10 +5,10 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { format } from 'timeago.js';
-import useUserStore from '../zustand';
+import { useUserStore } from '../zustand';
 
 const Post = ({ post }) => {
-    const userId = useUserStore(state => state.userId);
+    const user = useUserStore(state => state.user);
     const [postOwner, setPostOwner] = useState({});
     const [likes, setLikes] = useState(post.likes.length);
     useEffect(() => {
@@ -21,7 +21,7 @@ const Post = ({ post }) => {
 
 
     const handleLike = async () => {
-        const res = await axios.put(`/posts/${post._id}/like`, { userId })
+        const res = await axios.put(`/posts/${post._id}/like`, { userId: user._id })
         res.data === "liked successfully" ? setLikes(p => p + 1) : setLikes(p => p - 1)
     }
     return (
