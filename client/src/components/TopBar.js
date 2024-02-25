@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import MessageIcon from '@mui/icons-material/Message';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
-import {useUserStore} from '../zustand';
+import { useUserStore } from '../zustand';
+import Settings from './Settings';
+import CloseIcon from '@mui/icons-material/Close';
 const TopBar = () => {
   const user = useUserStore(s => s.user);
+  const [settings, setSettings] = useState(false);
   return (
     <div className='sticky top-0 bg-violet-700 flex items-center z-10 justify-between h-14'>
       {/* left */}
@@ -57,9 +60,25 @@ const TopBar = () => {
             1
           </span>
         </div>
-        <div className="relative">
-          <SettingsIcon className='hover:text-white cursor-pointer' />
-
+        <div className='relative'>
+          {
+            settings &&
+            <CloseIcon
+              onClick={() => setSettings(!settings)}
+              className='hover:text-white cursor-pointer'
+            />
+          }
+          {
+            !settings &&
+            <SettingsIcon
+              onClick={() => setSettings(!settings)}
+              className='hover:text-white cursor-pointer'
+            />
+          }
+          {
+            settings &&
+            <Settings />
+          }
         </div>
       </div>
 

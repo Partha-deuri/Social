@@ -11,22 +11,19 @@ const CoverProfile = ({ currProfile }) => {
     useEffect(() => {
         if (user?._id === currProfile?._id) {
             setOwner(true);
-            setFollowText("Edit Profile")
         } else {
             setOwner(false);
             if (!user.followings.includes(currProfile?._id))
                 setFollowText("Follow");
             else
-            setFollowText("Unfollow");
+                setFollowText("Unfollow");
 
         }
     }, [currProfile?._id, user?._id, user.followings])
     // console.log(user?._id,currProfile?._id);
     const handleFollow = async () => {
         try {
-            if (owner)
-                navigate('/editprofile')
-            else if (!user.followings.includes(currProfile?._id)) {
+            if (!user.followings.includes(currProfile?._id)) {
                 await axios.post(`/users/${currProfile?._id}/follow`, { userId: user._id })
                 user.followings.push(currProfile?._id);
                 setFollowText("Unfollow");
@@ -53,10 +50,31 @@ const CoverProfile = ({ currProfile }) => {
                     <div className="">
                         <div className="flex items-end gap-4 ">
                             <h1 className="font-extrabold text-2xl mt-2">{currProfile?.username}</h1>
-                            <div
-                                onClick={handleFollow}
-                                className="border-2 px-2 ml-10 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
-                                {followText}
+                            <div className="flex gap-2 ml-10">
+                                {
+                                    owner &&
+                                    <div
+                                        onClick={()=>navigate('/editprofile')}
+                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
+                                        Edit Profile
+                                    </div>
+                                }
+                                {
+                                    !owner &&
+                                    <div
+                                        onClick={handleFollow}
+                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
+                                        {followText}
+                                    </div>
+                                }
+                                {
+                                    !owner &&
+                                    <div
+                                        onClick={()=>navigate(`/messenger`)}
+                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
+                                        Send Message
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div className="overflow-y-scroll h-1/2">

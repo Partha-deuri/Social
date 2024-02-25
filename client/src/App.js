@@ -9,7 +9,7 @@ import Messenger from "./pages/messenger/Messenger";
 import PostPage from "./pages/postPage/PostPage";
 import axios from "axios";
 import { useUserStore } from "./zustand";
-import Loading from "./components/Loading";
+import Redirect from "./components/Redirect";
 
 function App() {
 
@@ -18,31 +18,31 @@ function App() {
   const pages = createBrowserRouter([
     {
       path: '/',
-      element: user ? <Home /> : <Loading />
+      element: user ? <Home /> : <Redirect to={'/login'} />
     },
     {
       path: '/profile/:uid',
-      element: user ? <Profile /> : <Loading />
+      element: user ? <Profile /> : <Redirect to={'/login'} />
     },
     {
       path: '/login',
-      element: <Login />
+      element: user ? <Redirect to={'/'} /> : <Login />
     },
     {
       path: '/register',
-      element: <Register />
+      element: user ? <Redirect to={'/'} /> : <Register />
     },
     {
       path: '/forgot-password',
-      element: <ForgotPassword />
+      element: user ? <Redirect to={'/'} /> : <ForgotPassword />
     },
     {
       path: '/messenger',
-      element: <Messenger />
+      element: user ? <Messenger /> : <Redirect to={'/login'} />
     },
     {
       path: '/post/:postid',
-      element: user?<PostPage />: <Loading/>
+      element: user ? <PostPage /> : <Redirect to={'/login'} />
     },
     {
       path: '*',

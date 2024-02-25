@@ -12,7 +12,7 @@ const Home = () => {
   const user = useUserStore(s=>s.user);
   const setUser = useUserStore(s=>s.setUser);
   useEffect(()=>{
-    if(user===null){
+    if(user===null){ 
       navigate('/login');
     }else{
       const fetchUser = async () => {
@@ -22,7 +22,8 @@ const Home = () => {
       fetchUser();
     }
     // console.log(user);
-  })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
   return (
     <div className='h-screen'>
         <TopBar />

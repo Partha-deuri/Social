@@ -47,13 +47,13 @@ const PostPage = () => {
                     <Post post={post} />
                 }
                 {post &&
-                    <div className="mt-4 p-2 border-2 rounded-lg relative">
+                    <div className="mt-4 p-2 border-2 rounded-lg relative ">
                         <div className="w-full flex gap-2 sticky top-[56px] bg-white pt-2 pb-1">
                             <input id="comment-box"
                                 onChange={(e) => setNewComment(e.target.value)}
                                 className='border-2 p-2 border-slate-400 w-full rounded'
                                 type='text'
-                                placeholder='Write someting here...'
+                                placeholder='Write someting here...' 
                             />
                             <button
                                 onClick={(e) => handleComment()}

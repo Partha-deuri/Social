@@ -7,10 +7,11 @@ import EventIcon from '@mui/icons-material/Event';
 import { useUserStore } from '../zustand';
 import axios from 'axios';
 import ExploreIcon from '@mui/icons-material/Explore';
+import { Link } from 'react-router-dom';
 
 const LeftBar = () => {
     const user = useUserStore(s => s.user);
-    const friendList = user?.followings || [];
+    const friendList = user?.followings; 
 
     const FriendItem = ({ fid }) => {
         const [friend, setFriend] = useState(null);
@@ -26,13 +27,13 @@ const LeftBar = () => {
             }
         }, [])
         return (
-            <div className='pl-4 flex items-center gap-2 my-2 pb-1'>
+            <Link to={`/profile/${friend?._id}`} className='pl-4 flex items-center gap-2 my-2 pb-1'>
                 <img
                     className='h-8 w-8 rounded-full'
                     src={friend?.profilePic}
                     alt="" />
                 <span className="">{friend?.username || "Loading..."}</span>
-            </div>
+            </Link>
         )
     }
     return (
@@ -75,7 +76,7 @@ const LeftBar = () => {
                 <button className='text-center w-full rounded mb-1 bg-slate-200 font-medium py-1'>Show More</button>
                 <hr className='my-1 bg-slate-700 p-[1px] ' />
                 <div className=' mt-2'>
-                    <h1 className='font-bold bg-slate-300 rounded p-2 mb-2 sticky top-[-8px] z-10'>Friends</h1>
+                    <h1 className='font-bold bg-slate-300 rounded p-2 mb-2 sticky top-[-8px] z-6'>Friends</h1>
                     <div className='border-2 border-slate-300 rounded-lg'>
                         {
                             friendList.map(fid => (

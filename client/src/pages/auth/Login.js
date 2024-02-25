@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {useUserStore} from '../../zustand';
 
@@ -7,13 +7,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const setUser =useUserStore(s=>s.setUser);
-  const user =useUserStore(s=>s.user);
   const navigate  = useNavigate();
-  useEffect(()=>{
-    if(user!==null){
-      navigate('/')
-    }
-  },[navigate, user])
   const handleLogin = async () => {
     try {
       const res = await axios.post(`/auth/login`, { email, password })

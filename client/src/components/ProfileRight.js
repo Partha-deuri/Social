@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Ads from "./Ads";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ProfileRight = ({ currProfile }) => {
     const followers = currProfile?.followers;
@@ -12,15 +13,16 @@ const ProfileRight = ({ currProfile }) => {
                 setFProfile(res.data)
             }
             fetchUser();
-        },[])
+        }, [])
         return (
-            <div className='flex flex-col items-center w-[30%] p-1 shadow rounded '>
+            <Link to={`/profile/${fProfile?._id}`}
+                className='flex flex-col items-center w-[30%] p-1 shadow rounded '>
                 <img
                     className='rounded p-1 aspect-square'
                     src={fProfile?.profilePic}
                     alt="" />
                 <span className="">{fProfile?.username}</span>
-            </div>
+            </Link>
         )
     }
 
