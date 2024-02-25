@@ -1,27 +1,32 @@
 import { useEffect, useState } from "react";
 import Ads from "./Ads";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const ProfileRight = ({ currProfile }) => {
-    const followers = currProfile?.followers;
-    const Mutuals = ({ fid }) => {
-        const [fProfile, setFProfile] = useState(null);
-        useEffect(() => {
-            const fetchUser = async () => {
-                const res = await axios.get(`/users/${fid}`);
-                setFProfile(res.data)
+    const {uid} = useParams();
+    const [followers, setFollowers] = useState([]);
+
+    useEffect(() => {
+        try {
+            const fetchFriend = async () => { 
+                const res = await axios.get(`/users/${uid}/followings`);
+                setFollowers(res.data);
             }
-            fetchUser();
-        }, [])
+            fetchFriend();
+        } catch (err) {
+            console.log(err);
+        }
+    }, [uid])
+    const Mutuals = ({ f }) => {
         return (
-            <Link to={`/profile/${fProfile?._id}`}
+            <Link to={`/profile/${f?._id}`}
                 className='flex flex-col items-center w-[30%] p-1 shadow rounded '>
                 <img
                     className='rounded p-1 aspect-square'
-                    src={fProfile?.profilePic}
+                    src={f?.profilePic}
                     alt="" />
-                <span className="">{fProfile?.username}</span>
+                <span className="">{f?.username}</span>
             </Link>
         )
     }
@@ -48,7 +53,7 @@ const ProfileRight = ({ currProfile }) => {
                 <div className='flex flex-wrap gap-4'>
                     {
                         followers?.map(f => (
-                            <Mutuals key={f} fid={f} />
+                            <Mutuals key={f?._id} f={f} />
                         ))
                     }
                 </div>

@@ -43,10 +43,38 @@ router.delete('/:id', async (req, res) => {
 // get a user
 router.get('/:id', async (req, res) => {
     try {
-        const currUser = await User.findById(req.params.id);
-        const { password, updatedAt, ...rest } = currUser._doc;
-        res.status(200).json(rest)
+        const currUser = await User.findById(req.params.id, { password: 0, updatedAt: 0 });
+        res.status(200).json(currUser)
 
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+// get followings
+router.get('/:id/followings', async (req, res) => {
+    try {
+        const currUser = await User.findById(req.params.id);
+        const flwings = await Promise.all(
+            currUser.followings.map(fid => {
+                return User.findById(fid, { _id: 1, username: 1, profilePic: 1 });
+            })
+        )
+        return res.status(200).json(flwings);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+// get followers
+router.get('/:id/followers', async (req, res) => {
+    try {
+        const currUser = await User.findById(req.params.id);
+        const flwers = await Promise.all(
+            currUser.followers.map(fid => {
+                return User.findById(fid, { _id: 1, username: 1, profilePic: 1 });
+            })
+        )
+
+        return res.status(200).json(flwers);
     } catch (err) {
         return res.status(500).json(err);
     }

@@ -80,7 +80,7 @@ const CoverProfile = ({ currProfile }) => {
                         <div className="overflow-y-scroll h-1/2">
                             <p>
                                 {
-                                    "Lorem ipsum dolor, sit amet consectetur adipisicing elksnfxvkjzjxnkit. Quis, voluptates!"
+                                    currProfile?.desc
                                 }
                             </p>
                         </div>

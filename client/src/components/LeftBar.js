@@ -11,28 +11,28 @@ import { Link } from 'react-router-dom';
 
 const LeftBar = () => {
     const user = useUserStore(s => s.user);
-    const friendList = user?.followings; 
-
-    const FriendItem = ({ fid }) => {
-        const [friend, setFriend] = useState(null);
-        useEffect(() => {
-            try {
-                const fetchFriend = async () => {
-                    const res = await axios.get(`/users/${fid}`)
-                    setFriend(res.data);
-                }
-                fetchFriend();
-            } catch (err) {
-                console.log(err);
+    const [friendList, setFriendList] = useState([]);
+    useEffect(() => {
+        try {
+            const fetchFriend = async () => {
+                const res = await axios.get(`/users/${user._id}/followings`);
+                setFriendList(res.data);
             }
-        }, [])
+            fetchFriend();
+        } catch (err) {
+            console.log(err)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+
+    const FriendItem = ({ f }) => {
         return (
-            <Link to={`/profile/${friend?._id}`} className='pl-4 flex items-center gap-2 my-2 pb-1'>
+            <Link to={`/profile/${f._id}`} className='pl-4 flex items-center gap-2 my-2 pb-1'>
                 <img
                     className='h-8 w-8 rounded-full'
-                    src={friend?.profilePic}
+                    src={f?.profilePic}
                     alt="" />
-                <span className="">{friend?.username || "Loading..."}</span>
+                <span className="">{f?.username || "Loading..."}</span>
             </Link>
         )
     }
@@ -79,8 +79,8 @@ const LeftBar = () => {
                     <h1 className='font-bold bg-slate-300 rounded p-2 mb-2 sticky top-[-8px] z-6'>Friends</h1>
                     <div className='border-2 border-slate-300 rounded-lg'>
                         {
-                            friendList.map(fid => (
-                                <FriendItem key={fid} fid={fid} />
+                            friendList.map(f => (
+                                <FriendItem key={f._id} f={f} />
                             ))
                         }
                     </div>

@@ -14,11 +14,16 @@ const Profile = () => {
   let { uid } = useParams()
   const [currProfile, setCurrProfile] = useState();
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await axios.get(`/users/${uid}`);
-      setCurrProfile(res.data) 
+    try{
+
+      const fetchUser = async () => {
+        const res = await axios.get(`/users/${uid}`);
+        setCurrProfile(res.data) 
+      }
+      fetchUser();
+    }catch(err){
+      console.log(err);
     }
-    fetchUser();
   }, [uid])
   return (
     <div className='w-full'>

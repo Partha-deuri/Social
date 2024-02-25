@@ -11,6 +11,16 @@ import CloseIcon from '@mui/icons-material/Close';
 const TopBar = () => {
   const user = useUserStore(s => s.user);
   const [settings, setSettings] = useState(false);
+  const [searchText,setSearchText] = useState("");
+  const handleSearch = () =>{
+    try{
+      setSearchText("");
+      document.getElementById("search-inp").value = "";
+    }catch(err){
+      console.log(err)
+    }
+    
+  }
   return (
     <div className='sticky top-0 bg-violet-700 flex items-center z-10 justify-between h-14'>
       {/* left */}
@@ -23,9 +33,14 @@ const TopBar = () => {
       </div>
       {/* center */}
       <div className="w-1/2">
-        <label className="bg-white rounded-3xl p-1 flex">
-          <SearchIcon className='w-1/12 mx-1' />
-          <input type='text' placeholder='Search Here' className='rounded-sm pl-2 focus:outline-none w-11/12' />
+        <label className="bg-white rounded-3xl p-1 flex justify-between w-full ">
+          <input 
+          id='search-inp'
+          onChange={(e)=>setSearchText(e.target.value)}
+          type='text' 
+          placeholder='Search Here' 
+          className='rounded-sm px-2 focus:outline-none w-full' />
+          <SearchIcon className='w-1/12 mx-1 cursor-pointer' onClick={handleSearch}/>
         </label>
       </div>
       {/* right */}
