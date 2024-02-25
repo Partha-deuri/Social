@@ -54,7 +54,6 @@ const Share = ({ setPosts, posts }) => {
     const handleImgChange = async (e) => {
         const cnvImg = await base64(e.target.files[0]);
         setPostImg(cnvImg);
-        console.log(cnvImg);
     }
     const handleClose = () => {
         setPostImg(null);

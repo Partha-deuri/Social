@@ -32,13 +32,19 @@ router.put('/:id/delete', async (req, res) => {
     if (req.body.userId === req.params.id || req.body.isAdmin) {
         try {
             const currUser = await User.findById(req.params.id);
-            const allPosts = await Post.find({userId:req.params.id},{_id:1})
-            const allComments = await Comment.find({userId:req.params.id},{_id:1})
+            const allPosts = await Post.find({ userId: req.params.id }, { _id: 1 })
+            const allComments = await Comment.find({ userId: req.params.id }, { _id: 1 })
             await Promise.all(
                 allPosts.map(pId => Post.findByIdAndDelete(pId))
             )
             await Promise.all(
                 allComments.map(cId => Comment.findByIdAndDelete(cId))
+            )
+            await Promise.all(
+                currUser.followings.map(fId => User.findByIdAndUpdate(fId,{ $pull: { followers: req.params.id } }))
+            )
+            await Promise.all(
+                currUser.followers.map(fId => User.findByIdAndUpdate(fId,{ $pull: { followings: req.params.id } }))
             )
             await currUser.deleteOne();
             return res.status(200).json("Account has been deleted");

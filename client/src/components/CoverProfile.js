@@ -37,6 +37,17 @@ const CoverProfile = ({ currProfile }) => {
         }
 
     }
+    const handleMsg = async () => {
+        try {
+            await axios.post(`/conv`, {
+                senderId: user._id,
+                receiverId: currProfile._id
+            })
+            navigate('/messenger')
+        } catch (err) {
+            console.log(err)
+        }
+    }
     return (
         <div className="h-2/3 p-2 ">
             <div className="shadow-xl h-full rounded-lg">
@@ -54,7 +65,7 @@ const CoverProfile = ({ currProfile }) => {
                                 {
                                     owner &&
                                     <div
-                                        onClick={()=>navigate('/editprofile')}
+                                        onClick={() => navigate('/editprofile')}
                                         className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
                                         Edit Profile
                                     </div>
@@ -70,7 +81,7 @@ const CoverProfile = ({ currProfile }) => {
                                 {
                                     !owner &&
                                     <div
-                                        onClick={()=>navigate(`/messenger`)}
+                                        onClick={handleMsg}
                                         className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
                                         Send Message
                                     </div>

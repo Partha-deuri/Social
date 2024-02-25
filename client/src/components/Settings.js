@@ -13,7 +13,6 @@ const Settings = () => {
     }
 
     const handleDeleteUser = () =>{
-        // console.log("clicked")
         try{
             console.log(user._id)
             const res = axios.put(`/users/${user._id}/delete`,{userId:user._id})
