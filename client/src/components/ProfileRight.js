@@ -10,7 +10,7 @@ const ProfileRight = ({ currProfile }) => {
     useEffect(() => {
         try {
             const fetchFriend = async () => { 
-                const res = await axios.get(`/users/${uid}/followings`);
+                const res = await axios.get(`/users/${uid}/followers`);
                 setFollowers(res.data);
             }
             fetchFriend();

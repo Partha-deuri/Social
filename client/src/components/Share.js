@@ -13,11 +13,13 @@ const Share = ({ setPosts, posts }) => {
     const [postDesc, setPostDesc] = useState("");
     const [postImg, setPostImg] = useState(null);
     // console.log(postImg);
+    const [sharing, setSharing] = useState(false);
 
 
     const handleShare = async () => {
         try {
-            if (postImg !== null || postDesc !== "") {
+            if (!sharing && (postImg !== null || postDesc !== "")) {
+                setSharing(true);
                 const res = await axios.post(`/posts`, {
                     userId: currUser?._id,
                     desc: postDesc,
@@ -28,6 +30,7 @@ const Share = ({ setPosts, posts }) => {
                 document.getElementById("file-inp").value = null;
                 setPostDesc("");
                 setPostImg(null);
+                setSharing(false);
             }
         } catch (err) {
             console.log(err);
@@ -112,7 +115,10 @@ const Share = ({ setPosts, posts }) => {
                 </div>
                 <button
                     onClick={handleShare}
-                    className='rounded px-4 p-2 bg-green-600 text-white font-bold'>Share</button>
+                    className={`rounded px-4 p-2 bg-green-600 text-white font-bold 
+                    ${sharing && "cursor-not-allowed"}`}>
+                    {sharing ? "Sharing..." : "Share"}
+                </button>
             </div>
         </div>
     )

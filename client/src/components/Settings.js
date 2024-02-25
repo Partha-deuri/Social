@@ -1,6 +1,7 @@
 import React from 'react'
 import { useUserStore } from '../zustand'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Settings = () => {
     const user = useUserStore(s => s.user);
@@ -9,6 +10,18 @@ const Settings = () => {
     const handleLogout = () => {
         setUser(null);
         navigate('/login');
+    }
+
+    const handleDeleteUser = () =>{
+        // console.log("clicked")
+        try{
+            console.log(user._id)
+            const res = axios.put(`/users/${user._id}/delete`,{userId:user._id})
+            console.log(res.data);
+            handleLogout();
+        }catch(err){
+            console.log(err)
+        }
     }
     return (
         <div
@@ -33,6 +46,11 @@ const Settings = () => {
                     </div>
                     <div className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer">
                         <span>Change Password</span>
+                    </div>
+                    <div
+                        onClick={handleDeleteUser}
+                        className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer">
+                        <span>Delete Account</span>
                     </div>
                     <div className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer">
                         <span>Help & support</span>

@@ -11,10 +11,10 @@ const PostPage = () => {
     const user = useUserStore(state => state.user);
     const [post, setPost] = useState();
     const [allComments, setAllComments] = useState([]);
+    const [commenting, setCommenting] = useState(false);
     useEffect(() => {
         const fetchPost = async () => {
             try {
-
                 const res = await axios.get(`/posts/${postid}`)
                 setPost(res.data);
                 const res2 = await axios.get(`/posts/${postid}/comments/all`);
@@ -25,10 +25,11 @@ const PostPage = () => {
         }
         fetchPost();
     }, [postid])
-
+    
     const [newComment, setNewComment] = useState("");
     const handleComment = async (e) => {
         if (newComment.trim() !== "") {
+            setCommenting(true);
             const res3 = await axios.post(`/posts/${postid}/comment`, {
                 userId: user._id,
                 comment: newComment
@@ -37,6 +38,7 @@ const PostPage = () => {
         }
         document.querySelector("#comment-box").value = "";
         setNewComment("");
+        setCommenting(false);
     }
     return (
         <>
@@ -53,11 +55,13 @@ const PostPage = () => {
                                 onChange={(e) => setNewComment(e.target.value)}
                                 className='border-2 p-2 border-slate-400 w-full rounded'
                                 type='text'
-                                placeholder='Write someting here...' 
+                                placeholder='Write someting here...'
                             />
                             <button
                                 onClick={(e) => handleComment()}
-                                className='px-2 bg-blue-500 rounded font-bold text-white'> Comment </button>
+                                className='px-2 bg-blue-500 rounded font-bold text-white'>
+                                {commenting ? "Commenting..." : "Comment"}
+                            </button>
                         </div>
 
                         <div className="flex flex-col-reverse">
