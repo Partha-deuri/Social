@@ -4,21 +4,45 @@ import axios from 'axios';
 import { format } from 'timeago.js';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import Close from '@mui/icons-material/Close';
+import { Link } from 'react-router-dom';
 
 
-const Conversation = ({ currChat, currUser }) => {
+const Conversation = ({ currChat, currUser, socket, onlineUsers }) => {
     const [messages, setMessages] = useState(null);
     const [friend, setFriend] = useState(null);
     const [newMsg, setNewMsg] = useState("");
-    const [newImg, setNewImg] = useState(null);
+    const [newImg, setNewImg] = useState("");
     const [sending, setSending] = useState(false);
+    const [arrivalMsg, setArrivalMsg] = useState(null);
+    const [online, setOnline] = useState(false);
+
     const scrollRef = useRef();
+
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages])
 
     useEffect(() => {
+        socket.on("getMsg", data => {
+            setArrivalMsg({
+                _id: Date.now(),
+                sender: data.senderId,
+                text: data.text,
+                image: data.iamge,
+                createdAt: Date.now(),
+            })
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useEffect(() => {
+        arrivalMsg && currChat?.members.includes(arrivalMsg.sender) &&
+            setMessages(prev => [...prev, arrivalMsg]);
+    }, [arrivalMsg, currChat])
+
+    useEffect(() => {
         const friendId = currChat.members.find(m => m !== currUser._id)
+        setOnline(onlineUsers.includes(friendId));
         try {
             const getFriend = async () => {
                 const res = await axios.get(`/users/${friendId}`);
@@ -28,7 +52,7 @@ const Conversation = ({ currChat, currUser }) => {
         } catch (err) {
             console.log(err)
         }
-    }, [currChat, currUser])
+    }, [currChat, currUser, onlineUsers])
     useEffect(() => {
         try {
             const getMsgs = async () => {
@@ -61,26 +85,35 @@ const Conversation = ({ currChat, currUser }) => {
     }
     const handleNewMessage = async () => {
         try {
-            setSending(true);
-            const res = await axios.post(`/msg`, {
-                sender: currUser._id,
-                convId: currChat._id,
-                text: newMsg,
-                image: newImg
-            })
-            setMessages([...messages, res.data])
-            document.getElementById("msg-inp-text").value = "";
-            document.getElementById("msg-inp-img").value = null;
-            setNewImg(null);
-            setNewMsg("");
-            setSending(false);
+            if (newMsg.trim() !== "" || newImg !== "") {
+
+                setSending(true);
+                const res = await axios.post(`/msg`, {
+                    sender: currUser._id,
+                    convId: currChat._id,
+                    text: newMsg,
+                    image: newImg
+                })
+                socket.emit("sendMsg", {
+                    senderId: currUser._id,
+                    receiverId: friend._id,
+                    text: newMsg,
+                    image: newImg,
+                })
+                setMessages([...messages, res.data])
+                document.getElementById("msg-inp-text").value = "";
+                document.getElementById("msg-inp-img").value = null;
+                setNewImg("");
+                setNewMsg("");
+                setSending(false);
+            }
         } catch (err) {
             console.log(err)
         }
     }
     const handleClose = () => {
         document.getElementById("msg-inp-img").value = null;
-        setNewImg(null);
+        setNewImg("");
     }
 
     const Msg = ({ own, m }) => {
@@ -123,7 +156,10 @@ const Conversation = ({ currChat, currUser }) => {
     return (
         <div className=" shadow-xl h-full rounded-lg border-2  relative">
             <div className="rounded-md flex justify-between">
-                <div className=" flex items-center px-2 py-1 gap-2 rounded mx-1">
+                <Link
+                    to={`/profile/${friend?._id}`}
+                    className=" flex items-center px-2 py-1 gap-2 rounded mx-1  cursor-pointer"
+                >
                     <div className=" h-12 w-12 aspect-square ">
                         <img
                             className='h-12 w-12 rounded-full  border-2'
@@ -132,9 +168,9 @@ const Conversation = ({ currChat, currUser }) => {
                     </div>
                     <div className="flex flex-col">
                         <span className='text-md font-bold'>{friend?.username}</span>
-                        <span className='text-sm text-slate-500'>Active</span>
+                        <span className='text-sm text-slate-500'>{online ? "Active" : "Offline"}</span>
                     </div>
-                </div>
+                </Link>
                 <div className="flex items-center mx-4 my-1 cursor-pointer">
                     <MoreHoriz />
                 </div>

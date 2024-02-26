@@ -8,14 +8,12 @@ router.post('/', async (req, res) => {
     try {
         const oldConv = await Conv.find({
             members: { $in: [req.body.senderId] }
-        }, { members: 1, _id: 0 })
-        console.log(oldConv)
+        })
         const sameConv = await Promise.all(
             oldConv.filter(i => {
                 return (i.members.includes(req.body.receiverId))
             })
         )
-        console.log(sameConv);
         if (oldConv.length === 0 || sameConv.length === 0) {
             const newConv = new Conv({
                 members: [req.body.senderId, req.body.receiverId]
@@ -23,8 +21,9 @@ router.post('/', async (req, res) => {
             const savedConv = await newConv.save();
             return res.status(200).json(savedConv);
         }
-        else
-            return res.status(200).json("already exist");
+        else{
+            return res.status(200).json(sameConv);
+        }
     } catch (err) {
         return res.status(500).json(err);
     }
