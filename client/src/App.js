@@ -10,6 +10,7 @@ import PostPage from "./pages/postPage/PostPage";
 import axios from "axios";
 import { useUserStore } from "./zustand";
 import Redirect from "./components/Redirect";
+import EditProfile from "./pages/editProfile/EditProfile";
 
 function App() {
 
@@ -25,12 +26,16 @@ function App() {
       element: user ? <Profile /> : <Redirect to={'/login'} />
     },
     {
+      path: '/editprofile',
+      element: user ? <EditProfile /> : <Redirect to={'/'} />
+    },
+    {
       path: '/login',
       element: user ? <Redirect to={'/'} /> : <Login />
     },
     {
       path: '/register',
-      element: user ? <Redirect to={'/'} /> : <Register />
+      element: user ? <Redirect to={'/editprofile'} /> : <Register />
     },
     {
       path: '/forgot-password',

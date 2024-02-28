@@ -1,19 +1,17 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import {useUserStore} from '../../zustand';
+import { Link } from 'react-router-dom'
+import { useUserStore } from '../../zustand';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const setUser =useUserStore(s=>s.setUser);
-  const navigate  = useNavigate();
+  const setUser = useUserStore(s => s.setUser);
   const handleLogin = async () => {
     try {
       const res = await axios.post(`/auth/login`, { email, password })
       setUser(res.data);
-      navigate('/');
-      // console.log(res.data);
+      // navigate('/');
     } catch (err) {
       console.log(err);
     }

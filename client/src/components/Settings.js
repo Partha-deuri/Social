@@ -1,6 +1,6 @@
 import React from 'react'
 import { useUserStore } from '../zustand'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Settings = () => {
@@ -37,9 +37,9 @@ const Settings = () => {
                 </div>
                 <div className="flex flex-col gap-2">
 
-                    <div className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer">
+                    <Link to={'/editprofile'} className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer">
                         <span>Edit Profile</span>
-                    </div>
+                    </Link>
                     <div className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer">
                         <span>Saved Posts</span>
                     </div>

@@ -7,6 +7,11 @@ const UserSchema = new mongoose.Schema({
         min: 3,
         max: 20,
     },
+    fullname: {
+        type: String,
+        required: true,
+        max: 50
+    },
     email: {
         type: String,
         require: true,
@@ -24,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     },
     coverPic: {
         type: String,
-        default: "https://i.pinimg.com/236x/9a/e8/fc/9ae8fc22197c56c5e5b0c2c22b05186e.jpg", 
+        default: "https://i.pinimg.com/236x/9a/e8/fc/9ae8fc22197c56c5e5b0c2c22b05186e.jpg",
     },
     followers: {
         type: Array,

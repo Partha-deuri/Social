@@ -1,29 +1,224 @@
-import React, { useState } from 'react'
+
+import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {useUserStore} from '../../zustand';
+import { useUserStore } from '../../zustand';
 import axios from 'axios';
 
 const Register = () => {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [otpId, setOtpId] = useState();
+  const emailRef = useRef();
+  const otp = useRef();
+  const username = useRef();
+  const fullname = useRef();
+  const password = useRef();
+  const confirmPassword = useRef();
   const setUser = useUserStore(s => s.setUser);
   const navigate = useNavigate();
-  const handleRegister = async () => {
+  const [first, setFirst] = useState(true);
+  const [second, setSecond] = useState(false);
+  const [third, setThird] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleFirst = async (e) => {
     try {
-      if (confirmPassword === password) {
-        const res = await axios.post(`/auth/register`, { username, email, password })
-        setUser(res.data);
-        navigate('/');
+      e.preventDefault();
+      setLoading(true);
+      // check email existance and send otp
+      setEmail(emailRef.current.value.trim());
+      const res = await axios.get(`/auth/email/${emailRef.current.value.trim()}`);
+      if (res.data?.msg === "all ok") {
+        setOtpId(res.data.otpId);
+        setFirst(false);
+        setSecond(true);
       } else {
-        console.log("password doesn't match");
+        console.log(res.data.msg)
       }
-      // console.log(res.data);
-    } catch (err) {
+      setLoading(false);
+    }
+    catch (err) {
       console.log(err);
     }
   }
+
+  const FirstSignup = () => {
+    return (
+      <form className="p-4 " onSubmit={handleFirst}>
+        <input type="text"
+          ref={emailRef}
+          className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
+          required
+          placeholder='Email'
+        />
+        <button
+          className={`text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500 ${loading && "cursor-not-allowed"}`}>
+          Send OTP
+        </button>
+      </form>
+    )
+  }
+
+  const handleSecond = async (e) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+      // verify otp 
+      if (otp.current.value.length === 6) {
+        const res = await axios.post(`/auth/otp`, {
+          otpId, otp: otp.current.value
+        })
+        if (res.data.msg === "success") {
+          setSecond(false);
+          setThird(true);
+        }
+      } else {
+        console.log("otp should be of exactly 6-digit")
+      }
+      setLoading(false);
+    } catch (err) {
+      if (err.response.status === 403) {
+        console.log("otp  mismatch");
+      } else {
+        console.log(err)
+      }
+      setLoading(false);
+    }
+  }
+  const handleResendOtp = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`/auth/email/${email}`);
+      if (res.data?.msg === "all ok") {
+        setOtpId(res.data.otpId);
+        setFirst(false);
+        setSecond(true);
+      } else {
+        console.log(res.data.msg)
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err)
+      setLoading(false);
+    }
+  }
+  const handleWrongEmail = () => {
+    try {
+      // send wrong email
+      setEmail("");
+      setSecond(false);
+      setFirst(true);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const SecondSignup = () => {
+    return (
+      <form className="p-4 " onSubmit={handleSecond}>
+        <div className='text-white'> {`A 6-digit otp has been sent to `}
+          <span className="font-semibold text-lime-400 text-xl">{email}</span>
+        </div>
+        <div className="flex justify-between">
+          <div
+            onClick={handleWrongEmail}
+            className='text-cyan-500 cursor-pointer'
+          >
+            wrong email?
+          </div>
+          <div
+            onClick={handleResendOtp}
+            className='text-cyan-500 cursor-pointer'
+          >
+            resend otp?
+          </div>
+        </div>
+        <input type="number"
+          ref={otp}
+          className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent '
+          required
+          placeholder='Enter 6-digit OTP'
+
+        />
+        <button type='submit'
+          className={`text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500}  ${loading && "cursor-not-allowed"}`}>
+          Confirm OTP
+        </button>
+      </form>
+    )
+  }
+
+  const handleThird = async () => {
+    try {
+      setLoading(true);
+      const uname = username.current.value
+      const fname = fullname.current.value
+      const pswrd = password.current.value
+      const cnfPswd = confirmPassword.current.value
+      if (cnfPswd === pswrd) {
+        // validate username
+        const res = await axios.get(`/auth/username/${username.current.value.trim()}`);
+        if (res.data.msg === "username exist") {
+          // create account
+          const res2 = await axios.post(`/auth/register`, {
+            username: uname,
+            fullname: fname,
+            password: pswrd,
+            email,
+          })
+          // set user
+          setUser(res2.data);
+          // sign in
+          // redirect to edit profile
+          // navigate('/editprofile');
+        } else {
+          console.log(res.data)
+        }
+      } else {
+        console.log("password mismatch")
+      }
+      setLoading(false);
+      navigate('/editprofile');
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  }
+  const ThirdSignup = () => {
+    return (
+      <div className="p-4 " >
+        <input type="text"
+          ref={fullname}
+          className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
+          required
+          placeholder='Full Name'
+        />
+        <input type="text"
+          ref={username}
+          className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
+          required
+          placeholder='Username'
+        />
+        <input type="text"
+          ref={password}
+          className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
+          required
+          placeholder='Password'
+        />
+        <input type="text"
+          ref={confirmPassword}
+          className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
+          required
+          placeholder='Confirm Password'
+        />
+        <button
+          onClick={handleThird}
+          className='text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500'>
+          Sign Up
+        </button>
+      </div >
+
+    )
+  }
+
   return (
     <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
       <div className="w-[70%] flex gap-4 justify-around ">
@@ -31,38 +226,10 @@ const Register = () => {
           <h1 className=' text-8xl font-extrabold text-violet-900 cursor-default'>Social</h1>
           <span className='text-2xl cursor-default'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium tempore mollitia fuga ea, repellendus eos?</span>
         </div>
-        <div className="w-2/5  border-2 shadow-xl rounded-lg ">
-          <div className="p-4 ">
-            <input type="text"
-              onChange={e => setUsername(e.target.value)}
-              className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
-              required
-              placeholder='Username'
-            />
-            <input type="text"
-              onChange={e => setEmail(e.target.value)}
-              className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
-              required
-              placeholder='Email'
-            />
-            <input type="text"
-              onChange={e => setPassword(e.target.value)}
-              className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
-              required
-              placeholder='Password'
-            />
-            <input type="text"
-              onChange={e => setConfirmPassword(e.target.value)}
-              className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
-              required
-              placeholder='Confirm Password'
-            />
-            <button
-              onClick={handleRegister}
-              className='text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500'>
-              Sign Up
-            </button>
-          </div>
+        <div className="w-2/5  border-2 shadow-xl rounded-lg flex flex-col justify-end">
+          {first && <FirstSignup />}
+          {second && <SecondSignup />}
+          {third && <ThirdSignup />}
           <div className='mx-4 border-b-2 mb-2 border-slate-600 flex justify-center pb-2'>
             <Link to={'/login'} className='text-cyan-500 cursor-pointer'>Already have account?</Link>
           </div>
@@ -75,4 +242,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default Register 

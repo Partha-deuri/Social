@@ -9,13 +9,21 @@
     
 }
 
-::-webkit-scrollbar-track {
-    /* Customize the scrollbar track */
-    /* background-color: #f1f1f1; */
-}
 
 ::-webkit-scrollbar-thumb {
     /* Customize the scrollbar thumb */
     background-color: rgba(218, 214, 214, 0.767);
     border-radius: 60px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
