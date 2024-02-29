@@ -52,11 +52,11 @@ const CoverProfile = ({ currProfile }) => {
         <div className="h-2/3 p-2 ">
             <div className="shadow-xl h-full rounded-lg">
                 <img className='h-3/4 w-full object-cover rounded-lg'
-                    src={currProfile?.coverPic} alt="" />
+                    src={currProfile?.coverPic || ""} alt="" />
                 <div className="h-1/4 gap-4 flex pl-6  ">
                     <img
                         className='h-40 w-40 rounded-full relative top-[-80px] border-4 border-white'
-                        src={currProfile?.profilePic}
+                        src={currProfile?.profilePic || ""}
                         alt="" />
                     <div className="">
                         <div className="flex items-end gap-4 ">

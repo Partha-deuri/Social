@@ -25,11 +25,11 @@ const UserSchema = new mongoose.Schema({
     },
     profilePic: {
         type: String,
-        default: "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg",
+        default: "",
     },
     coverPic: {
         type: String,
-        default: "https://i.pinimg.com/236x/9a/e8/fc/9ae8fc22197c56c5e5b0c2c22b05186e.jpg",
+        default: "",
     },
     followers: {
         type: Array,
@@ -59,7 +59,11 @@ const UserSchema = new mongoose.Schema({
     relationship: {
         type: Number,
         enum: [1, 2, 3]
-    }
+    },
+    gender: {
+        type: Number,
+        enum: [1, 2, 3]
+    },
 
 }, { timestamps: true })
 

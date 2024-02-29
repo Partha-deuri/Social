@@ -30,7 +30,8 @@ const Login = () => {
             <input type="text"
               onChange={e => setEmail(e.target.value)}
               className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
-              placeholder='Email/Username'
+              placeholder='Email'
+              autoFocus
             />
             <input type="text"
               onChange={e => setPassword(e.target.value)}

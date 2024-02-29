@@ -9,7 +9,7 @@ router.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
         const newUser = await new User({
-            username: req.body.username, 
+            username: req.body.username,
             email: req.body.email,
             fullname: req.body.fullname,
             password: hashedPassword
@@ -28,6 +28,21 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const currUser = await User.findOne({ email: req.body.email });
+        if (!currUser) return res.status(404).json("user not found");
+
+        const validPassword = await bcrypt.compare(req.body.password, currUser.password);
+        if (!validPassword) return res.status(400).json("invalid password");
+        const { password, updatedAt, ...rest } = currUser._doc;
+        res.status(200).json(rest);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
+})
+// verify passwword
+router.post('/verify', async (req, res) => {
+    try {
+        const currUser = await User.findById(req.body.userId);
         if (!currUser) return res.status(404).json("user not found");
 
         const validPassword = await bcrypt.compare(req.body.password, currUser.password);
@@ -77,7 +92,7 @@ router.post('/otp', async (req, res) => {
     }
 })
 
-// verify otp
+// verify username
 router.get('/username/:username', async (req, res) => {
     try {
         const oldUser = await User.findOne({ username: req.params.username });

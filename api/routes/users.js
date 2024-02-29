@@ -6,7 +6,8 @@ const bcrypt = require("bcrypt");
 
 // update user
 router.put('/:id', async (req, res) => {
-    if (req.body.userId === req.params.id || req.body.isAdmin) {
+
+    if (req.body._id === req.params.id || req.body.isAdmin) {
         if (req.body.password) {
             try {
                 const salt = await bcrypt.genSalt(10);
@@ -15,9 +16,17 @@ router.put('/:id', async (req, res) => {
                 return res.status(500).json(err);
             }
         }
+        if (req.body?.profilePic === "") {
+            req.body.profilePic = "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
+        }
+        if (req.body?.coverPic === "") {
+            req.body.coverPic = "https://i.pinimg.com/236x/9a/e8/fc/9ae8fc22197c56c5e5b0c2c22b05186e.jpg"
+        }
         try {
+            console.log(req.body);
             const currUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body });
-            return res.status(200).json("Account has been updated");
+            const { password, updatedAt, ...rest } = currUser._doc;
+            return res.status(200).json(rest);
         } catch (err) {
             return res.status(500).json(err);
         }
@@ -41,10 +50,10 @@ router.put('/:id/delete', async (req, res) => {
                 allComments.map(cId => Comment.findByIdAndDelete(cId))
             )
             await Promise.all(
-                currUser.followings.map(fId => User.findByIdAndUpdate(fId,{ $pull: { followers: req.params.id } }))
+                currUser.followings.map(fId => User.findByIdAndUpdate(fId, { $pull: { followers: req.params.id } }))
             )
             await Promise.all(
-                currUser.followers.map(fId => User.findByIdAndUpdate(fId,{ $pull: { followings: req.params.id } }))
+                currUser.followers.map(fId => User.findByIdAndUpdate(fId, { $pull: { followings: req.params.id } }))
             )
             await currUser.deleteOne();
             return res.status(200).json("Account has been deleted");

@@ -49,10 +49,11 @@ const Register = () => {
           className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
           required
           placeholder='Email'
+          autoFocus
         />
         <button
           className={`text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500 ${loading && "cursor-not-allowed"}`}>
-          Send OTP
+          {loading ? "Loading" : "Send OTP"}
         </button>
       </form>
     )
@@ -136,11 +137,11 @@ const Register = () => {
           className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent '
           required
           placeholder='Enter 6-digit OTP'
-
+          autoFocus
         />
         <button type='submit'
           className={`text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500}  ${loading && "cursor-not-allowed"}`}>
-          Confirm OTP
+          {loading ? "Loading..." : "Confirm OTP"}
         </button>
       </form>
     )
@@ -156,7 +157,8 @@ const Register = () => {
       if (cnfPswd === pswrd) {
         // validate username
         const res = await axios.get(`/auth/username/${username.current.value.trim()}`);
-        if (res.data.msg === "username exist") {
+        console.log(res)
+        if (res.data?.msg === "username exist") {
           // create account
           const res2 = await axios.post(`/auth/register`, {
             username: uname,
@@ -168,15 +170,19 @@ const Register = () => {
           setUser(res2.data);
           // sign in
           // redirect to edit profile
-          // navigate('/editprofile');
+          navigate('/editprofile');
         } else {
-          console.log(res.data)
+          console.log(res.data);
+          setTimeout(() => {
+            fullname.current.value = fname;
+            password.current.value = pswrd;
+            confirmPassword.current.value = cnfPswd;
+          }, 10)
         }
       } else {
         console.log("password mismatch")
       }
       setLoading(false);
-      navigate('/editprofile');
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -186,16 +192,18 @@ const Register = () => {
     return (
       <div className="p-4 " >
         <input type="text"
+          ref={username}
+          className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
+          autoFocus
+          required
+          placeholder='Username'
+        />
+        <input type="text"
           ref={fullname}
           className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
           required
           placeholder='Full Name'
-        />
-        <input type="text"
-          ref={username}
-          className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
-          required
-          placeholder='Username'
+          autoCapitalize='on'
         />
         <input type="text"
           ref={password}
@@ -212,7 +220,7 @@ const Register = () => {
         <button
           onClick={handleThird}
           className='text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500'>
-          Sign Up
+          {loading ? "Loading..." : "Sign Up"}
         </button>
       </div >
 
