@@ -4,6 +4,21 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const bcrypt = require("bcrypt");
 
+// search a user
+router.get("/search", async (req, res) => {
+    try {
+        const username = req.query.username;
+        const fullname = req.query.fullname;
+        const userList = username
+            ? await User.find({ username }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
+            : await User.find({ fullname }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
+        if (!userList) return res.status(404).json("no result found");
+        return res.status(200).json(userList);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+})
+
 // update user
 router.put('/:id', async (req, res) => {
 
@@ -146,6 +161,7 @@ router.post("/:id/unfollow", async (req, res) => {
         return res.status(403).json("You can not unfollow yourself")
     }
 })
+
 
 
 
