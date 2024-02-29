@@ -23,7 +23,6 @@ router.put('/:id', async (req, res) => {
             req.body.coverPic = "https://i.pinimg.com/236x/9a/e8/fc/9ae8fc22197c56c5e5b0c2c22b05186e.jpg"
         }
         try {
-            console.log(req.body);
             const currUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body });
             const { password, updatedAt, ...rest } = currUser._doc;
             return res.status(200).json(rest);
