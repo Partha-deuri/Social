@@ -229,12 +229,15 @@ const Register = () => {
 
   return (
     <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
-      <div className="w-[70%] flex gap-4 justify-around ">
-        <div className="w-3/5 p-2 flex flex-col justify-center ">
+      <div className="w-[70%] flex md:flex-row flex-col gap-4 justify-around ">
+          <h1 className='md:hidden text-8xl font-extrabold text-violet-900 cursor-default text-center'>Social</h1>
+        <div className="hidden w-3/5 p-2 md:flex flex-col justify-center ">
           <h1 className=' text-8xl font-extrabold text-violet-900 cursor-default'>Social</h1>
-          <span className='text-2xl cursor-default'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium tempore mollitia fuga ea, repellendus eos?</span>
+          <span className='text-2xl cursor-default'>
+            It is a basic social media project for learning purpose only
+          </span>
         </div>
-        <div className="w-2/5  border-2 shadow-xl rounded-lg flex flex-col justify-end">
+        <div className=" md:w-2/5  border-2 shadow-xl rounded-lg flex flex-col justify-end">
           {first && <FirstSignup />}
           {second && <SecondSignup />}
           {third && <ThirdSignup />}
