@@ -21,7 +21,7 @@ function App() {
   //   socket.current = io("ws://localhost:8900");
   // },[])
 
-  axios.defaults.baseURL = "http://localhost:5000/api"
+  axios.defaults.baseURL = process.env.REACT_APP_API_URL
   const user = useUserStore(s => s.user);
   const pages = createBrowserRouter([
     {

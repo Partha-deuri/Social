@@ -1,6 +1,6 @@
 import React from 'react'
 import ChatIcon from '@mui/icons-material/Chat';
-import Ads from './Ads';
+// import Ads from './Ads';
 import { Link } from 'react-router-dom';
 
 const RightBar = () => {
@@ -30,7 +30,7 @@ const RightBar = () => {
                 </div>
             <div className="">
             </div >
-                <Ads/>
+                {/* <Ads/> */}
             </div>
         </div>
     )

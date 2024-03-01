@@ -99,7 +99,7 @@ const Share = ({ setPosts, posts }) => {
                             id="file-inp"
                             accept='image/*' />
                     </label>
-                    <div className="flex items-center cursor-pointer gap-1">
+                    {/* <div className="flex items-center cursor-pointer gap-1">
                         <VideoCallIcon />
                         <span>Video</span>
                     </div>
@@ -110,7 +110,7 @@ const Share = ({ setPosts, posts }) => {
                     <div className="flex items-center cursor-pointer gap-1">
                         <AddLocationAltIcon />
                         <span>Location</span>
-                    </div>
+                    </div> */}
                 </div>
                 <button
                     onClick={handleShare}

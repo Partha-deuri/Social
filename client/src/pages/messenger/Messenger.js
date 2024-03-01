@@ -15,7 +15,7 @@ const Messenger = () => {
     const [currChat, setCurrChat] = useState(null);
     const socket = useRef()
     useEffect(() => {
-        socket.current = io("ws://localhost:8900");
+        socket.current = io(process.env.REACT_APP_SOCKET_URL);
         try {
             const getFollowings = async () => {
                 const res = await axios.get(`/users/${user._id}/followings`);

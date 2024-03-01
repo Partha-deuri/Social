@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Ads from "./Ads";
+// import Ads from "./Ads";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 

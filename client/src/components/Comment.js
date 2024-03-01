@@ -14,7 +14,7 @@ const Comment = ({ c }) => {
             setCommenter(res.data)
         }
         fetchUser();
-    }, [])
+    }, [c])
 
     const MoreOpt = ({ cmnt, cmtr }) => {
         return (

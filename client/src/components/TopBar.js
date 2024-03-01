@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import MessageIcon from '@mui/icons-material/Message';
-import SettingsIcon from '@mui/icons-material/Settings';
+// import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
 import { useUserStore } from '../zustand';
