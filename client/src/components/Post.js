@@ -19,8 +19,6 @@ const Post = ({ post, setChangeDlt }) => {
     const [moreOpt, setMoreOpt] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const navigate = useNavigate();
-
-
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`/users/${post.userId}`);
@@ -42,7 +40,7 @@ const Post = ({ post, setChangeDlt }) => {
                 setDeleting(false);
                 if (setChangeDlt) {
                     setChangeDlt(prev => !prev);
-                }else{
+                } else {
                     navigate('/')
                 }
 
@@ -51,7 +49,14 @@ const Post = ({ post, setChangeDlt }) => {
             console.log(err);
         }
     }
-
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(`${window.location.origin}/post/${post._id}`)
+            console.log("copied")
+        } catch (err) {
+            console.log(err)
+        }
+    }
     const OptionsList = () => {
         return (
             <div className="absolute top-2 right-6 w-max h-max z-[1]">
@@ -74,6 +79,7 @@ const Post = ({ post, setChangeDlt }) => {
                         </>
                     }
                     <div
+                        onClick={handleCopy}
                         className="px-4 py-1 bg-violet-500 rounded cursor-pointer flex items-center gap-2 justify-center"
                     >
                         <span>Share</span>

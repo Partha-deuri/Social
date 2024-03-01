@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import VideoCallIcon from '@mui/icons-material/VideoCall';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+// import VideoCallIcon from '@mui/icons-material/VideoCall';
+// import MusicNoteIcon from '@mui/icons-material/MusicNote';
+// import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import axios from 'axios';
 import { useUserStore } from '../zustand';
 import Close from '@mui/icons-material/Close';

@@ -21,7 +21,7 @@ const ProfileRight = ({ currProfile }) => {
     const Mutuals = ({ f }) => {
         return (
             <Link to={`/profile/${f?._id}`}
-                className='flex flex-col items-center w-min  p-1 shadow rounded '>
+                className='flex flex-col items-center w-[30%]  p-1 shadow rounded '>
                 <img
                     className='rounded p-1 aspect-square'
                     src={f?.profilePic}

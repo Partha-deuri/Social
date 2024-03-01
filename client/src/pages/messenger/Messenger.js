@@ -55,6 +55,9 @@ const Messenger = () => {
                 senderId: user._id,
                 receiverId: fid
             })
+            if (!allConv.includes(res.data[0])) {
+                allConv.add(res.data[0]);
+            }
             setCurrChat(res.data[0]);
         } catch (err) {
             console.log(err);
