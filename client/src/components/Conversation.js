@@ -5,9 +5,10 @@ import { format } from 'timeago.js';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import Close from '@mui/icons-material/Close';
 import { Link } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
 
 
-const Conversation = ({ currChat, currUser, socket, onlineUsers }) => {
+const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) => {
     const [messages, setMessages] = useState(null);
     const [friend, setFriend] = useState(null);
     const [newMsg, setNewMsg] = useState("");
@@ -171,8 +172,9 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers }) => {
                         <span className='text-sm text-slate-500'>{online ? "Active" : "Offline"}</span>
                     </div>
                 </Link>
-                <div className="flex items-center mx-4 my-1 cursor-pointer">
-                    <MoreHoriz />
+                <div className="flex items-center mx-4 my-1 cursor-pointer gap-1">
+                    {/* <MoreHoriz /> */}
+                    <CloseIcon onClick={() => setCurrChat(null)} />
                 </div>
             </div>
             <hr className='border-b-1 border-slate-500' />
@@ -212,7 +214,7 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers }) => {
                 </div>
                 <div className="flex gap-2 items-center px-2">
                     <label className='cursor-pointer bg-gray-200 aspect-square rounded-full p-2'>
-                        <AddIcon fontSize='large' />
+                        <AddIcon />
                         <input
                             onChange={handleImgChange}
                             id="msg-inp-img"

@@ -37,7 +37,7 @@ const LeftBar = () => {
         )
     }
     return (
-        <div className='w-1/5 p-2 overflow-y-scroll' >
+        <div className='w-2/5 p-2 overflow-y-scroll hidden md:block lg:w-1/5' >
             <div className="">
                 <ul className='flex flex-col gap-4 pl-2 py-2 '>
                     <li className='flex items-center gap-2'>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
-import PersonIcon from '@mui/icons-material/Person';
 import MessageIcon from '@mui/icons-material/Message';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -9,6 +8,7 @@ import { useUserStore } from '../zustand';
 import Settings from './Settings';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchPage from './SearchPage';
+import MenuIcon from '@mui/icons-material/Menu';
 import axios from 'axios';
 const TopBar = () => {
   const user = useUserStore(s => s.user);
@@ -51,9 +51,11 @@ const TopBar = () => {
             id='search-inp'
             onChange={(e) => setSearchText(e.target.value)}
             type='text'
-            placeholder='Search Here'
+            placeholder='Search username'
             className='rounded-sm px-2 focus:outline-none w-full' />
-          <SearchIcon className='w-1/12 mx-1 cursor-pointer' onClick={handleSearch} />
+          <button className=' md:w-1/12 rounded-full' onClick={handleSearch}>
+            <SearchIcon />
+          </button>
         </label>
       </div>
       {/* right */}
@@ -67,26 +69,26 @@ const TopBar = () => {
             alt="DP"
           />
         </Link>
-        <div className="relative">
+        {/* <div className="relative">
           <PersonIcon className='hover:text-white cursor-pointer' />
           <span
             className='absolute top-[-4px] right-[-2px] z-[-1] text-[12px] bg-red-500 rounded-full h-4 w-4 flex items-center justify-center'>
             1
           </span>
-        </div>
-        <Link to={'/messenger'} className="relative hover:text-white">
+        </div> */}
+        <Link to={'/messenger'} className="relative hidden md:block hover:text-white">
           <MessageIcon className=' cursor-pointer' />
-          <span
+          {/* <span
             className='absolute top-[-4px] right-[-2px]  text-[12px] bg-red-500 rounded-full h-4 w-4 flex items-center justify-center'>
-            1
-          </span>
+            
+          </span> */}
         </Link>
-        <div className="relative">
+        <div className="relative hidden md:block">
           <NotificationsIcon className='hover:text-white cursor-pointer' />
-          <span
+          {/* <span
             className='absolute top-[-4px] right-[-2px] z-[-1] text-[12px] bg-red-500 rounded-full h-4 w-4 flex items-center justify-center'>
             1
-          </span>
+          </span> */}
         </div>
         <div className='relative'>
           {
@@ -98,10 +100,12 @@ const TopBar = () => {
           }
           {
             !settings &&
-            <SettingsIcon
-              onClick={() => setSettings(!settings)}
-              className='hover:text-white cursor-pointer'
-            />
+            <>
+              <MenuIcon
+                onClick={() => setSettings(!settings)}
+                className='hover:text-white cursor-pointer hidden'
+              />
+            </>
           }
           {
             settings &&

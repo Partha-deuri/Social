@@ -66,7 +66,7 @@ const Messenger = () => {
         <div>
             <TopBar />
             <div className="flex h-[calc(100vh-56px)]">
-                <div className="w-1/5 p-2 h-full">
+                <div className={`${!currChat ? "block" : "hidden"} md:block  md:w-1/5 w-full p-2 h-full`}>
                     <div className="shadow-lg border h-full rounded-lg">
                         <div className="">
                             <h1 className='font-bold bg-slate-300 rounded px-2 py-1 '> Online</h1>
@@ -112,7 +112,7 @@ const Messenger = () => {
                         </div>
                     </div>
                 </div>
-                <div className=" w-4/5 p-2">
+                <div className={`${currChat ? "block" : "hidden"} md:block md:w-4/5 w-full p-2`}>
                     {
                         currChat ?
                             <Conversation
@@ -120,6 +120,7 @@ const Messenger = () => {
                                 currUser={user}
                                 socket={socket.current}
                                 onlineUsers={onlineUsers}
+                                setCurrChat={setCurrChat}
                             /> :
                             <div className="border-2 shadow h-full w-full rounded-lg flex items-center justify-center">
                                 <div className="text-3xl font-bold text-slate-400 cursor-default">

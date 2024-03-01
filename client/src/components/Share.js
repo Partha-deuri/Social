@@ -88,7 +88,7 @@ const Share = ({ setPosts, posts }) => {
                 </div>
             }
             <div className="flex justify-between p-2 items-center">
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-wrap">
                     <label htmlFor='file-inp' className="flex items-center cursor-pointer gap-1">
                         <AddPhotoAlternateIcon />
                         <span>Photo</span>

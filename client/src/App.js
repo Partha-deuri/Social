@@ -11,8 +11,15 @@ import axios from "axios";
 import { useUserStore } from "./zustand";
 import Redirect from "./components/Redirect";
 import EditProfile from "./pages/editProfile/EditProfile";
+// import { useEffect, useRef } from "react";
+// import { io } from "socket.io-client";
+
 
 function App() {
+  // const socket = useRef() 
+  // useEffect(()=>{
+  //   socket.current = io("ws://localhost:8900");
+  // },[])
 
   axios.defaults.baseURL = "http://localhost:5000/api"
   const user = useUserStore(s => s.user);

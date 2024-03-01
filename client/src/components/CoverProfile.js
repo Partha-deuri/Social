@@ -49,9 +49,9 @@ const CoverProfile = ({ currProfile }) => {
         }
     }
     return (
-        <div className="h-2/3 p-2 ">
+        <div className="md:h-2/3 p-2 ">
             <div className="shadow-xl h-full rounded-lg">
-                <img className='h-3/4 w-full object-cover rounded-lg'
+                <img className='md:h-3/4 w-full object-cover rounded-lg'
                     src={currProfile?.coverPic || ""} alt="" />
                 <div className="h-1/4 gap-4 flex pl-6  ">
                     <img
@@ -59,14 +59,14 @@ const CoverProfile = ({ currProfile }) => {
                         src={currProfile?.profilePic || ""}
                         alt="" />
                     <div className="">
-                        <div className="flex items-end gap-4 ">
+                        <div className="flex md:gap-4 flex-wrap">
                             <h1 className="font-extrabold text-2xl mt-2">{currProfile?.username}</h1>
-                            <div className="flex gap-2 ml-10">
+                            <div className="flex gap-2 md:ml-10">
                                 {
                                     owner &&
                                     <div
                                         onClick={() => navigate('/editprofile')}
-                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
+                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700  flex items-center">
                                         Edit Profile
                                     </div>
                                 }
@@ -74,7 +74,7 @@ const CoverProfile = ({ currProfile }) => {
                                     !owner &&
                                     <div
                                         onClick={handleFollow}
-                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
+                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700 flex items-center">
                                         {followText}
                                     </div>
                                 }

@@ -25,7 +25,7 @@ const Feed = ({ profile }) => {
         fetchF();
     }, [profile, uid, user, changeDelete])
     return (
-        <div className={`${profile ? "w-full" : "w-3/5"} p-2 overflow-y-scroll`}>
+        <div className={`${profile ? "" : "lg:w-3/5"} w-full p-2 overflow-y-scroll`}>
             <div className="">
                 {
                     !profile &&

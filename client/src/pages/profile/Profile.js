@@ -31,7 +31,7 @@ const Profile = () => {
         <LeftBar />
         <div className="h-[calc(100vh-56px)] w-full overflow-y-scroll">
           <CoverProfile currProfile={currProfile} />
-          <div className="flex ">
+          <div className="flex flex-col-reverse md:flex-row">
             <Feed profile />
             <ProfileRight currProfile={currProfile} />
           </div>

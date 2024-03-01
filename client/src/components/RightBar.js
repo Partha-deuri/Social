@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const RightBar = () => {
     return (
-        <div className='w-1/4 p-2  overflow-y-scroll'>
+        <div className='w-1/4 p-2  overflow-y-scroll hidden lg:block'>
             {/* online friends */}
             <div className="">
                 <h1 className='font-bold bg-slate-300 rounded p-2 mb-2'>Online Friends</h1>
