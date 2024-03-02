@@ -7,13 +7,13 @@ const bcrypt = require("bcrypt");
 // search a user
 router.get("/search", async (req, res) => {
     try {
-        const username = req.query.username;
-        const fullname = req.query.fullname;
-        const userList = username
-            ? await User.find({ username }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
-            : await User.find({ fullname }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
-        if (!userList) return res.status(404).json("no result found");
-        return res.status(200).json(userList);
+        const q = req.query.q;
+        const re = `.*(${q}).*`
+        const userList = await User.find({ username: { $regex: re } }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
+        const userList2 = await User.find({ fullname: { $regex: re } }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
+        const userList3 = userList2.filter(i => userList.includes(i))
+        if (!userList && !userList2) return res.status(404).json("no result found");
+        return res.status(200).json(userList.concat(userList3));
     } catch (err) {
         res.status(500).json(err);
     }
@@ -30,12 +30,6 @@ router.put('/:id', async (req, res) => {
             } catch (err) {
                 return res.status(500).json(err);
             }
-        }
-        if (req.body?.profilePic === "") {
-            req.body.profilePic = "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
-        }
-        if (req.body?.coverPic === "") {
-            req.body.coverPic = "https://i.pinimg.com/236x/9a/e8/fc/9ae8fc22197c56c5e5b0c2c22b05186e.jpg"
         }
         try {
             const currUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body });

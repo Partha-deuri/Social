@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) => {
-    const [messages, setMessages] = useState(null);
+    const [messages, setMessages] = useState([]);
     const [friend, setFriend] = useState(null);
     const [newMsg, setNewMsg] = useState("");
     const [newImg, setNewImg] = useState("");
@@ -136,7 +136,7 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
                             src={own ? currUser?.profilePic : friend?.profilePic}
                             alt="" />
                     </div>
-                    <div className="max-w-[70%] min-w-[30%] w-min">
+                    <div className="max-w-[70%] min-w-[60%] md:min-w-[30%]  w-min">
                         <div onClick={handleClick} className={`${!own ? "bg-gray-300" : "bg-sky-300"} p-2 rounded-md shadow-lg flex flex-col items-end`}>
                             <span className='w-full'>
                                 {m.text}
@@ -178,9 +178,9 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
                 </div>
             </div>
             <hr className='border-b-1 border-slate-500' />
-            <div className="h-[78%] p-2 ">
+            <div className="h-[calc(100%-130px)] p-2 ">
                 {
-                    !messages &&
+                    messages?.length===0 &&
                     <div className='w-full h-full flex justify-center items-center'>
                         <span>
                             Loading...

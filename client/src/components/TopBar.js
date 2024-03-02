@@ -19,7 +19,7 @@ const TopBar = () => {
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`/users/search?username=${searchText}`)
+      const res = await axios.get(`/users/search?q=${searchText}`)
       setSearchList(res.data);
       setSearch(true);
       // setSearchText("");

@@ -60,8 +60,8 @@ const EditProfile = () => {
               {"Save Changes"}
             </button>
           </div>
-          <div className="flex">
-            <div className=" p-2 w-2/3">
+          <div className="flex flex-col-reverse md:flex-row">
+            <div className=" p-2 md:w-2/3">
               <div className=" p-2 rounded-lg">
                 <div className="p-2 border-2  bg-violet-400 rounded-lg shadow-xl w-full flex items-center flex-col ">
                   <div
@@ -69,7 +69,7 @@ const EditProfile = () => {
                   >
                     Edit Profile
                   </div>
-                  <div className=" p-2 flex w-1/2 items-center  gap-2">
+                  <div className=" p-2 flex w-full md:w-1/2 items-center  gap-2">
                     <span className="w-1/3 font-semibold">
                       Username:
                     </span>
@@ -82,7 +82,7 @@ const EditProfile = () => {
                       required
                     />
                   </div>
-                  <div className="p-2 flex w-1/2 items-center  gap-2">
+                  <div className="p-2 flex w-full md:w-1/2 items-center  gap-2">
                     <span className="w-1/3 font-semibold">
                       Name:
                     </span>
@@ -95,7 +95,7 @@ const EditProfile = () => {
                       required
                     />
                   </div>
-                  <div className="p-2 flex w-1/2 items-center  gap-2">
+                  <div className="p-2 flex w-full md:w-1/2 items-center  gap-2">
                     <span className="w-1/3 font-semibold">
                       Email:
                     </span>
@@ -108,7 +108,7 @@ const EditProfile = () => {
                       required
                     />
                   </div>
-                  <div className="p-2 flex w-1/2 items-start  gap-2">
+                  <div className="p-2 flex w-full md:w-1/2 items-start  gap-2">
                     <span className="w-1/3 mt-2 font-semibold">
                       Bio:
                     </span>
@@ -121,7 +121,7 @@ const EditProfile = () => {
 
                     />
                   </div>
-                  <div className="p-2 flex w-1/2 items-center  gap-2">
+                  <div className="p-2 flex w-full md:w-1/2 items-center  gap-2">
                     <span className="w-1/3 font-semibold">
                       Gender:
                     </span>
@@ -164,7 +164,7 @@ const EditProfile = () => {
                     </div>
                   </div>
 
-                  <div className="p-2 flex w-1/2 items-center  gap-2">
+                  <div className="p-2 flex w-full md:w-1/2 items-center  gap-2">
                     <span className="w-1/3 font-semibold">
                       Lives in:
                     </span>
@@ -176,7 +176,7 @@ const EditProfile = () => {
                       placeholder='Lives in'
                     />
                   </div>
-                  <div className="p-2 flex w-1/2 items-center  gap-2">
+                  <div className="p-2 flex w-full md:w-1/2 items-center  gap-2">
                     <span className="w-1/3 font-semibold">
                       Hometown:
                     </span>
@@ -189,7 +189,7 @@ const EditProfile = () => {
                     />
                   </div>
 
-                  <div className="p-2 flex w-1/2 items-center  gap-2">
+                  <div className="p-2 flex w-full md:w-1/2 items-center  gap-2">
                     <span className="w-1/3 font-semibold">
                       Relationship :
                     </span>
@@ -237,7 +237,7 @@ const EditProfile = () => {
                 </div>
               </div>
             </div>
-            <div className="p-4 w-1/3">
+            <div className="p-4 md:w-1/3">
               <div className=" flex flex-col items-center gap-1 ">
                 <div className="h-[17rem] ">
                   <div className="rounded-full overflow-hidden h-60  hover:h-full">

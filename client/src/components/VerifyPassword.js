@@ -37,10 +37,10 @@ const VerifyPassword = ({ newUser, setSave }) => {
     }
     return (
         <div className='absolute w-full h-[calc(100vh-60px)]  z-10 p-2'>
-            <div className=" p-2 flex  justify-center items-center h-full bg-yellow-200 ">
+            <div className=" p-2 flex  justify-center items-center h-full ">
                 <form
                     onSubmit={handleSubmit}
-                    className="bg-violet-400 p-4 rounded-xl w-[30%] h-[50%] flex flex-col justify-between shadow-xl border relative z-40">
+                    className="bg-violet-400 p-4 rounded-xl md:w-[30%] h-[50%] flex flex-col justify-between shadow-xl border relative z-40">
                     <div
                         onClick={() => setSave(false)}
                         className='absolute font-bold bg-red text-white rounded-full bg-red-500 h-8 w-8 flex justify-center items-center aspect-square -top-4 -right-4 cursor-pointer border border-black'>
