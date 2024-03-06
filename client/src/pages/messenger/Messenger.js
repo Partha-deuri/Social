@@ -48,16 +48,15 @@ const Messenger = () => {
     useEffect(() => {
         setOnlineFriends(friendList.filter(f => onlineUsers.includes(f._id)))
     }, [onlineUsers, friendList])
-
     const handleOnlineClick = async ({ fid }) => {
         try {
             const res = await axios.post('/conv', {
                 senderId: user._id,
                 receiverId: fid
             })
-            if (!allConv.includes(res.data[0])) {
-                allConv.add(res.data[0]);
-            }
+            console.log(res.data[0]);
+            console.log(allConv);
+            console.log(allConv.includes(res.data[0])) // &&  allConv.push(res.data[0]);
             setCurrChat(res.data[0]);
         } catch (err) {
             console.log(err);
@@ -87,12 +86,12 @@ const Messenger = () => {
                                         <div
                                             onClick={() => handleOnlineClick({ fid: f._id })}
                                             key={f._id}
-                                            className="relative h-12 w-12 aspect-square">
+                                            className="relative h-12 w-12 aspect-square ">
                                             <img
-                                                className='h-12 w-12 rounded-full'
+                                                className='h-12 w-12 rounded-full cursor-pointer'
                                                 src={f.profilePic || ""}
                                                 alt="" />
-                                            <span className='bg-lime-500 border-2 border-white top-0 p-[4px] h-0.5 w-0.5 rounded-full absolute right-[-1px]'></span>
+                                            <span className='bg-lime-500 border-2 border-white top-0 p-[4px] h-0.5 w-0.5 rounded-full absolute right-[-1px] '></span>
                                         </div>
                                     ))
                                 }

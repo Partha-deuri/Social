@@ -61,7 +61,7 @@ const CoverProfile = ({ currProfile }) => {
                     <div className="">
                         <div className="flex md:gap-4 flex-wrap">
                             <h1 className="font-extrabold text-2xl mt-2">{currProfile?.username}</h1>
-                            <div className="flex gap-2 md:ml-10">
+                            <div className="flex gap-2 md:ml-10 mt-1">
                                 {
                                     owner &&
                                     <div
@@ -82,7 +82,7 @@ const CoverProfile = ({ currProfile }) => {
                                     !owner &&
                                     <div
                                         onClick={handleMsg}
-                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700">
+                                        className="border-2 px-2 bg-violet-400 rounded cursor-pointer font-semibold  hover:bg-violet-200 border-slate-700 flex items-center">
                                         Send Message
                                     </div>
                                 }

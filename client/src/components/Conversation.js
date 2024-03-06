@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) => {
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(null);
     const [friend, setFriend] = useState(null);
     const [newMsg, setNewMsg] = useState("");
     const [newImg, setNewImg] = useState("");
@@ -180,10 +180,18 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
             <hr className='border-b-1 border-slate-500' />
             <div className="h-[calc(100%-130px)] p-2 ">
                 {
-                    messages?.length===0 &&
+                    !messages &&
                     <div className='w-full h-full flex justify-center items-center'>
                         <span>
                             Loading...
+                        </span>
+                    </div>
+                }
+                {
+                    messages?.length === 0 &&
+                    <div className='w-full h-full flex justify-center items-center'>
+                        <span>
+                            {`Say Hello to ${friend?.username}`} 
                         </span>
                     </div>
                 }
