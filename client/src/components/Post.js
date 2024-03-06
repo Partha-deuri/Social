@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -19,18 +20,23 @@ const Post = ({ post, setChangeDlt }) => {
     const [moreOpt, setMoreOpt] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const navigate = useNavigate();
+    const [likeStatus, setLikeStatus] = useState(false);
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`/users/${post.userId}`);
             setPostOwner(res.data)
         }
         fetchUser();
-    }, [post.userId])
+        if (post.likes.includes(user._id)) {
+            setLikeStatus(true)
+        }
+    }, [post, user])
 
 
     const handleLike = async () => {
         const res = await axios.put(`/posts/${post._id}/like`, { userId: user._id })
-        res.data === "liked successfully" ? setLikes(p => p + 1) : setLikes(p => p - 1)
+        res.data === "liked successfully" ? setLikes(p => p + 1) : setLikes(p => p - 1);
+        setLikeStatus(!likeStatus);
     }
     const deletePost = async () => {
         try {
@@ -142,7 +148,11 @@ const Post = ({ post, setChangeDlt }) => {
                         onClick={handleLike}
                         className="w-1/2 bg-red-300 h-8 text-white flex items-center justify-center rounded cursor-pointer">
                         <div className="flex gap-1 items-center" >
-                            <FavoriteBorderIcon />
+                            {
+                                !likeStatus
+                                    ? <FavoriteBorderIcon />
+                                    : <FavoriteIcon/>
+                            }
                             <span>{likes || 0} {(likes || 0) > 1 ? "Likes" : "Like"}</span>
                         </div>
                     </div>
