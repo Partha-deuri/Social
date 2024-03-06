@@ -18,7 +18,8 @@ const Home = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
-    socket.current = io(process.env.REACT_APP_SOCKET_URL);
+    // socket.current = io(process.env.REACT_APP_SOCKET_URL);
+    socket.current = io("ws://social-api-by-partha.onrender.com:8900");
     if (user === null) {
       navigate('/login');
     } else {

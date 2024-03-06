@@ -16,7 +16,8 @@ const Messenger = () => {
     const [currChat, setCurrChat] = useState(null);
     const socket = useRef()
     useEffect(() => {
-        socket.current = io(process.env.REACT_APP_SOCKET_URL);
+        // socket.current = io(process.env.REACT_APP_SOCKET_URL);
+        socket.current = io("ws://social-api-by-partha.onrender.com:8900");
         const fetchUser = async () => {
             const res = await axios.get(`/users/${user?._id}`);
             setUser(res.data);
