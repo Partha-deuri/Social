@@ -31,6 +31,11 @@ const TopBar = () => {
   }
   return (
     <div className='sticky top-0 bg-violet-700 flex items-center z-10 justify-between h-14'>
+      <div className="relative">
+        {
+          search && <SearchPage list={searchList} user={user} />
+        }
+      </div>
       {/* left */}
       <div className="p-3  w-1/4 ">
         <Link to={'/'}>
@@ -40,11 +45,6 @@ const TopBar = () => {
         </Link>
       </div>
       {/* center */}
-      <div className="relative">
-        {
-          search && <SearchPage list={searchList} user={user} />
-        }
-      </div>
       <div className="w-1/2">
         <label className="bg-white rounded-3xl p-1 flex justify-between w-full ">
           <input
