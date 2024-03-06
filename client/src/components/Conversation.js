@@ -29,7 +29,7 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
                 _id: Date.now(),
                 sender: data.senderId,
                 text: data.text,
-                image: data.iamge,
+                image: data.image,
                 createdAt: Date.now(),
             })
         })

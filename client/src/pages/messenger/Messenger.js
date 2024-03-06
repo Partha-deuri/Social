@@ -7,6 +7,7 @@ import MsgLeftListItem from '../../components/MsgLeftListItem'
 import { io } from "socket.io-client";
 
 const Messenger = () => {
+    const setUser = useUserStore(s => s.setUser);
     const user = useUserStore(s => s.user);
     const [allConv, setAllConv] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([]);
@@ -16,25 +17,20 @@ const Messenger = () => {
     const socket = useRef()
     useEffect(() => {
         socket.current = io(process.env.REACT_APP_SOCKET_URL);
+        const fetchUser = async () => {
+            const res = await axios.get(`/users/${user?._id}`);
+            setUser(res.data);
+        }
+        fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+    useEffect(() => {
         try {
             const getFollowings = async () => {
                 const res = await axios.get(`/users/${user._id}/followings`);
                 setFriendList(res.data);
             }
             getFollowings();
-        } catch (err) {
-            console.log(err)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    useEffect(() => {
-        try {
-            const fetchConv = async () => {
-                const res = await axios.get(`/conv/${user?._id}`)
-                setAllConv(res.data);
-            }
-            fetchConv();
         } catch (err) {
             console.log(err)
         }
@@ -45,6 +41,18 @@ const Messenger = () => {
             );
         });
     }, [user])
+
+    useEffect(() => {
+        try {
+            const fetchConv = async () => {
+                const res = await axios.get(`/conv/${user?._id}`)
+                setAllConv(res.data);
+            }
+            fetchConv();
+        } catch (err) {
+            console.log(err)
+        }  
+    }, [currChat, user])
     useEffect(() => {
         setOnlineFriends(friendList.filter(f => onlineUsers.includes(f._id)))
     }, [onlineUsers, friendList])
@@ -54,9 +62,12 @@ const Messenger = () => {
                 senderId: user._id,
                 receiverId: fid
             })
-            console.log(res.data[0]);
-            console.log(allConv);
-            console.log(allConv.includes(res.data[0])) // &&  allConv.push(res.data[0]);
+            // console.log(res.data[0]);
+            // console.log(allConv);
+            // console.log(allConv.includes(res.data[0]))
+            // {
+                // allConv.push(res.data);
+            // }   
             setCurrChat(res.data[0]);
         } catch (err) {
             console.log(err);
