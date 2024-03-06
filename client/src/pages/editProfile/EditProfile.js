@@ -38,8 +38,8 @@ const EditProfile = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    newUser.profilePic = dp;
-    newUser.coverPic = cover;
+    newUser.profilePic = dp || user.profilePic;
+    newUser.coverPic = cover || user.coverPic;
     setNewUserCopy(newUser);
     setSave(true);
   }

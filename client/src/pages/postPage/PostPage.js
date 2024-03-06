@@ -64,7 +64,7 @@ const PostPage = () => {
                             </button>
                         </div>
 
-                        <div className="flex flex-col-reverse">
+                        <div className="flex flex-col-reverse w-full overflow-x-clip">
                             {
                                 allComments.map(c => <Comment key={c._id} c={c} />)
                             }

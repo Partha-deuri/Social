@@ -16,6 +16,10 @@ const Comment = ({ c }) => {
         fetchUser();
     }, [c])
 
+    const handleDelete = () => {
+
+    }
+
     const MoreOpt = ({ cmnt, cmtr }) => {
         return (
             <div className="absolute w-max right-8 top-1">
@@ -23,7 +27,9 @@ const Comment = ({ c }) => {
                     <div className=" bg-violet-500 px-2 py-1 rounded">
                         Edit Comment
                     </div>
-                    <div className=" bg-violet-500 px-2 py-1 rounded">
+                    <div
+                        onClick={handleDelete}
+                        className=" bg-violet-500 px-2 py-1 rounded">
                         Delete Commennt
                     </div>
                     <div className=" bg-violet-500 px-2 py-1 rounded">
@@ -35,32 +41,32 @@ const Comment = ({ c }) => {
     }
 
     return (
-        <div className="px-1  mt-4 rounded flex items-start border shadow-md">
+        <div className="px-1  mt-4 rounded flex items-start border shadow-md max-w-full">
             <Link to={`profile/${commenter?._id}`} className=" mx-1 my-2 h-12 w-12 aspect-square">
                 <img
                     className='h-12 w-12 aspect-square rounded-full'
                     src={commenter?.profilePic} alt="" />
             </Link>
-            <div className="p-2 w-full ">
+            <div className="p-2 w-[calc(90%-3rem)]">
                 <div className="flex gap-2 items-center">
                     <Link to={`/profile/${commenter?._id}`} className='font-bold cursor-pointer'>{commenter?.username}</Link>
                     <span className='text-sm text-gray-400'>{format(c?.createdAt)}</span>
                 </div>
                 <div className="flex justify-between w-full">
-                    <span>
+                    <span className=" overflow-auto">
                         {c.comment}
                     </span>
                 </div>
             </div>
             <div
                 onClick={() => setMrOpt(!mrOpt)}
-                className="py-2 px-1 flex items-center  relative"
+                className="py-2 px-1 flex items-center w-8 relative"
             >
                 {
-                    mrOpt && <CloseIcon  className="cursor-pointer" />
+                    mrOpt && <CloseIcon className="cursor-pointer" />
                 }
                 {
-                    !mrOpt && <MoreVert  className="cursor-pointer"/>
+                    !mrOpt && <MoreVert className="cursor-pointer" />
                 }
                 {
                     mrOpt && <MoreOpt cmnt={c} cmtr={commenter} />
