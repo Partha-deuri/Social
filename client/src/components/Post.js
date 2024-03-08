@@ -17,6 +17,7 @@ const Post = ({ post, setChangeDlt }) => {
     const user = useUserStore(state => state.user);
     const [postOwner, setPostOwner] = useState({});
     const [likes, setLikes] = useState(post?.likes?.length);
+    const [comments, setComments] = useState(post?.comments?.length);
     const [moreOpt, setMoreOpt] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const navigate = useNavigate();
@@ -159,7 +160,7 @@ const Post = ({ post, setChangeDlt }) => {
                     <Link to={`/post/${post._id}`} className="w-1/2 bg-blue-300 h-8 text-white flex items-center justify-center rounded cursor-pointer">
                         <div className="flex gap-1 items-center">
                             <ChatBubbleOutlineIcon />
-                            <span>{post.comments.length} {(post.comments.length) > 1 ? "Comments" : "Comment"}</span>
+                            <span>{comments} {(comments) > 1 ? "Comments" : "Comment"}</span>
                         </div>
                     </Link>
                 </div>

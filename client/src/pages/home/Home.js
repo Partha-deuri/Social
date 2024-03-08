@@ -23,30 +23,35 @@ const Home = () => {
     if (user === null) {
       navigate('/login');
     } else {
-      const fetchUser = async () => {
-        const res = await axios.get(`/users/${user?._id}`);
-        setUser(res.data);
+      try {
+        const fetchUser = async () => {
+          const res = await axios.get(`/users/${user?._id}`);
+          setUser(res.data);
+        }
+        fetchUser();
+      } catch (err) {
+        console.log(err);
       }
-      fetchUser();
     }
     // console.log(user);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
+    socket.current.emit("addUser", user._id);
     socket.current.on("getAllUsers", users => {
       setOnlineUsers(
         user.followings.filter(f => users.some(u => u.userId === f))
       );
     });
-  }, [user])
-  
+  }, [user._id, user.followings])
+
   return (
     <div className='h-screen'>
       <TopBar />
       <div className="flex h-[calc(100vh-56px)] w-full">
         <LeftBar />
         <Feed />
-        <RightBar onlineUsers={onlineUsers} user={user}/>
+        <RightBar onlineUsers={onlineUsers} user={user} />
       </div>
 
     </div>

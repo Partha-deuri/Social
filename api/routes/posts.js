@@ -34,9 +34,7 @@ router.put("/:id/delete", async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
         if (currPost.userId === req.body.userId) {
-            await Promise.all(
-                currPost.comments.map(cId => Comment.findByIdAndDelete(cId))
-            )
+            await Comment.deleteMany({ postId: currPost._id });
             await currPost.deleteOne();
             return res.status(200).json("The  post has been deleted");
         } else {
@@ -95,9 +93,8 @@ router.post("/:id/comment", async (req, res) => {
 // get a comment
 router.get("/:id/comment/:comment", async (req, res) => {
     try {
-        const currPost = await Post.findById(req.params.id);
-        if (currPost.comments.includes(req.params.comment)) {
-            const currComment = await Comment.findById(req.params.comment);
+        const currComment = await Comment.findById(req.params.comment);
+        if (currComment.postId === req.params.id) {
             return res.status(200).json(currComment);
         } else {
             return res.status(403).json("this comment doesn't belong to this post");
@@ -111,8 +108,8 @@ router.get("/:id/comment/:comment", async (req, res) => {
 router.put("/:id/comment/:comment", async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
-        if (currPost.comments.includes(req.params.comment)) {
-            const currComment = await Comment.findById(req.params.comment);
+        const currComment = await Comment.findById(req.params.comment);
+        if (currComment.postId === req.params.id) {
             if (currComment.userId === req.body.userId) {
                 await currComment.updateOne({ $set: { comment: req.body.comment } });
                 return res.status(200).json("comment updated successfully");
@@ -130,11 +127,11 @@ router.put("/:id/comment/:comment", async (req, res) => {
 })
 
 // delete a comment
-router.delete("/:id/comment/:comment", async (req, res) => {
+router.put("/:id/comment/:comment/delete", async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
-        if (currPost.comments.includes(req.params.comment)) {
-            const currComment = await Comment.findById(req.params.comment);
+        const currComment = await Comment.findById(req.params.comment);
+        if (currComment.postId === req.params.id) {
             if (currComment.userId === req.body.userId) {
                 let temp = currPost.comments.filter(items => items != req.params.comment);
                 await currPost.updateOne({ $set: { comments: temp } })
@@ -156,12 +153,8 @@ router.delete("/:id/comment/:comment", async (req, res) => {
 // get all comments in a post
 router.get("/:id/comments/all", async (req, res) => {
     try {
-        const currPost = await Post.findById(req.params.id);
-        const allComments = await Promise.all(
-            currPost.comments.map(cId => {
-                return Comment.findById(cId);
-            })
-        )
+        // const currPost = await Post.findById(req.params.id);
+        const allComments = await Comment.find({ postId: req.params.id })
         return res.status(200).json(allComments);
     } catch (err) {
         return res.status(500).json(err);

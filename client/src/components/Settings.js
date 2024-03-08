@@ -9,14 +9,16 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import HelpIcon from '@mui/icons-material/Help';
 import InfoIcon from '@mui/icons-material/Info';
 
-const Settings = () => {
+const Settings = ({ socket }) => {
     const user = useUserStore(s => s.user);
     const setUser = useUserStore(s => s.setUser);
     // const navigate = useNavigate();
     const handleLogout = async () => {
         try {
-
-            await setUser(null);
+            await socket.emit("logout", user._id);
+            setTimeout(() => {
+                setUser(null);
+            }, 20)
         } catch (err) {
             console.log(err);
         }

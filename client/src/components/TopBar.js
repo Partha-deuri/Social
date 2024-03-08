@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import MessageIcon from '@mui/icons-material/Message';
 // import SettingsIcon from '@mui/icons-material/Settings';
@@ -10,12 +10,19 @@ import CloseIcon from '@mui/icons-material/Close';
 import SearchPage from './SearchPage';
 import MenuIcon from '@mui/icons-material/Menu';
 import axios from 'axios';
+import { io } from 'socket.io-client';
+
 const TopBar = () => {
   const user = useUserStore(s => s.user);
   const [settings, setSettings] = useState(false);
   const [search, setSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchList, setSearchList] = useState([]);
+  const socket = useRef();
+  useEffect(()=>{
+    socket.current = io(process.env.REACT_APP_SOCKET_URL);
+  },[])
+
 
   const handleSearch = async () => {
     try {
@@ -109,7 +116,7 @@ const TopBar = () => {
           }
           {
             settings &&
-            <Settings />
+            <Settings socket={socket.current} />
           }
         </div>
       </div>
