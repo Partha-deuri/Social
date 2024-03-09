@@ -11,7 +11,7 @@ const postRoute = require("./routes/posts");
 const convRoute = require("./routes/conversations");
 const msgRoute = require("./routes/messages");
 
-const { socketConnect } = require("./socket/socket");
+// const { socketConnect } = require("./socket/socket");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -49,7 +49,7 @@ const startApp = async () => {
 startApp();
 
 // socket 
-socketConnect();
+// socketConnect();
 
 app.get('/', (req, res) => {
     res.status(200).json("i am alive");
