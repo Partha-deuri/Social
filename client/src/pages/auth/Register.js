@@ -44,12 +44,13 @@ const Register = () => {
   const FirstSignup = () => {
     return (
       <form className="p-4 " onSubmit={handleFirst}>
-        <input type="text"
+        <input type="email"
           ref={emailRef}
           className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
           required
           placeholder='Email'
           autoFocus
+          inputMode='email'
         />
         <button
           className={`text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500 ${loading && "cursor-not-allowed"}`}>
@@ -66,7 +67,9 @@ const Register = () => {
       // verify otp 
       if (otp.current.value.length === 6) {
         const res = await axios.post(`/auth/otp`, {
-          otpId, otp: otp.current.value
+          otpId, 
+          otp: otp.current.value,
+          email
         })
         if (res.data.msg === "success") {
           setSecond(false);
@@ -138,6 +141,7 @@ const Register = () => {
           required
           placeholder='Enter 6-digit OTP'
           autoFocus
+          inputMode='numeric'
         />
         <button type='submit'
           className={`text-2xl font-semibold text-center w-full bg-violet-700 rounded p-2 mt-4 text-white hover:bg-violet-500}  ${loading && "cursor-not-allowed"}`}>
@@ -205,13 +209,13 @@ const Register = () => {
           placeholder='Full Name'
           autoCapitalize='on'
         />
-        <input type="text"
+        <input type="password"
           ref={password}
           className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
           required
           placeholder='Password'
         />
-        <input type="text"
+        <input type="password"
           ref={confirmPassword}
           className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
           required

@@ -54,7 +54,7 @@ const VerifyPassword = ({ newUser, setSave }) => {
                         <input
                             className='rounded px-2 py-1 my-2 w-full'
                             placeholder='Password'
-                            type="text"
+                            type="password"
                             name="" id=""
                             required
                         />
