@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
-const SOCKET_PORT = process.env.SOCKET_PORT || 8900;
-const SOCKET_HOST = process.env.SOCKET_HOST
+const SOCKET_PORT = process.env.PORT || 8900;
+const SOCKET_HOST = process.env.HOST
 
 const io = require("socket.io")(SOCKET_PORT, {
     cors: {
