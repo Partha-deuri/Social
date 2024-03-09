@@ -1,6 +1,6 @@
 import React from 'react'
 import { useUserStore } from '../zustand'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -12,17 +12,17 @@ import InfoIcon from '@mui/icons-material/Info';
 const Settings = ({ socket }) => {
     const user = useUserStore(s => s.user);
     const setUser = useUserStore(s => s.setUser);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const handleLogout = async () => {
         try {
             await socket.emit("logout", user._id);
+            navigate('/login');
             setTimeout(() => {
                 setUser(null);
-            }, 20)
+            }, 1)
         } catch (err) {
             console.log(err);
         }
-        // navigate('/login');
     }
 
     const handleDeleteUser = () => {

@@ -34,13 +34,13 @@ const Login = () => {
         </div>
         <div className="w-full md:w-2/5  border-2 shadow-xl rounded-lg ">
           <form onSubmit={handleLogin} className="p-4 ">
-            <input type="text"
+            <input type="email"
               onChange={e => setEmail(e.target.value)}
               className='my-2 border border-black w-full text-xl p-2 rounded bg-transparent'
               placeholder='Email'
               autoFocus
             />
-            <input type="text"
+            <input type="password"
               onChange={e => setPassword(e.target.value)}
               className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
               placeholder='Password'
