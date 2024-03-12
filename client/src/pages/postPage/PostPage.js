@@ -12,6 +12,7 @@ const PostPage = () => {
     const [post, setPost] = useState();
     const [allComments, setAllComments] = useState([]);
     const [commenting, setCommenting] = useState(false);
+    const [cmntChng, setCmntChng] = useState(false);
     useEffect(() => {
         const fetchPost = async () => {
             try {
@@ -24,8 +25,8 @@ const PostPage = () => {
             }
         }
         fetchPost();
-    }, [postid])
-    
+    }, [postid, cmntChng])
+
     const [newComment, setNewComment] = useState("");
     const handleComment = async (e) => {
         if (newComment.trim() !== "") {
@@ -66,7 +67,12 @@ const PostPage = () => {
 
                         <div className="flex flex-col-reverse w-full overflow-x-clip">
                             {
-                                allComments.map(c => <Comment key={c._id} c={c} />)
+                                allComments.map(c => <Comment
+                                    key={c._id}
+                                    c={c}
+                                    p={post}
+                                    setCmntChng={setCmntChng}
+                                />)
                             }
                         </div>
                     </div>

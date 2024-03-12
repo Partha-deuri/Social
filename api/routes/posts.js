@@ -132,7 +132,7 @@ router.put("/:id/comment/:comment/delete", async (req, res) => {
         const currPost = await Post.findById(req.params.id);
         const currComment = await Comment.findById(req.params.comment);
         if (currComment.postId === req.params.id) {
-            if (currComment.userId === req.body.userId) {
+            if (currComment.userId === req.body.userId || currPost.userId === req.body.userId) {
                 let temp = currPost.comments.filter(items => items != req.params.comment);
                 await currPost.updateOne({ $set: { comments: temp } })
                 await currComment.deleteOne();
