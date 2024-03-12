@@ -13,15 +13,17 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import ReportIcon from '@mui/icons-material/Report';
 
-const Post = ({ post, setChangeDlt }) => {
+const Post = ({ post, setChangeDlt, cmntL }) => {
     const user = useUserStore(state => state.user);
     const [postOwner, setPostOwner] = useState({});
     const [likes, setLikes] = useState(post?.likes?.length);
-    const [comments, setComments] = useState(post?.comments?.length);
     const [moreOpt, setMoreOpt] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const navigate = useNavigate();
     const [likeStatus, setLikeStatus] = useState(false);
+    if (!cmntL) {
+        cmntL = post.comments.length;
+    }
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`/users/${post.userId}`);
@@ -152,7 +154,7 @@ const Post = ({ post, setChangeDlt }) => {
                             {
                                 !likeStatus
                                     ? <FavoriteBorderIcon />
-                                    : <FavoriteIcon/>
+                                    : <FavoriteIcon />
                             }
                             <span>{likes || 0} {(likes || 0) > 1 ? "Likes" : "Like"}</span>
                         </div>
@@ -160,7 +162,7 @@ const Post = ({ post, setChangeDlt }) => {
                     <Link to={`/post/${post._id}`} className="w-1/2 bg-blue-300 h-8 text-white flex items-center justify-center rounded cursor-pointer">
                         <div className="flex gap-1 items-center">
                             <ChatBubbleOutlineIcon />
-                            <span>{comments} {(comments) > 1 ? "Comments" : "Comment"}</span>
+                            <span>{cmntL} {(cmntL) > 1 ? "Comments" : "Comment"}</span>
                         </div>
                     </Link>
                 </div>

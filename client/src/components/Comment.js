@@ -6,7 +6,7 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUserStore } from "../zustand";
 
-const Comment = ({ c, p, setCmntChng }) => {
+const Comment = ({ c, p, setAllComments }) => {
     const user = useUserStore(s => s.user);
     const [commenter, setCommenter] = useState();
     const [mrOpt, setMrOpt] = useState(false);
@@ -27,7 +27,7 @@ const Comment = ({ c, p, setCmntChng }) => {
                 userId: user._id
             })
             console.log(res.data);
-            setCmntChng(prev => !prev);
+            setAllComments(prev => prev.filter(c => c?._id !== cmnt?._id));
         } catch (err) {
             console.log(err)
         }
@@ -43,11 +43,11 @@ const Comment = ({ c, p, setCmntChng }) => {
                 <div className="p-2 bg-violet-400 rounded-md font-semibold  flex flex-col gap-1">
                     {
                         cmtr?._id === user?._id &&
-                            <div
-                                onClick={handleEdit}
-                                className=" bg-violet-500 px-2 py-1 rounded cursor-pointer">
-                                Edit Comment
-                            </div>
+                        <div
+                            onClick={handleEdit}
+                            className=" bg-violet-500 px-2 py-1 rounded cursor-pointer">
+                            Edit Comment
+                        </div>
                     }
                     {
                         (user?._id === p.userId || user?._id === cmtr?._id) &&
@@ -59,9 +59,9 @@ const Comment = ({ c, p, setCmntChng }) => {
                     }
                     {
                         cmtr?._id !== user?._id &&
-                            <div className=" bg-violet-500 px-2 py-1 rounded cursor-pointer">
-                                Report
-                            </div>
+                        <div className=" bg-violet-500 px-2 py-1 rounded cursor-pointer">
+                            Report
+                        </div>
                     }
                 </div>
             </div>

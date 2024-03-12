@@ -12,7 +12,7 @@ const PostPage = () => {
     const [post, setPost] = useState();
     const [allComments, setAllComments] = useState([]);
     const [commenting, setCommenting] = useState(false);
-    const [cmntChng, setCmntChng] = useState(false);
+    const [cmntL, setCmntL] = useState(null);
     useEffect(() => {
         const fetchPost = async () => {
             try {
@@ -25,7 +25,10 @@ const PostPage = () => {
             }
         }
         fetchPost();
-    }, [postid, cmntChng])
+    }, [postid])
+    useEffect(()=>{
+        setCmntL(allComments.length);
+    },[allComments.length])
 
     const [newComment, setNewComment] = useState("");
     const handleComment = async (e) => {
@@ -47,7 +50,7 @@ const PostPage = () => {
             <div className='p-2'>
                 {
                     post &&
-                    <Post post={post} />
+                    <Post post={post} cmntL={cmntL} setCmntL={setCmntL} />
                 }
                 {post &&
                     <div className="mt-4 p-2 border-2 rounded-lg relative ">
@@ -71,7 +74,7 @@ const PostPage = () => {
                                     key={c._id}
                                     c={c}
                                     p={post}
-                                    setCmntChng={setCmntChng}
+                                    setAllComments={setAllComments}
                                 />)
                             }
                         </div>
