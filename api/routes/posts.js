@@ -3,14 +3,63 @@ const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
 
+
+const dotenv = require('dotenv');
+dotenv.config();
+
+const multer = require("multer");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+
+const BUCKET_NAME = process.env.BUCKET_NAME;
+const BUCKET_REGION = process.env.BUCKET_REGION;
+const ACCESS_KEY = process.env.ACCESS_KEY;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+    credentials: {
+        accessKeyId: ACCESS_KEY,
+        secretAccessKey: SECRET_ACCESS_KEY,
+    },
+    region: BUCKET_REGION,
+})
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 // create a post
 router.post("/", async (req, res) => {
-    const newPost = new Post(req.body);
     try {
+        const newPost = new Post(req.body);
         const savedPost = await newPost.save();
         return res.status(200).json(savedPost);
     } catch (err) {
         return res.status(500).json(err);
+    }
+})
+
+router.put("/:id/upload", upload.single('image'), async (req, res) => {
+    try {
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: `social-web-app/public/${req.params.id}-image`,
+            Body: req.file.buffer,
+            ContentType: req.file.mimetype,
+        }
+        const command = new PutObjectCommand(params);
+        const currPost = await Post.findById(req.params.id);
+
+        if (currPost.userId === req.body.userId) {
+            await s3.send(command);
+            await currPost.updateOne({ image: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/posts/${req.params.id}-image` })
+
+            const updatedPost = await Post.findById(req.params.id);
+            return res.status(200).json(updatedPost);
+        } else {
+            return res.status(403).json("You are not allowed to update this post");
+        }
+
+    } catch (err) {
+        res.status(500).json(err);
     }
 })
 

@@ -12,24 +12,38 @@ const Share = ({ setPosts, posts }) => {
     const currUser = useUserStore(s => s.user);
     const [postDesc, setPostDesc] = useState("");
     const [postImg, setPostImg] = useState(null);
-    // console.log(postImg);
+    const [previewImg, setPreviewImg] = useState(null);
     const [sharing, setSharing] = useState(false);
 
 
-    const handleShare = async () => {
+    const handleShare = async (e) => {
+        e.preventDefault();
         try {
             if (!sharing && (postImg !== null || postDesc !== "")) {
                 setSharing(true);
+                const formData = new FormData();
+                formData.append("userId", currUser._id);
+                formData.append("image", postImg);
+
                 const res = await axios.post(`/posts`, {
                     userId: currUser?._id,
                     desc: postDesc,
-                    image: postImg,
                 });
-                setPosts([res.data, ...posts]);
+                console.log(res.data);
+                if (postImg) {
+                    const res2 = await axios.put(`/posts/${res.data._id}/upload`, formData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                    console.log(res2.data);
+                    setPosts([res2.data, ...posts]);
+                } else {
+                    setPosts([res.data, ...posts]);
+                }
                 document.getElementById("text-area").value = "";
                 document.getElementById("file-inp").value = null;
                 setPostDesc("");
                 setPostImg(null);
+                setPreviewImg(null);
                 setSharing(false);
             }
         } catch (err) {
@@ -53,14 +67,17 @@ const Share = ({ setPosts, posts }) => {
     }
     const handleImgChange = async (e) => {
         const cnvImg = await base64(e.target.files[0]);
-        setPostImg(cnvImg);
+        setPreviewImg(cnvImg);
+        setPostImg(e.target.files[0]);
+
     }
     const handleClose = () => {
         setPostImg(null);
+        setPreviewImg(null);
         document.getElementById("file-inp").value = null;
     }
     return (
-        <div className='border-2 rounded p-2 shadow-lg mb-2'>
+        <form className='border-2 rounded p-2 shadow-lg mb-2' onSubmit={handleShare}>
             <div className="flex gap-4 px-2">
                 <img
                     className='h-12 w-12 border-2 rounded-full '
@@ -76,11 +93,11 @@ const Share = ({ setPosts, posts }) => {
             </div>
             <hr className='my-2' />
             {
-                postImg &&
+                previewImg &&
                 <div className="w-full p-2 rounded relative">
                     <img
                         className='w-full aspect-auto rounded shadow-lg h-full'
-                        src={postImg || ""} alt="" />
+                        src={previewImg || ""} alt="" />
                     <Close
                         fontSize="large"
                         onClick={handleClose}
@@ -113,13 +130,12 @@ const Share = ({ setPosts, posts }) => {
                     </div> */}
                 </div>
                 <button
-                    onClick={handleShare}
                     className={`rounded px-4 p-2 bg-green-600 text-white font-bold 
                     ${sharing && "cursor-not-allowed"}`}>
                     {sharing ? "Sharing..." : "Share"}
                 </button>
             </div>
-        </div>
+        </form>
     )
 }
 
