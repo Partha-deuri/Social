@@ -27,32 +27,6 @@ const s3 = new S3Client({
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.put("/:id/upload", upload.single("image"), async (req, res) => {
-    try {
-        console.log(req.body);
-        console.log(req.file);
-        const params = {
-            Bucket: BUCKET_NAME,
-            Key: `social-web-app/public/users/${req.params.id}-${req.body.type}`,
-            Body: req.file.buffer,
-            ContentType: req.file.mimetype,
-        }
-        const command = new PutObjectCommand(params);
-
-        const updatedUser = await User.findByIdAndUpdate(req.params.id,
-            {
-                profilePic: `${req.params.id}-profile`,
-                cover: `${req.params.id}-cover`,
-            }
-        )
-        console.log(updatedUser);
-        res.status(200).json(updatedUser);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-})
-
-
 
 // search a user
 router.get("/search", async (req, res) => {
@@ -72,28 +46,51 @@ router.get("/search", async (req, res) => {
 
 // update user
 router.put('/:id', async (req, res) => {
+    try {
 
-    if (req.body._id === req.params.id || req.body.isAdmin) {
-        if (req.body.password) {
+        if (req.body._id === req.params.id || req.body.isAdmin) {
             try {
-                const salt = await bcrypt.genSalt(10);
-                req.body.password = await bcrypt.hash(req.body.password, salt);
+                const currUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body });
+                const { password, updatedAt, ...rest } = currUser._doc;
+                return res.status(200).json(rest);
             } catch (err) {
                 return res.status(500).json(err);
             }
         }
-        try {
-            const currUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body });
-            const { password, updatedAt, ...rest } = currUser._doc;
-            return res.status(200).json(rest);
-        } catch (err) {
-            return res.status(500).json(err);
+        else {
+            return res.status(403).json("You can update only your account");
         }
-    }
-    else {
-        return res.status(403).json("You can update only your account");
+    } catch (err) {
+        return res.status(500).json(err);
     }
 })
+// upload iamge 
+
+router.put("/:id/upload", upload.single("image"), async (req, res) => {
+    try {
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: `social-web-app/public/users/${req.params.id}-${req.body.type}`,
+            Body: req.file.buffer,
+            ContentType: req.file.mimetype,
+        }
+        const command = new PutObjectCommand(params);
+        s3.send(command);
+
+        const updatedUser = await User.findByIdAndUpdate(req.params.id,
+            {
+                profilePic: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/public/users/${req.params.id}-profile`,
+                coverPic: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/public/users/${req.params.id}-cover`,
+            }
+        )
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+
+
 
 // delete user
 router.put('/:id/delete', async (req, res) => {

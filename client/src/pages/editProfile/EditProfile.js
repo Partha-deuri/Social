@@ -1,4 +1,4 @@
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import TopBar from '../../components/TopBar'
 import { useUserStore } from '../../zustand'
 import VerifyPassword from '../../components/VerifyPassword';
@@ -44,6 +44,12 @@ const EditProfile = () => {
     e.preventDefault();
     newUser.profilePic = dp;
     newUser.coverPic = cover;
+    if(newUser.profilePic===""){
+      delete newUser.profilePic;
+    }
+    if(newUser.coverPic===""){
+      delete newUser.coverPic;
+    }
     setNewUserCopy(newUser);
     setSave(true);
   }

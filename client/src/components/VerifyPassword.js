@@ -22,20 +22,22 @@ const VerifyPassword = ({ newUser, setSave }) => {
                 coverData.append("image", newUser.coverPic);
                 coverData.append("userId", user._id);
                 coverData.append("type", "cover");
-                if (user.profilePic !== newUser.profilePic) {
+                console.log(newUser);
+                if (newUser.profilePic) {
                     const { profilePic, ...rest } = newUser;
                     await axios.put(`/users/${user._id}/upload`, dpData, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     });
                     newUser = rest;
                 }
-                if (user.coverPic !== newUser.coverPic) {
+                if (newUser.coverPic) {
                     const { coverPic, ...rest } = newUser;
                     await axios.put(`/users/${user._id}/upload`, coverData, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     });
                     newUser = rest;
                 }
+                console.log(newUser);
                 const res2 = await axios.put(`/users/${user._id}`, newUser)
                 setUser(res2.data);
                 navigate(`/profile/${user._id}`);
