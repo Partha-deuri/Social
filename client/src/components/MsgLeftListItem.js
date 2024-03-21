@@ -16,7 +16,7 @@ const MsgLeftListItem = ({ c, currUser }) => {
         } catch (err) {
             console.log(err)
         }
-    }, [])
+    }, [c.members, currUser._id])
     return (
         <>
             {

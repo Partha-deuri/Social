@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useUserStore } from '../zustand';
 
 
-const Conversation = ({ socket, onlineUsers, setOpenChat }) => {
+const Conversation = ({ socket, onlineUsers }) => {
     const currUser = useUserStore(s => s.user);
     const [messages, setMessages] = useState(null);
     const [friend, setFriend] = useState(null);
@@ -151,8 +151,8 @@ const Conversation = ({ socket, onlineUsers, setOpenChat }) => {
                             src={own ? currUser?.profilePic : friend?.profilePic}
                             alt="" />
                     </div>
-                    <div className="max-w-[70%] min-w-[60%] md:min-w-[30%]  w-min">
-                        <div onClick={handleClick} className={`${!own ? "bg-gray-300" : "bg-sky-300"} p-2 rounded-md shadow-lg flex flex-col items-end  overflow-auto`}>
+                    <div className="max-w-[70%] min-w-[60%] md:min-w-[30%] ">
+                        <div onClick={handleClick} className={`${!own ? "bg-gray-300" : "bg-sky-300"} p-2 rounded-md shadow-lg flex flex-col items-end overflow-auto`}>
                             <span className='w-full'>
                                 {m.text}
                             </span>
