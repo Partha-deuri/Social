@@ -10,12 +10,13 @@ const MsgLeftListItem = ({ c, currUser }) => {
             const getFriend = async () => {
                 const res = await axios.get(`/users/${friendId}`);
                 setFriend(res.data);
+                // console.log(res.data);
             }
             getFriend();
         } catch (err) {
             console.log(err)
         }
-    }, [c, currUser])
+    }, [])
     return (
         <>
             {

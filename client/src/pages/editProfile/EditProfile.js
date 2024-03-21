@@ -151,12 +151,12 @@ const EditProfile = () => {
                         <span className='px-1'>Female</span>
                       </label>
                       <label className='cursor-pointer'
-                        htmlFor="other">
+                        htmlFor="other-g">
                         <input
                           type="radio"
                           name="gender"
                           value="3"
-                          id="other"
+                          id="other-g"
                           onChange={(e) => { newUser.gender = e.target.value }}
                         />
                         <span className='px-1'>Other</span>
@@ -219,12 +219,12 @@ const EditProfile = () => {
                         <span className='px-1'>Taken</span>
                       </label>
                       <label className='cursor-pointer'
-                        htmlFor="other">
+                        htmlFor="other-r">
                         <input
                           type="radio"
                           name="relationship"
                           value="3"
-                          id="other"
+                          id="other-r"
                           onChange={(e) => { newUser.relationship = e.target.value }}
                         />
                         <span className='px-1'>Hidden</span>
@@ -273,7 +273,7 @@ const EditProfile = () => {
                       />
                       <input
                         className='hidden'
-                        id='dp-inp'
+                        id='cp-inp'
                         alt=''
                         type='file'
                         accept='image/*'

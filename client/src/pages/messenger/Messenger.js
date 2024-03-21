@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import TopBar from '../../components/TopBar'
-import Conversation from '../../components/Conversation'
 import { useUserStore } from '../../zustand'
 import axios from 'axios'
 import MsgLeftListItem from '../../components/MsgLeftListItem'
 import { io } from "socket.io-client";
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
 
 const Messenger = () => {
     const setUser = useUserStore(s => s.setUser);
@@ -13,17 +13,26 @@ const Messenger = () => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [onlineFriends, setOnlineFriends] = useState([]);
     const [friendList, setFriendList] = useState([]);
-    const [currChat, setCurrChat] = useState(null);
-    const socket = useRef()
+    const [openChat, setOpenChat] = useState(false);
+    const socket = useRef();
+    const navigate = useNavigate();
+    let { convid } = useParams();
+    useEffect(() => {
+        if (convid) {
+            setOpenChat(true);
+        } else {
+            setOpenChat(false);
+        }
+    }, [convid])
     useEffect(() => {
         socket.current = io(process.env.REACT_APP_SOCKET_URL);
         // socket.current = io("ws://localhost:8900");
         const fetchUser = async () => {
-            const res = await axios.get(`/users/${user?._id}`);
+            const res = await axios.get(`/users/${user._id}`);
             setUser(res.data);
         }
         fetchUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     useEffect(() => {
         try {
@@ -52,8 +61,9 @@ const Messenger = () => {
             fetchConv();
         } catch (err) {
             console.log(err)
-        }  
-    }, [currChat, user])
+        }
+    }, [user])
+    // console.log(allConv, "all");
     useEffect(() => {
         setOnlineFriends(friendList.filter(f => onlineUsers.includes(f._id)))
     }, [onlineUsers, friendList])
@@ -63,13 +73,8 @@ const Messenger = () => {
                 senderId: user._id,
                 receiverId: fid
             })
-            // console.log(res.data[0]);
-            // console.log(allConv);
-            // console.log(allConv.includes(res.data[0]))
-            // {
-                // allConv.push(res.data);
-            // }   
-            setCurrChat(res.data[0]);
+            navigate(`/messenger/${res.data._id}`);
+            // setCurrChat(res.data[0]);
         } catch (err) {
             console.log(err);
         }
@@ -79,8 +84,8 @@ const Messenger = () => {
     return (
         <div>
             <TopBar />
-            <div className="flex h-[calc(100vh-56px)]">
-                <div className={`${!currChat ? "block" : "hidden"} md:block  md:w-1/5 w-full p-2 h-full`}>
+            <div className="flex h-[calc(100vh-56px)] ">
+                <div className={`${openChat ? "hidden" : "block"} w-full md:block  md:w-1/5 p-2 h-full`}>
                     <div className="shadow-lg border h-full rounded-lg">
                         <div className="">
                             <h1 className='font-bold bg-slate-300 rounded px-2 py-1 '> Online</h1>
@@ -113,8 +118,9 @@ const Messenger = () => {
                         <div className="overflow-y-scroll h-[calc(100%-8.7rem)] w-full">
                             <hr className='border-t mt-1 mx-1 ' />
                             {
+                                allConv.length !== 0 &&
                                 allConv.map(c => (
-                                    <div className="" key={c._id} onClick={() => setCurrChat(c)}>
+                                    <div className="" key={c._id} onClick={() => navigate(`/messenger/${c._id}`)}>
                                         <MsgLeftListItem
                                             c={c}
                                             currUser={user}
@@ -126,22 +132,8 @@ const Messenger = () => {
                         </div>
                     </div>
                 </div>
-                <div className={`${currChat ? "block" : "hidden"} md:block md:w-4/5 w-full p-2`}>
-                    {
-                        currChat ?
-                            <Conversation
-                                currChat={currChat}
-                                currUser={user}
-                                socket={socket.current}
-                                onlineUsers={onlineUsers}
-                                setCurrChat={setCurrChat}
-                            /> :
-                            <div className="border-2 shadow h-full w-full rounded-lg flex items-center justify-center">
-                                <div className="text-3xl font-bold text-slate-400 cursor-default">
-                                    <span>Open a Conversation to start Chat</span>
-                                </div>
-                            </div>
-                    }
+                <div className={`${openChat ? "block" : "hidden"} md:block md:w-4/5 w-full p-2`}>
+                    <Outlet />
                 </div>
             </div>
         </div>

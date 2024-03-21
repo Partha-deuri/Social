@@ -11,15 +11,16 @@ import axios from "axios";
 import { useUserStore } from "./zustand";
 import Redirect from "./components/Redirect";
 import EditProfile from "./pages/editProfile/EditProfile";
-// import { useEffect, useRef } from "react";
-// import { io } from "socket.io-client";
+import Conversation from "./components/Conversation";
+import { useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 
 
 function App() {
-  // const socket = useRef() 
-  // useEffect(()=>{
-  //   socket.current = io("ws://localhost:8900");
-  // },[])
+  const socket = useRef()
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+  }, [])
 
   axios.defaults.baseURL = process.env.REACT_APP_API_URL
   const user = useUserStore(s => s.user);
@@ -50,7 +51,23 @@ function App() {
     },
     {
       path: '/messenger',
-      element: user ? <Messenger /> : <Redirect to={'/login'} />
+      element: user ? <Messenger /> : <Redirect to={'/login'} />,
+      children: [
+        {
+          path: '',
+          element: user ?
+            <div className="hidden md:flex border-2 shadow h-full w-full rounded-lg items-center justify-center">
+              <div className="text-3xl font-bold text-slate-400 cursor-default">
+                <span>Open a Conversation to start Chat</span>
+              </div>
+            </div>
+            :
+            <Redirect to={'/login'} />,
+        },
+        {
+          path: ':convid',
+          element: user ? <Conversation socket={socket.current} /> : <Redirect to={'/login'} />,
+        }]
     },
     {
       path: '/post/:postid',

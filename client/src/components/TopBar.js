@@ -19,12 +19,13 @@ const TopBar = () => {
   const [searchText, setSearchText] = useState("");
   const [searchList, setSearchList] = useState([]);
   const socket = useRef();
-  useEffect(()=>{
+  useEffect(() => {
     socket.current = io(process.env.REACT_APP_SOCKET_URL);
-  },[])
+  }, [])
 
 
-  const handleSearch = async () => {
+  const handleSearch = async (e) => {
+    e.preventDefault();
     try {
       const res = await axios.get(`/users/search?q=${searchText}`)
       setSearchList(res.data);
@@ -53,17 +54,19 @@ const TopBar = () => {
       </div>
       {/* center */}
       <div className="w-1/2">
-        <label className="bg-white rounded-3xl p-1 flex justify-between w-full ">
-          <input
-            id='search-inp'
-            onChange={(e) => setSearchText(e.target.value)}
-            type='text'
-            placeholder='Search username'
-            className='rounded-sm px-2 focus:outline-none w-full' />
-          <button className=' md:w-1/12 rounded-full' onClick={handleSearch}>
-            <SearchIcon />
-          </button>
-        </label>
+        <form className='w-full' onSubmit={handleSearch}>
+          <label className="bg-white rounded-3xl p-1 flex justify-between w-full ">
+            <input
+              id='search-inp'
+              onChange={(e) => setSearchText(e.target.value)}
+              type='text'
+              placeholder='Search username'
+              className='rounded-sm px-2 focus:outline-none w-full' />
+            <button className=' md:w-1/12 rounded-full'>
+              <SearchIcon />
+            </button>
+          </label>
+        </form>
       </div>
       {/* right */}
       <div className="flex gap-4 mr-4  h-8 items-center w-1/4 justify-end">

@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
             const savedConv = await newConv.save();
             return res.status(200).json(savedConv);
         }
-        else{
+        else {
             return res.status(200).json(sameConv);
         }
     } catch (err) {
@@ -36,6 +36,15 @@ router.get("/:userId", async (req, res) => {
             members: { $in: [req.params.userId] }
         })
         return res.status(200).json(allConv);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+router.get("/one/:convId", async (req, res) => {
+    try {
+        const oneConv = await Conv.findById(req.params.convId)
+        return res.status(200).json(oneConv);
     } catch (err) {
         return res.status(500).json(err);
     }

@@ -4,11 +4,13 @@ import axios from 'axios';
 import { format } from 'timeago.js';
 // import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import Close from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import { useUserStore } from '../zustand';
 
 
-const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) => {
+const Conversation = ({ socket, onlineUsers, setOpenChat }) => {
+    const currUser = useUserStore(s => s.user);
     const [messages, setMessages] = useState(null);
     const [friend, setFriend] = useState(null);
     const [newMsg, setNewMsg] = useState("");
@@ -16,15 +18,16 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
     const [sending, setSending] = useState(false);
     const [arrivalMsg, setArrivalMsg] = useState(null);
     const [online, setOnline] = useState(false);
-
+    const [currChat, setCurrChat] = useState({});
+    let { convid } = useParams();
     const scrollRef = useRef();
-
+    const navigate = useNavigate();
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages])
 
     useEffect(() => {
-        socket.on("getMsg", data => {
+        socket?.on("getMsg", data => {
             setArrivalMsg({
                 _id: Date.now(),
                 sender: data.senderId,
@@ -33,38 +36,50 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
                 createdAt: Date.now(),
             })
         })
+        try {
+            const fetchConv = async () => {
+                const resC = await axios.get(`/conv/one/${convid}`);
+                // console.log(resC.data);
+                setCurrChat(resC.data);
+            }
+            fetchConv();
+        } catch (err) {
+            console.log(err)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
-        arrivalMsg && currChat?.members.includes(arrivalMsg.sender) &&
+        arrivalMsg && currChat?.members?.includes(arrivalMsg.sender) &&
             setMessages(prev => [...prev, arrivalMsg]);
     }, [arrivalMsg, currChat])
 
     useEffect(() => {
-        const friendId = currChat.members.find(m => m !== currUser._id)
-        setOnline(onlineUsers.includes(friendId));
+        const friendId = currChat?.members?.find(m => m !== currUser?._id)
+        setOnline(onlineUsers?.includes(friendId));
         try {
             const getFriend = async () => {
                 const res = await axios.get(`/users/${friendId}`);
                 setFriend(res.data);
             }
-            getFriend();
+            if (friendId !== undefined)
+                getFriend();
         } catch (err) {
             console.log(err)
         }
-    }, [currChat, currUser, onlineUsers])
+    }, [currChat.members, currUser?._id, onlineUsers])
     useEffect(() => {
         try {
             const getMsgs = async () => {
-                const res = await axios.get(`/msg/${currChat._id}`);
+                const res = await axios.get(`/msg/${currChat?._id}`);
                 setMessages(res.data);
             }
-            getMsgs();
+            if (currChat._id !== undefined)
+                getMsgs();
         } catch (err) {
             console.log(err)
         }
-    }, [currChat])
+    }, [currChat._id])
 
     const base64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -90,14 +105,14 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
 
                 setSending(true);
                 const res = await axios.post(`/msg`, {
-                    sender: currUser._id,
-                    convId: currChat._id,
+                    sender: currUser?._id,
+                    convId: currChat?._id,
                     text: newMsg,
                     image: newImg
                 })
                 socket.emit("sendMsg", {
-                    senderId: currUser._id,
-                    receiverId: friend._id,
+                    senderId: currUser?._id,
+                    receiverId: friend?._id,
                     text: newMsg,
                     image: newImg,
                 })
@@ -137,7 +152,7 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
                             alt="" />
                     </div>
                     <div className="max-w-[70%] min-w-[60%] md:min-w-[30%]  w-min">
-                        <div onClick={handleClick} className={`${!own ? "bg-gray-300" : "bg-sky-300"} p-2 rounded-md shadow-lg flex flex-col items-end`}>
+                        <div onClick={handleClick} className={`${!own ? "bg-gray-300" : "bg-sky-300"} p-2 rounded-md shadow-lg flex flex-col items-end  overflow-auto`}>
                             <span className='w-full'>
                                 {m.text}
                             </span>
@@ -174,32 +189,32 @@ const Conversation = ({ currChat, currUser, socket, onlineUsers, setCurrChat }) 
                 </Link>
                 <div className="flex items-center mx-4 my-1 cursor-pointer gap-1">
                     {/* <MoreHoriz /> */}
-                    <CloseIcon onClick={() => setCurrChat(null)} />
+                    <CloseIcon onClick={() => navigate('/messenger')} />
                 </div>
             </div>
             <hr className='border-b-1 border-slate-500' />
             <div className="h-[calc(100%-130px)] p-2 ">
                 {
                     !messages &&
-                    <div className='w-full h-full flex justify-center items-center'>
-                        <span>
+                    <div className='w-full flex justify-center items-center '>
+                        <span className='font-bold'>
                             Loading...
                         </span>
                     </div>
                 }
                 {
                     messages?.length === 0 &&
-                    <div className='w-full h-full flex justify-center items-center'>
+                    <div className='w-full flex justify-center items-center overflow-hidden '>
                         <span>
-                            {`Say Hello to ${friend?.username}`} 
+                            {`Say Hello to ${friend?.username}`}
                         </span>
                     </div>
                 }
                 <div className="flex flex-col overflow-y-scroll h-full ">
                     {
                         messages?.map(m => (
-                            <div key={m._id} ref={scrollRef} className="">
-                                <Msg m={m} own={m.sender === currUser._id} />
+                            <div key={m?._id} ref={scrollRef} className="">
+                                <Msg m={m} own={m.sender === currUser?._id} />
                             </div>
                         ))
                     }
