@@ -34,11 +34,11 @@ const Register = () => {
       } else {
         console.log(res.data.msg)
       }
-      setLoading(false);
     }
     catch (err) {
       console.log(err);
     }
+    setLoading(false);
   }
 
   const FirstSignup = () => {

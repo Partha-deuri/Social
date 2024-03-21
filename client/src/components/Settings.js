@@ -16,10 +16,8 @@ const Settings = ({ socket }) => {
     const handleLogout = async () => {
         try {
             await socket.emit("logout", user._id);
+            setUser(null);
             navigate('/login');
-            setTimeout(() => {
-                setUser(null);
-            }, 1)
         } catch (err) {
             console.log(err);
         }
@@ -59,7 +57,9 @@ const Settings = ({ socket }) => {
                         <span>Messenger</span>
                     </Link>
                     <div className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer
-                    flex gap-2 hover:text-white items-center">
+                    flex gap-2 hover:text-white items-center"
+                        onClick={() => navigate('/change-password')}
+                    >
                         <PasswordIcon />
                         <span>Change Password</span>
                     </div>

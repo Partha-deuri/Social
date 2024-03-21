@@ -23,7 +23,7 @@ const Share = ({ setPosts, posts }) => {
                 setSharing(true);
                 const formData = new FormData();
                 formData.append("userId", currUser._id);
-                formData.append("image", postImg);
+                formData.append("image", postImg); 
 
                 const res = await axios.post(`/posts`, {
                     userId: currUser?._id,

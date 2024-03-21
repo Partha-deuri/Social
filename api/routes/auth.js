@@ -80,6 +80,47 @@ router.get('/email/:email', async (req, res) => {
         res.status(500).json(err);
     }
 })
+// forgot password
+router.get('/forgot/:email', async (req, res) => {
+    try {
+        const oldUser = await User.findOne({ email: req.params.email });
+        if (oldUser) {
+            let otp = 0;
+            while (otp < 100000) otp = Math.floor((Math.random() * 1000000) + 1);
+            const newOTP = new OTP({
+                email: req.params.email,
+                otp,
+            })
+            const savedOtp = await newOTP.save();
+            sendMail({
+                userEmail: req.params.email,
+                code: otp,
+            })
+            console.log(savedOtp);
+            return res.status(200).json({ msg: "all ok", otpId: savedOtp._id });
+        } else {
+            return res.status(200).json({ msg: "email doesn't exist" });
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+})
+
+// forgot password reset 
+router.put('/change/:email', async (req, res) => {
+    try {
+        if (req.body.password) {
+            const salt = await bcrypt.genSalt(10);
+            req.body.password = await bcrypt.hash(req.body.password, salt);
+            const currUser = await User.findOneAndUpdate({email:req.params.email}, { $set: req.body });
+            const { password, updatedAt, ...rest } = currUser._doc;
+            return res.status(200).json("password updated");
+        }
+        return res.status(200).json("no password field");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+})
 
 
 // verify otp

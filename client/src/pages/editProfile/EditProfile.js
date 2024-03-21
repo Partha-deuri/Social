@@ -6,7 +6,9 @@ import VerifyPassword from '../../components/VerifyPassword';
 const EditProfile = () => {
   const user = useUserStore(s => s.user);
   const [dp, setDp] = useState("");
+  const [dpPreview, setDpPreview] = useState("");
   const [cover, setCover] = useState("");
+  const [coverPreview, setCoverPreview] = useState("");
   const newUser = user;
   const [newUserCopy, setNewUserCopy] = useState();
   const [save, setSave] = useState(false);
@@ -25,21 +27,23 @@ const EditProfile = () => {
     })
   }
   const handleDPChange = async (e) => {
-    if (e.target.files) {
+    if (e.target.files[0]) {
       const cnvImg = await base64(e.target.files[0]);
-      setDp(cnvImg);
+      setDpPreview(cnvImg);
+      setDp(e.target.files[0]);
     }
   }
   const handleCoverChange = async (e) => {
-    if (e.target.files) {
+    if (e.target.files[0]) {
       const cnvImg = await base64(e.target.files[0]);
-      setCover(cnvImg);
+      setCoverPreview(cnvImg);
+      setCover(e.target.files[0]);
     }
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    newUser.profilePic = dp || user.profilePic;
-    newUser.coverPic = cover || user.coverPic;
+    newUser.profilePic = dp;
+    newUser.coverPic = cover;
     setNewUserCopy(newUser);
     setSave(true);
   }
@@ -248,7 +252,7 @@ const EditProfile = () => {
                     >
                       <img
                         className='rounded-full object-cover h-56 aspect-square pt-1'
-                        src={dp || user.profilePic} alt="Add_image"
+                        src={dpPreview || user.profilePic} alt="Add_image"
                       />
                       <input
                         className='hidden'
@@ -269,7 +273,7 @@ const EditProfile = () => {
                     <label className="p-1 rounded shadow-2xl bg-yellow-400 flex flex-col items-center cursor-pointer">
                       <img
                         className=' object-contain h-56 aspect-auto rounded '
-                        src={cover || user.coverPic} alt="Add_image"
+                        src={coverPreview || user.coverPic} alt="Add_image"
                       />
                       <input
                         className='hidden'

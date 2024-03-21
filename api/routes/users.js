@@ -4,6 +4,56 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const bcrypt = require("bcrypt");
 
+
+const dotenv = require('dotenv');
+dotenv.config();
+
+const multer = require("multer");
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+
+const BUCKET_NAME = process.env.BUCKET_NAME;
+const BUCKET_REGION = process.env.BUCKET_REGION;
+const ACCESS_KEY = process.env.ACCESS_KEY;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+    credentials: {
+        accessKeyId: ACCESS_KEY,
+        secretAccessKey: SECRET_ACCESS_KEY,
+    },
+    region: BUCKET_REGION,
+})
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+router.put("/:id/upload", upload.single("image"), async (req, res) => {
+    try {
+        console.log(req.body);
+        console.log(req.file);
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: `social-web-app/public/users/${req.params.id}-${req.body.type}`,
+            Body: req.file.buffer,
+            ContentType: req.file.mimetype,
+        }
+        const command = new PutObjectCommand(params);
+
+        const updatedUser = await User.findByIdAndUpdate(req.params.id,
+            {
+                profilePic: `${req.params.id}-profile`,
+                cover: `${req.params.id}-cover`,
+            }
+        )
+        console.log(updatedUser);
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+
+
 // search a user
 router.get("/search", async (req, res) => {
     try {
@@ -11,13 +61,14 @@ router.get("/search", async (req, res) => {
         const re = `.*(${q}).*`
         const userList = await User.find({ username: { $regex: re } }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
         const userList2 = await User.find({ fullname: { $regex: re } }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
-        const userList3 = userList2.filter(i => userList.includes(i)) 
+        const userList3 = userList2.filter(i => userList.includes(i))
         if (!userList && !userList2) return res.status(404).json("no result found");
         return res.status(200).json(userList.concat(userList3));
     } catch (err) {
         res.status(500).json(err);
     }
 })
+
 
 // update user
 router.put('/:id', async (req, res) => {

@@ -3,44 +3,26 @@ import { useUserStore } from '../zustand'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-const VerifyPassword = ({ newUser, setSave }) => {
+const ChangePassword = () => {
     const user = useUserStore(s => s.user)
-    const setUser = useUserStore(s => s.setUser)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [currPswd, setCurrPswd] = useState(null);
+    const [newPswd, setNewPswd] = useState(null);
+    const [cnfPswd, setCnfPswd] = useState(null);
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post('/auth/verify', { userId: user._id, password: e.target[0].value })
-            if (res.status === 200) {
-                const dpData = new FormData();
-                dpData.append("image", newUser.profilePic);
-                dpData.append("userId", user._id);
-                dpData.append("type", "profile");
-                const coverData = new FormData();
-                coverData.append("image", newUser.coverPic);
-                coverData.append("userId", user._id);
-                coverData.append("type", "cover");
-                if (user.profilePic !== newUser.profilePic) {
-                    const { profilePic, ...rest } = newUser;
-                    await axios.put(`/users/${user._id}/upload`, dpData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                    });
-                    newUser = rest;
+            if (newPswd === cnfPswd) {
+                const res = await axios.post('/auth/verify', { userId: user._id, password: currPswd })
+                if (res.status === 200) {
+                    const res2 = axios.put(`auth/change/${user.email}`, { password: newPswd })
+                    console.log(res2.data);
+                    navigate('/');
+                } else {
+                    console.log(res.data)
                 }
-                if (user.coverPic !== newUser.coverPic) {
-                    const { coverPic, ...rest } = newUser;
-                    await axios.put(`/users/${user._id}/upload`, coverData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                    });
-                    newUser = rest;
-                }
-                const res2 = await axios.put(`/users/${user._id}`, newUser)
-                setUser(res2.data);
-                navigate(`/profile/${user._id}`);
-            } else {
-                console.log(res.data)
             }
         } catch (err) {
             console.log(err)
@@ -54,21 +36,34 @@ const VerifyPassword = ({ newUser, setSave }) => {
                     onSubmit={handleSubmit}
                     className="bg-violet-400 p-4 rounded-xl md:w-[30%] h-[50%] flex flex-col justify-between shadow-xl border relative z-40">
                     <div
-                        onClick={() => setSave(false)}
                         className='absolute font-bold bg-red text-white rounded-full bg-red-500 h-8 w-8 flex justify-center items-center aspect-square -top-4 -right-4 cursor-pointer border border-black'>
                         X
                     </div>
                     <div className="font-bold text-center mb-4 p-2 rounded bg-violet-600 text-white">
-                        <span>Verify User</span>
+                        <span>Cahange Password</span>
                     </div>
                     <div className="">
-                        <span className='text-sm'>Please verify yourself before saving changes</span>
+                        <span className='text-sm'></span>
                         <input
                             className='rounded px-2 py-1 my-2 w-full'
-                            placeholder='Password'
+                            placeholder='Current Password'
                             type="password"
-                            name="" id=""
                             required
+                            onChange={(e) => setCurrPswd(e.target.value)}
+                        />
+                        <input
+                            className='rounded px-2 py-1 my-2 w-full'
+                            placeholder='New Password'
+                            type="password"
+                            required
+                            onChange={(e) => setNewPswd(e.target.value)}
+                        />
+                        <input
+                            className='rounded px-2 py-1 my-2 w-full'
+                            placeholder='Confirm New Password'
+                            type="password"
+                            required
+                            onChange={(e) => setCnfPswd(e.target.value)}
                         />
                     </div>
                     <button
@@ -82,4 +77,4 @@ const VerifyPassword = ({ newUser, setSave }) => {
     )
 }
 
-export default VerifyPassword
+export default ChangePassword

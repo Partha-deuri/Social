@@ -14,6 +14,7 @@ import EditProfile from "./pages/editProfile/EditProfile";
 import Conversation from "./components/Conversation";
 import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
+import ChangePassword from "./components/ChangePassword";
 
 
 function App() {
@@ -48,6 +49,10 @@ function App() {
     {
       path: '/forgot-password',
       element: user ? <Redirect to={'/'} /> : <ForgotPassword />
+    },
+    {
+      path: '/change-password',
+      element: user ? <ChangePassword /> : <Redirect to={'/'} />
     },
     {
       path: '/messenger',
