@@ -10,7 +10,6 @@ const Feed = ({ profile }) => {
     const user = useUserStore((state) => state.user);
     let { uid } = useParams();
     const [posts, setPosts] = useState([]);
-    const [changeDelete, setChangeDlt] = useState(false);
     useEffect(() => {
         const fetchF = async () => {
             try {
@@ -23,7 +22,7 @@ const Feed = ({ profile }) => {
             }
         }
         fetchF();
-    }, [profile, uid, user, changeDelete])
+    }, [profile, uid, user])
     return (
         <div className={`${profile ? "" : "lg:w-3/5"} w-full p-2 overflow-y-scroll`}>
             <div className="">
@@ -33,7 +32,7 @@ const Feed = ({ profile }) => {
                 }
                 <div className="">
                     {
-                        posts.map(p => <Post key={p._id} post={p} setChangeDlt={setChangeDlt}/>)
+                        posts.map(p => <Post key={p._id} post={p} setPosts={setPosts}/>)
                     }
                 </div>
 

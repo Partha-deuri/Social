@@ -8,7 +8,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const multer = require("multer");
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 const BUCKET_NAME = process.env.BUCKET_NAME;
 const BUCKET_REGION = process.env.BUCKET_REGION;
@@ -41,7 +41,7 @@ router.put("/:id/upload", upload.single('image'), async (req, res) => {
     try {
         const params = {
             Bucket: BUCKET_NAME,
-            Key: `social-web-app/public/${req.params.id}-image`,
+            Key: `social-web-app/public/posts/${req.params.id}-image`,
             Body: req.file.buffer,
             ContentType: req.file.mimetype,
         }
@@ -50,7 +50,7 @@ router.put("/:id/upload", upload.single('image'), async (req, res) => {
 
         if (currPost.userId === req.body.userId) {
             await s3.send(command);
-            await currPost.updateOne({ image: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/posts/${req.params.id}-image` })
+            await currPost.updateOne({ image: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/public/posts/${req.params.id}-image` })
 
             const updatedPost = await Post.findById(req.params.id);
             return res.status(200).json(updatedPost);
@@ -83,6 +83,15 @@ router.put("/:id/delete", async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
         if (currPost.userId === req.body.userId) {
+            if (currPost.image && currPost.image !== "") {
+                const params = {
+                    Bucket: BUCKET_NAME,
+                    Key: `social-web-app/public/posts/${currPost._id}-image`
+                }
+                const command = new DeleteObjectCommand(params);
+                await s3.send(command);
+            }
+            
             await Comment.deleteMany({ postId: currPost._id });
             await currPost.deleteOne();
             return res.status(200).json("The  post has been deleted");

@@ -13,7 +13,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import ReportIcon from '@mui/icons-material/Report';
 
-const Post = ({ post, setChangeDlt, cmntL }) => {
+const Post = ({ post, setPosts, cmntL }) => {
     const user = useUserStore(state => state.user);
     const [postOwner, setPostOwner] = useState({});
     const [likes, setLikes] = useState(post?.likes?.length);
@@ -47,8 +47,8 @@ const Post = ({ post, setChangeDlt, cmntL }) => {
                 setDeleting(true);
                 await axios.put(`/posts/${post._id}/delete`, { userId: user._id })
                 setDeleting(false);
-                if (setChangeDlt) {
-                    setChangeDlt(prev => !prev);
+                if (setPosts) {
+                    setPosts(p => p.filter(u=> u._id!==post._id));
                 } else {
                     navigate('/')
                 }
