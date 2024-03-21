@@ -26,7 +26,6 @@ const Messenger = () => {
     }, [convid])
     useEffect(() => {
         socket.current = io(process.env.REACT_APP_SOCKET_URL);
-        // socket.current = io("ws://localhost:8900");
         const fetchUser = async () => {
             const res = await axios.get(`/users/${user._id}`);
             setUser(res.data);
@@ -73,7 +72,7 @@ const Messenger = () => {
                 senderId: user._id,
                 receiverId: fid
             })
-            navigate(`/messenger/${res.data._id}`);
+            navigate(`/messenger/${res?.data?._id}`);
             // setCurrChat(res.data[0]);
         } catch (err) {
             console.log(err);

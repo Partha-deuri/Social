@@ -20,7 +20,7 @@ import ChangePassword from "./components/ChangePassword";
 function App() {
   const socket = useRef()
   useEffect(() => {
-    socket.current = io("ws://localhost:8900");
+    socket.current = io(process.env.REACT_APP_SOCKET_URL);
   }, [])
 
   axios.defaults.baseURL = process.env.REACT_APP_API_URL

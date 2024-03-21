@@ -156,7 +156,7 @@ const Conversation = ({ socket, onlineUsers }) => {
                             <span className='w-full'>
                                 {m.text}
                             </span>
-                            <div className="w-[100%]">
+                            <div className="w-[80%]">
                                 <img
                                     className=' object-contain  rounded-lg'
                                     src={m?.image} alt="" />
