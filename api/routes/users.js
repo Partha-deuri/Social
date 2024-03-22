@@ -33,8 +33,8 @@ router.get("/search", async (req, res) => {
     try {
         const q = req.query.q;
         const re = `.*(${q}).*`
-        const userList = await User.find({ username: { $regex: re } }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
-        const userList2 = await User.find({ fullname: { $regex: re } }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
+        const userList = await User.find({ username: { $regex: re, $options: 'i' } }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
+        const userList2 = await User.find({ fullname: { $regex: re, $options: 'i' } }, { _id: 1, username: 1, fullname: 1, profilePic: 1 })
         const userList3 = userList2.filter(i => userList.includes(i))
         if (!userList && !userList2) return res.status(404).json("no result found");
         return res.status(200).json(userList.concat(userList3));
