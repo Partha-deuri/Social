@@ -14,9 +14,9 @@ const Messenger = ({ socket }) => {
     const [onlineFriends, setOnlineFriends] = useState([]);
     const [friendList, setFriendList] = useState([]);
     const [openChat, setOpenChat] = useState(false);
-    // const socket = useRef();
     const navigate = useNavigate();
     let { convid } = useParams();
+    const [newMsgList, setNewMsgList] = useState([]);
     useEffect(() => {
         if (convid) {
             setOpenChat(true);
@@ -52,10 +52,12 @@ const Messenger = ({ socket }) => {
             // console.log("user",users);
         });
         socket.current?.on("getMsg", data => {
-            console.log(data);
+            !newMsgList.includes(data.senderId) &&
+                setNewMsgList(prev => [...prev, data.senderId]);
         })
-    }, [socket, user._id, user.followings])
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket, user._id])
+    console.log(newMsgList);
     useEffect(() => {
         try {
             const fetchConv = async () => {
@@ -124,10 +126,17 @@ const Messenger = ({ socket }) => {
                             {
                                 allConv.length !== 0 &&
                                 allConv.map(c => (
-                                    <div className="" key={c._id} onClick={() => navigate(`/messenger/${c._id}`)}>
+                                    <div
+                                        className="" key={c._id}
+                                        onClick={() => {
+                                            navigate(`/messenger/${c._id}`)
+                                        }}
+                                    >
                                         <MsgLeftListItem
                                             c={c}
                                             currUser={user}
+                                            newMsgList={newMsgList}
+                                            setNewMsgList={setNewMsgList}
                                         />
                                     </div>
                                 ))
