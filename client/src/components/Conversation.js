@@ -7,12 +7,12 @@ import Close from '@mui/icons-material/Close';
 import { Link, useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUserStore } from '../zustand';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 
 
 const Conversation = () => {
     const currUser = useUserStore(s => s.user);
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(null);
     const [friend, setFriend] = useState(null);
     // const [onlineUsers, setOnlineUsers] = useState([]);
     const [newMsg, setNewMsg] = useState("");
@@ -69,7 +69,7 @@ const Conversation = () => {
     useEffect(() => {
         const friendId = currChat?.members?.find(m => m !== currUser?._id)
         // setOnline(onlineUsers?.some(u => u.userId === friendId));
-        socket.current.on("getAllUsers", users => {
+        socket.current?.on("getAllUsers", users => {
             setOnline(users.some(u => u.userId === friendId));
             // setOnlineUsers(users);
         })
@@ -132,7 +132,10 @@ const Conversation = () => {
                     text: newMsg,
                     image: newImg,
                 })
-                setMessages([...messages, res.data])
+                if (messages)
+                    setMessages([...messages, res.data]);
+                else
+                    setMessages([res.data]);
                 document.getElementById("msg-inp-text").value = "";
                 document.getElementById("msg-inp-img").value = null;
                 setNewImg("");
@@ -213,7 +216,7 @@ const Conversation = () => {
                 {
                     !messages &&
                     <div className='w-full flex justify-center items-center '>
-                        <span className='font-bold'>
+                        <span className='font-semibold text-gray-400'>
                             Loading...
                         </span>
                     </div>
@@ -221,8 +224,8 @@ const Conversation = () => {
                 {
                     messages?.length === 0 &&
                     <div className='w-full flex justify-center items-center overflow-hidden '>
-                        <span>
-                            {`Say Hello to ${friend?.username}`}
+                        <span className='font-semibold text-gray-400'>
+                            {!friend ? "Loading..." : `Say Hello to ${friend?.username}`}
                         </span>
                     </div>
                 }

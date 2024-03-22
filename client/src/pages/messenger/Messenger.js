@@ -4,7 +4,7 @@ import { useUserStore } from '../../zustand'
 import axios from 'axios'
 import MsgLeftListItem from '../../components/MsgLeftListItem'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
-import { io } from 'socket.io-client'
+// import { io } from 'socket.io-client'
 
 const Messenger = ({ socket }) => {
     const setUser = useUserStore(s => s.setUser);

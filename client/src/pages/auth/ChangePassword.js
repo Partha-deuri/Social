@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useUserStore } from '../zustand'
+import { useUserStore } from '../../zustand'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 

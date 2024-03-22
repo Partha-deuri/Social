@@ -12,9 +12,10 @@ import { useUserStore } from "./zustand";
 import Redirect from "./components/Redirect";
 import EditProfile from "./pages/editProfile/EditProfile";
 import Conversation from "./components/Conversation";
-import { useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-import ChangePassword from "./components/ChangePassword";
+import ChangePassword from "./pages/auth/ChangePassword";
+import SearchPage from "./components/SearchPage";
 
 
 function App() {
@@ -53,6 +54,10 @@ function App() {
     {
       path: '/change-password',
       element: user ? <ChangePassword /> : <Redirect to={'/'} />
+    },
+    {
+      path: '/search/users/',
+      element: user ? <SearchPage /> : <Redirect to={'/'} />
     },
     {
       path: '/messenger',

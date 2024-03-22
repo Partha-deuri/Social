@@ -3,7 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import MessageIcon from '@mui/icons-material/Message';
 // import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUserStore } from '../zustand';
 import Settings from './Settings';
 import CloseIcon from '@mui/icons-material/Close';
@@ -15,10 +15,9 @@ import { io } from 'socket.io-client';
 const TopBar = () => {
   const user = useUserStore(s => s.user);
   const [settings, setSettings] = useState(false);
-  const [search, setSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [searchList, setSearchList] = useState([]);
   const socket = useRef();
+  const navigate = useNavigate();
   useEffect(() => {
     socket.current = io(process.env.REACT_APP_SOCKET_URL);
   }, [])
@@ -27,9 +26,8 @@ const TopBar = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.get(`/users/search?q=${searchText}`)
-      setSearchList(res.data);
-      setSearch(true);
+
+      navigate(`/search/users/?q=${searchText}`);
       // setSearchText("");
       // document.getElementById("search-inp").value = "";
     } catch (err) {
@@ -39,11 +37,6 @@ const TopBar = () => {
   }
   return (
     <div className='sticky top-0 bg-violet-700 flex items-center z-10 justify-between h-14'>
-      <div className="relative">
-        {
-          search && <SearchPage list={searchList} user={user} />
-        }
-      </div>
       {/* left */}
       <div className="p-3  w-1/4 ">
         <Link to={'/'}>
