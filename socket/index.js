@@ -13,9 +13,9 @@ let users = []
 
 const addUser = (userId, socketId) => {
     users = users.filter(user => user.userId !== userId)
-    // !users.some(user => user.userId === userId) &&
-    users.push({ userId, socketId })
-    console.log("user connected");
+    !users.some(user => user.userId === userId) &&
+        users.push({ userId, socketId }) &&
+        console.log(`user connected ${userId}  ${socketId}`);
 }
 const removeUser = (socketId) => {
     users = users.filter(user => user.socketId !== socketId)
@@ -35,10 +35,9 @@ io.on("connection", (socket) => {
         addUser(userId, socket.id);
         io.emit("getAllUsers", users);
     });
-
+    
     // send and get message
     socket.on("sendMsg", ({ senderId, receiverId, text, image }) => {
-
         const user = getUser(receiverId);
         if (user) {
             io.to(user.socketId).emit("getMsg", {
@@ -47,6 +46,11 @@ io.on("connection", (socket) => {
                 image,
             })
         }
+        io.emit("getAllUsers", users);
+    })
+    
+    socket.on("sendUsers", () => {
+        io.emit("getAllUsers", users);
     })
 
     socket.on("logout", (userId) => {
@@ -58,7 +62,7 @@ io.on("connection", (socket) => {
     // when disconnect
     socket.on("disconnect", () => {
         removeUser(socket.id);
-        console.log("a user disconnected");
+        console.log(`a user disconnected ${socket.id}`);
         io.emit("getAllUsers", users);
     })
     // io.to(si).emit("welcome","hello this  is socket server");

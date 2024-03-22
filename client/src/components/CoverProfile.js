@@ -39,11 +39,11 @@ const CoverProfile = ({ currProfile }) => {
     }
     const handleMsg = async () => {
         try {
-            await axios.post(`/conv`, {
+            const res = await axios.post(`/conv`, {
                 senderId: user._id,
                 receiverId: currProfile._id
             })
-            navigate('/messenger')
+            navigate(`/messenger/${res.data[0]._id}`);            
         } catch (err) {
             console.log(err)
         }

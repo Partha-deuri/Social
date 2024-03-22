@@ -12,23 +12,23 @@ import { useUserStore } from "./zustand";
 import Redirect from "./components/Redirect";
 import EditProfile from "./pages/editProfile/EditProfile";
 import Conversation from "./components/Conversation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef} from "react";
 import { io } from "socket.io-client";
 import ChangePassword from "./components/ChangePassword";
 
 
 function App() {
-  const socket = useRef()
-  useEffect(() => {
-    socket.current = io(process.env.REACT_APP_SOCKET_URL);
-  }, [])
-
   axios.defaults.baseURL = process.env.REACT_APP_API_URL
   const user = useUserStore(s => s.user);
+  const socket = useRef();
+  useEffect(() => {
+    socket.current = io(process.env.REACT_APP_SOCKET_URL);
+  }, [user])
+
   const pages = createBrowserRouter([
     {
       path: '/',
-      element: user ? <Home /> : <Redirect to={'/login'} />
+      element: user ? <Home socket={socket} /> : <Redirect to={'/login'} />
     },
     {
       path: '/profile/:uid',
@@ -56,7 +56,7 @@ function App() {
     },
     {
       path: '/messenger',
-      element: user ? <Messenger /> : <Redirect to={'/login'} />,
+      element: user ? <Messenger socket={socket} /> : <Redirect to={'/login'} />,
       children: [
         {
           path: '',
@@ -71,7 +71,7 @@ function App() {
         },
         {
           path: ':convid',
-          element: user ? <Conversation socket={socket.current} /> : <Redirect to={'/login'} />,
+          element: user ? <Conversation /> : <Redirect to={'/login'} />,
         }]
     },
     {

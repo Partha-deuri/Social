@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TopBar from '../../components/TopBar'
 import { useUserStore } from '../../zustand'
 import axios from 'axios'
 import MsgLeftListItem from '../../components/MsgLeftListItem'
-import { io } from "socket.io-client";
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
+import { io } from 'socket.io-client'
 
-const Messenger = () => {
+const Messenger = ({ socket }) => {
     const setUser = useUserStore(s => s.setUser);
     const user = useUserStore(s => s.user);
     const [allConv, setAllConv] = useState([]);
@@ -14,7 +14,7 @@ const Messenger = () => {
     const [onlineFriends, setOnlineFriends] = useState([]);
     const [friendList, setFriendList] = useState([]);
     const [openChat, setOpenChat] = useState(false);
-    const socket = useRef();
+    // const socket = useRef();
     const navigate = useNavigate();
     let { convid } = useParams();
     useEffect(() => {
@@ -25,7 +25,8 @@ const Messenger = () => {
         }
     }, [convid])
     useEffect(() => {
-        socket.current = io(process.env.REACT_APP_SOCKET_URL);
+        // socket.current = io(process.env.REACT_APP_SOCKET_URL);
+        socket.current?.emit("addUser", user._id);
         const fetchUser = async () => {
             const res = await axios.get(`/users/${user._id}`);
             setUser(res.data);
@@ -43,13 +44,17 @@ const Messenger = () => {
         } catch (err) {
             console.log(err)
         }
-        socket.current.emit("addUser", user._id);
-        socket.current.on("getAllUsers", users => {
+        socket.current?.emit("sendUsers");
+        socket.current?.on("getAllUsers", users => {
             setOnlineUsers(
                 user.followings.filter(f => users.some(u => u.userId === f))
             );
+            // console.log("user",users);
         });
-    }, [user])
+        socket.current?.on("getMsg", data => {
+            console.log(data);
+        })
+    }, [socket, user._id, user.followings])
 
     useEffect(() => {
         try {
@@ -72,7 +77,7 @@ const Messenger = () => {
                 senderId: user._id,
                 receiverId: fid
             })
-            navigate(`/messenger/${res?.data?._id}`);
+            navigate(`/messenger/${res.data[0]._id}`);
             // setCurrChat(res.data[0]);
         } catch (err) {
             console.log(err);
@@ -123,7 +128,6 @@ const Messenger = () => {
                                         <MsgLeftListItem
                                             c={c}
                                             currUser={user}
-                                            socket={socket.current}
                                         />
                                     </div>
                                 ))
@@ -132,7 +136,7 @@ const Messenger = () => {
                     </div>
                 </div>
                 <div className={`${openChat ? "block" : "hidden"} md:block md:w-4/5 w-full p-2`}>
-                    <Outlet />
+                    <Outlet context={[socket]} />
                 </div>
             </div>
         </div>

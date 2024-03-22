@@ -4,30 +4,42 @@ import axios from 'axios';
 import { format } from 'timeago.js';
 // import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import Close from '@mui/icons-material/Close';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUserStore } from '../zustand';
+import { io } from 'socket.io-client';
 
 
-const Conversation = ({ socket, onlineUsers }) => {
+const Conversation = () => {
     const currUser = useUserStore(s => s.user);
-    const [messages, setMessages] = useState(null);
+    const [messages, setMessages] = useState([]);
     const [friend, setFriend] = useState(null);
+    // const [onlineUsers, setOnlineUsers] = useState([]);
     const [newMsg, setNewMsg] = useState("");
     const [newImg, setNewImg] = useState("");
     const [sending, setSending] = useState(false);
-    const [arrivalMsg, setArrivalMsg] = useState(null);
+    const [arrivalMsg, setArrivalMsg] = useState([]);
     const [online, setOnline] = useState(false);
     const [currChat, setCurrChat] = useState({});
     let { convid } = useParams();
     const scrollRef = useRef();
     const navigate = useNavigate();
+    // const socket = useRef();
+    const [socket] = useOutletContext();
+
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages])
 
     useEffect(() => {
-        socket?.on("getMsg", data => {
+        // socket.current = io(process.env.REACT_APP_SOCKET_URL);
+    }, [])
+    useEffect(() => {
+        socket.current?.emit("addUser", currUser._id);
+    }, [currUser._id, socket])
+
+    useEffect(() => {
+        socket.current?.on("getMsg", data => {
             setArrivalMsg({
                 _id: Date.now(),
                 sender: data.senderId,
@@ -56,7 +68,11 @@ const Conversation = ({ socket, onlineUsers }) => {
 
     useEffect(() => {
         const friendId = currChat?.members?.find(m => m !== currUser?._id)
-        setOnline(onlineUsers?.includes(friendId));
+        // setOnline(onlineUsers?.some(u => u.userId === friendId));
+        socket.current.on("getAllUsers", users => {
+            setOnline(users.some(u => u.userId === friendId));
+            // setOnlineUsers(users);
+        })
         try {
             const getFriend = async () => {
                 const res = await axios.get(`/users/${friendId}`);
@@ -67,11 +83,11 @@ const Conversation = ({ socket, onlineUsers }) => {
         } catch (err) {
             console.log(err)
         }
-    }, [currChat.members, currUser?._id, onlineUsers])
+    }, [currChat?.members, currUser?._id, socket])
     useEffect(() => {
         try {
             const getMsgs = async () => {
-                const res = await axios.get(`/msg/${currChat?._id}`);
+                const res = await axios.get(`/msg/${currChat._id}`);
                 setMessages(res.data);
             }
             if (currChat._id !== undefined)
@@ -110,9 +126,9 @@ const Conversation = ({ socket, onlineUsers }) => {
                     text: newMsg,
                     image: newImg
                 })
-                socket.emit("sendMsg", {
-                    senderId: currUser?._id,
-                    receiverId: friend?._id,
+                socket.current?.emit("sendMsg", {
+                    senderId: currUser._id,
+                    receiverId: friend._id,
                     text: newMsg,
                     image: newImg,
                 })
@@ -156,7 +172,7 @@ const Conversation = ({ socket, onlineUsers }) => {
                             <span className='w-full'>
                                 {m.text}
                             </span>
-                            <div className="w-[80%]">
+                            <div className="w-[100%]">
                                 <img
                                     className=' object-contain  rounded-lg'
                                     src={m?.image} alt="" />
@@ -189,7 +205,7 @@ const Conversation = ({ socket, onlineUsers }) => {
                 </Link>
                 <div className="flex items-center mx-4 my-1 cursor-pointer gap-1">
                     {/* <MoreHoriz /> */}
-                    <CloseIcon onClick={() => navigate('/messenger')} />
+                    <CloseIcon onClick={() => navigate('../')} />
                 </div>
             </div>
             <hr className='border-b-1 border-slate-500' />
