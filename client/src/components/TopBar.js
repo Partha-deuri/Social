@@ -7,9 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUserStore } from '../zustand';
 import Settings from './Settings';
 import CloseIcon from '@mui/icons-material/Close';
-import SearchPage from './SearchPage';
 import MenuIcon from '@mui/icons-material/Menu';
-import axios from 'axios';
 import { io } from 'socket.io-client';
 
 const TopBar = () => {
