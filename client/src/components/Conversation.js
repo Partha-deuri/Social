@@ -48,6 +48,9 @@ const Conversation = () => {
                 createdAt: Date.now(),
             })
         })
+    }, [socket])
+    useEffect(() => {
+
         try {
             const fetchConv = async () => {
                 const resC = await axios.get(`/conv/one/${convid}`);
@@ -58,8 +61,7 @@ const Conversation = () => {
         } catch (err) {
             console.log(err)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [convid])
 
     useEffect(() => {
         arrivalMsg && currChat?.members?.includes(arrivalMsg.sender) &&
