@@ -144,7 +144,7 @@ const Messenger = ({ socket }) => {
                         </div>
                     </div>
                 </div>
-                <div className={`${openChat ? "block" : "hidden"} md:block md:w-4/5 w-full p-2 h-[95%] sm:h-full`}>
+                <div className={`${openChat ? "block" : "hidden"} md:block md:w-4/5 w-full p-2 h-full`}>
                     <Outlet context={[socket]} />
                 </div>
             </div>

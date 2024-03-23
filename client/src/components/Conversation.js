@@ -191,7 +191,7 @@ const Conversation = () => {
     }
     // const [activeIp, setActiveInp] = useState(false);
     return (
-        <div className={` h:full sm:h-full  shadow-xl rounded-lg border-2  relative`}>
+        <div className={` h-full sm:h-full  shadow-xl rounded-lg border-2  relative`}>
             <div className="rounded-md flex justify-between">
                 <Link
                     to={`/profile/${friend?._id}`}
