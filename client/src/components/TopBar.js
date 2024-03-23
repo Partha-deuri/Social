@@ -26,8 +26,8 @@ const TopBar = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-
-      navigate(`/search/users/?q=${searchText}`);
+      if (searchText !== "")
+        navigate(`/search/users/?q=${searchText}`);
       // setSearchText("");
       // document.getElementById("search-inp").value = "";
     } catch (err) {

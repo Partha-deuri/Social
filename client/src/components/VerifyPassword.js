@@ -22,7 +22,6 @@ const VerifyPassword = ({ newUser, setSave }) => {
                 coverData.append("image", newUser.coverPic);
                 coverData.append("userId", user._id);
                 coverData.append("type", "cover");
-                console.log(newUser);
                 if (newUser.profilePic) {
                     const { profilePic, ...rest } = newUser;
                     await axios.put(`/users/${user._id}/upload`, dpData, {

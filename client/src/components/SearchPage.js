@@ -12,15 +12,13 @@ const SearchPage = () => {
   const user = useUserStore(s => s.user);
   const [searchParams] = useSearchParams();
   let searchText = searchParams.get('q');
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const searchUsers = async () => {
       const res = await axios.get(`/users/search?q=${searchText}`)
       setList(res.data);
     }
-    setLoading(true);
-    searchUsers();
-    setLoading(false);
+    if (searchText !== "")
+      searchUsers();
   }, [searchText])
   const handleMsg = async ({ uid }) => {
     try {

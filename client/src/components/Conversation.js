@@ -187,9 +187,9 @@ const Conversation = () => {
             </div>
         )
     }
-
+    const [activeIp, setActiveInp] = useState(false);
     return (
-        <div className=" shadow-xl h-full rounded-lg border-2  relative">
+        <div className={` ${activeIp ? "h-[70%]" : "h-full"} sm:h-full  shadow-xl rounded-lg border-2  relative`}>
             <div className="rounded-md flex justify-between">
                 <Link
                     to={`/profile/${friend?._id}`}
@@ -255,7 +255,8 @@ const Conversation = () => {
                     }
                 </div>
                 <div className="flex gap-2 items-center px-2">
-                    <label className='cursor-pointer bg-gray-200 aspect-square rounded-full p-2'>
+                    <label
+                        className='cursor-pointer bg-gray-200 aspect-square rounded-full p-2'>
                         <AddIcon />
                         <input
                             onChange={handleImgChange}
@@ -265,6 +266,8 @@ const Conversation = () => {
                     <textarea
                         id="msg-inp-text"
                         onChange={(e) => setNewMsg(e.target.value)}
+                        onFocus={() => setActiveInp(true)}
+                        onBlur={() => setActiveInp(false)}
                         className='w-full border-2 rounded h-16 resize-none pl-1 border-black'
                     />
                     <button

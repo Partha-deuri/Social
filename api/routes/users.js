@@ -68,21 +68,40 @@ router.put('/:id', async (req, res) => {
 
 router.put("/:id/upload", upload.single("image"), async (req, res) => {
     try {
+        const currUser = await User.findById(req.params.id);
+        const oldRand = currUser.profilePic.slice(-6);
+        let randNo = 0;
+        while (randNo < 100000) randNo = Math.floor((Math.random() * 1000000) + 1);
+
+        const params2 = {
+            Bucket: BUCKET_NAME,
+            Key: `social-web-app/public/posts/${req.params.id}-${req.body.type}-${oldRand}`
+        }
+        const command2 = new DeleteObjectCommand(params2);
+        if (req.body.type === "profile" && currUser.profilePic !== "https://partha-s-bucket.s3.ap-south-1.amazonaws.com/social-web-app/public/users/default-avatar-profile.jpg") {
+            await s3.send(command2);
+        } else if (req.body.type === "cover" && currUser.coverPic !== "https://partha-s-bucket.s3.ap-south-1.amazonaws.com/social-web-app/public/users/default-cover.jpg") {
+            await s3.send(command2);
+        }
         const params = {
             Bucket: BUCKET_NAME,
-            Key: `social-web-app/public/users/${req.params.id}-${req.body.type}`,
+            Key: `social-web-app/public/users/${req.params.id}-${req.body.type}-${randNo}`,
             Body: req.file.buffer,
             ContentType: req.file.mimetype,
         }
         const command = new PutObjectCommand(params);
-        s3.send(command);
+        await s3.send(command);
+        const updatedUser = (req.body.type === "profile") ?
+            await User.findByIdAndUpdate(req.params.id,
+                {
+                    profilePic: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/public/users/${req.params.id}-profile-${randNo}`,
+                }) :
+            await User.findByIdAndUpdate(currUser._id,
+                {
+                    coverPic: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/public/users/${req.params.id}-cover-${randNo}`,
+                })
 
-        const updatedUser = await User.findByIdAndUpdate(req.params.id,
-            {
-                profilePic: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/public/users/${req.params.id}-profile`,
-                coverPic: `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/social-web-app/public/users/${req.params.id}-cover`,
-            }
-        )
+
         res.status(200).json(updatedUser);
     } catch (err) {
         return res.status(500).json(err);

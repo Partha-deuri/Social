@@ -57,7 +57,7 @@ const Messenger = ({ socket }) => {
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, user._id])
-    console.log(newMsgList);
+    // console.log(newMsgList);
     useEffect(() => {
         try {
             const fetchConv = async () => {
@@ -144,7 +144,7 @@ const Messenger = ({ socket }) => {
                         </div>
                     </div>
                 </div>
-                <div className={`${openChat ? "block" : "hidden"} md:block md:w-4/5 w-full p-2`}>
+                <div className={`${openChat ? "block" : "hidden"} md:block md:w-4/5 w-full p-2 h-[95%] sm:h-full`}>
                     <Outlet context={[socket]} />
                 </div>
             </div>
