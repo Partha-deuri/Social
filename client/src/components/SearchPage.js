@@ -17,7 +17,7 @@ const SearchPage = () => {
       const res = await axios.get(`/users/search?q=${searchText}`)
       setList(res.data);
     }
-    if (searchText !== "")
+    if (searchText.trim() !== "")
       searchUsers();
   }, [searchText])
   const handleMsg = async ({ uid }) => {
