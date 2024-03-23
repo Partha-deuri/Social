@@ -187,9 +187,9 @@ const Conversation = () => {
             </div>
         )
     }
-    const [activeIp, setActiveInp] = useState(false);
+    // const [activeIp, setActiveInp] = useState(false);
     return (
-        <div className={` ${activeIp ? "h-[70%]" : "h-full"} sm:h-full  shadow-xl rounded-lg border-2  relative`}>
+        <div className={` h:full sm:h-full  shadow-xl rounded-lg border-2  relative`}>
             <div className="rounded-md flex justify-between">
                 <Link
                     to={`/profile/${friend?._id}`}
@@ -266,8 +266,8 @@ const Conversation = () => {
                     <textarea
                         id="msg-inp-text"
                         onChange={(e) => setNewMsg(e.target.value)}
-                        onFocus={() => setActiveInp(true)}
-                        onBlur={() => setActiveInp(false)}
+                        // onFocus={() => setActiveInp(true)}
+                        // onBlur={() => setActiveInp(false)}
                         className='w-full border-2 rounded h-16 resize-none pl-1 border-black'
                     />
                     <button
