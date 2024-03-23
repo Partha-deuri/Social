@@ -16,7 +16,7 @@ const Settings = ({ socket }) => {
     const handleLogout = async () => {
         try {
             await socket.emit("logout", user._id);
-            setUser(null);
+            await setUser(null);
             navigate('/login');
         } catch (err) {
             console.log(err);
