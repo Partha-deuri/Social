@@ -192,53 +192,57 @@ const Conversation = () => {
     // const [activeIp, setActiveInp] = useState(false);
     return (
         <div className={` h-full sm:h-full  shadow-xl rounded-lg border-2  relative`}>
-            <div className="rounded-md flex justify-between">
-                <Link
-                    to={`/profile/${friend?._id}`}
-                    className=" flex items-center px-2 py-1 gap-2 rounded mx-1  cursor-pointer"
-                >
-                    <div className=" h-12 w-12 aspect-square ">
-                        <img
-                            className='h-12 w-12 rounded-full  border-2'
-                            src={friend?.profilePic}
-                            alt="" />
+            <div className="sticky ">
+                <div className="rounded-md flex justify-between">
+                    <Link
+                        to={`/profile/${friend?._id}`}
+                        className=" flex items-center px-2 py-1 gap-2 rounded mx-1  cursor-pointer"
+                    >
+                        <div className=" h-12 w-12 aspect-square ">
+                            <img
+                                className='h-12 w-12 rounded-full  border-2'
+                                src={friend?.profilePic}
+                                alt="" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className='text-md font-bold'>{friend?.username}</span>
+                            <span className='text-sm text-slate-500'>{online ? "Active" : "Offline"}</span>
+                        </div>
+                    </Link>
+                    <div className="flex items-center mx-4 my-1 cursor-pointer gap-1">
+                        {/* <MoreHoriz /> */}
+                        <CloseIcon onClick={() => navigate('../')} />
                     </div>
-                    <div className="flex flex-col">
-                        <span className='text-md font-bold'>{friend?.username}</span>
-                        <span className='text-sm text-slate-500'>{online ? "Active" : "Offline"}</span>
-                    </div>
-                </Link>
-                <div className="flex items-center mx-4 my-1 cursor-pointer gap-1">
-                    {/* <MoreHoriz /> */}
-                    <CloseIcon onClick={() => navigate('../')} />
                 </div>
             </div>
             <hr className='border-b-1 border-slate-500' />
             <div className="h-[calc(100%-130px)] p-2 ">
-                {
-                    !messages &&
-                    <div className='w-full flex justify-center items-center '>
-                        <span className='font-semibold text-gray-400'>
-                            Loading...
-                        </span>
-                    </div>
-                }
-                {
-                    messages?.length === 0 &&
-                    <div className='w-full flex justify-center items-center overflow-hidden '>
-                        <span className='font-semibold text-gray-400'>
-                            {!friend ? "Loading..." : `Say Hello to ${friend?.username}`}
-                        </span>
-                    </div>
-                }
-                <div className="flex flex-col overflow-y-scroll h-full ">
+                <div className='h-full'>
                     {
-                        messages?.map(m => (
-                            <div key={m?._id} ref={scrollRef} className="">
-                                <Msg m={m} own={m.sender === currUser?._id} />
-                            </div>
-                        ))
+                        !messages &&
+                        <div className='w-full flex justify-center items-center '>
+                            <span className='font-semibold text-gray-400'>
+                                Loading...
+                            </span>
+                        </div>
                     }
+                    {
+                        messages?.length === 0 &&
+                        <div className='w-full flex justify-center items-center overflow-hidden '>
+                            <span className='font-semibold text-gray-400'>
+                                {!friend ? "Loading..." : `Say Hello to ${friend?.username}`}
+                            </span>
+                        </div>
+                    }
+                    <div className="flex flex-col overflow-y-scroll h-full ">
+                        {
+                            messages?.map(m => (
+                                <div key={m?._id} ref={scrollRef} className="">
+                                    <Msg m={m} own={m.sender === currUser?._id} />
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
 

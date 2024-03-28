@@ -139,7 +139,7 @@ const ForgotPassword = () => {
             const pswd = password.current.value;
             const cnfpswd = confirmPassword.current.value;
             if (pswd === cnfpswd) {
-                const res = axios.put(`/auth/change/${email}`, {
+                await axios.put(`/auth/change/${email}`, {
                     password: pswd
                 })
                 navigate('/login');
