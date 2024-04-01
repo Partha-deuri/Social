@@ -12,16 +12,32 @@ import { useUserStore } from "./zustand";
 import Redirect from "./components/Redirect";
 import EditProfile from "./pages/editProfile/EditProfile";
 import Conversation from "./components/Conversation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import ChangePassword from "./pages/auth/ChangePassword";
 import SearchPage from "./components/SearchPage";
+import WakeUp from "./pages/loading/WakeUp";
 
 
 function App() {
   axios.defaults.baseURL = process.env.REACT_APP_API_URL
   const user = useUserStore(s => s.user);
   const socket = useRef();
+  const [serverAlive, setServerAlive] = useState(false);
+
+  useEffect(() => {
+    const wakeup = async () => {
+      const res = await axios.get('/');
+      console.log(res.status);
+      if (res.status === 200) {
+        setServerAlive(true);
+      } else {
+        setServerAlive(false);
+      }
+    }
+    wakeup();
+  }, [])
+
   useEffect(() => {
     socket.current = io(process.env.REACT_APP_SOCKET_URL);
   }, [user])
@@ -92,7 +108,13 @@ function App() {
 
   return (
     <div className="app">
-      <RouterProvider router={pages} />
+      {
+        !serverAlive && <WakeUp />
+      }
+      {
+        serverAlive &&
+        <RouterProvider router={pages} />
+      }
     </div>
   );
 }

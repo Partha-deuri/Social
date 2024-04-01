@@ -90,7 +90,7 @@ const Messenger = ({ socket }) => {
     return (
         <div>
             <TopBar />
-            <div className="flex h-[calc(100vh-56px)] ">
+            <div className="flex h-[calc(100dvh-56px)] ">
                 <div className={`${openChat ? "hidden" : "block"} w-full md:block  md:w-1/5 p-2 h-full`}>
                     <div className="shadow-lg border h-full rounded-lg">
                         <div className="">

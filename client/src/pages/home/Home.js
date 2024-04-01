@@ -37,10 +37,10 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
-    socket.current.emit("addUser", user._id);
+    socket.current.emit("addUser", user?._id);
     socket.current.on("getAllUsers", users => {
       setOnlineUsers(
-        user.followings.filter(f => users.some(u => u.userId === f))
+        user.followings.filter(f => users.some(u => u?.userId === f))
       );
     });
   }, [user._id, user.followings])

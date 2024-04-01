@@ -15,7 +15,7 @@ const LeftBar = () => {
     useEffect(() => {
         try {
             const fetchFriend = async () => {
-                const res = await axios.get(`/users/${user._id}/followings`);
+                const res = await axios.get(`/users/${user?._id}/followings`);
                 setFriendList(res.data);
             }
             fetchFriend();
@@ -27,7 +27,7 @@ const LeftBar = () => {
 
     const FriendItem = ({ f }) => {
         return (
-            <Link to={`/profile/${f._id}`} className='pl-4 flex items-center gap-2 my-2 pb-1'>
+            <Link to={`/profile/${f?._id}`} className='pl-4 flex items-center gap-2 my-2 pb-1'>
                 <img
                     className='h-8 w-8 rounded-full'
                     src={f?.profilePic}
@@ -80,7 +80,7 @@ const LeftBar = () => {
                     <div className='border-2 border-slate-300 rounded-lg'>
                         {
                             friendList.map(f => (
-                                <FriendItem key={f._id} f={f} />
+                                <FriendItem key={f?._id} f={f} />
                             ))
                         }
                     </div>

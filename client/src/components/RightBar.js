@@ -12,7 +12,7 @@ const RightBar = ({ onlineUsers, user }) => {
     useEffect(() => {
         try {
             const getFollowings = async () => {
-                const res = await axios.get(`/users/${user._id}/followings`);
+                const res = await axios.get(`/users/${user?._id}/followings`);
                 setFriendList(res.data);
             }
             getFollowings();
@@ -22,7 +22,7 @@ const RightBar = ({ onlineUsers, user }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     useEffect(() => {
-        setOnlineFriends(friendList.filter(f => onlineUsers.includes(f._id)))
+        setOnlineFriends(friendList.filter(f => onlineUsers.includes(f?._id)))
     }, [friendList, onlineUsers])
 
     const handleMsg = async ({ uid }) => {
