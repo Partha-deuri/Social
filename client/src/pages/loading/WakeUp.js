@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 const WakeUp = () => {
-    const [seconds, setSeconds] = useState(10);
+    const [seconds, setSeconds] = useState(60);
 
     useEffect(() => {
         if (seconds > 0) {
