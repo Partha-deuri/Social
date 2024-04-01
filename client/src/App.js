@@ -25,16 +25,16 @@ function App() {
   const socket = useRef();
   const [serverAlive, setServerAlive] = useState(false);
 
-  useEffect(() => {
-    const wakeup = async () => {
-      const res = await axios.get('/');
-      console.log(res.status);
-      if (res.status === 200) {
-        setServerAlive(true);
-      } else {
-        setServerAlive(false);
-      }
+  const wakeup = async () => {
+    const res = await axios.get('/');
+    console.log(res.status);
+    if (res.status === 200) {
+      setServerAlive(true);
+    } else {
+      setServerAlive(false);
     }
+  }
+  useEffect(() => {
     wakeup();
   }, [])
 
