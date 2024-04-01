@@ -109,7 +109,7 @@ function App() {
   return (
     <div className="app">
       {
-        !serverAlive && <WakeUp />
+        !serverAlive && <WakeUp wakeup={wakeup} />
       }
       {
         serverAlive &&

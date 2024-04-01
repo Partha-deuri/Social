@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const WakeUp = () => {
+const WakeUp = ({ wakeup }) => {
     const [seconds, setSeconds] = useState(60);
 
     useEffect(() => {
@@ -9,8 +9,10 @@ const WakeUp = () => {
                 setSeconds(seconds - 1);
             }, 1000);
             return () => clearInterval(interval);
+        } else {
+            wakeup();
         }
-    }, [seconds]);
+    }, [seconds, wakeup]);
     return (
         <div className='h-[100dvh] w-[100vw] bg-gradient-to-r from-fuchsia-500 to-violet-500 flex flex-col items-center justify-center'>
             <div role="status" >
