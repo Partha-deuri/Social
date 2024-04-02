@@ -1,4 +1,5 @@
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -24,11 +25,11 @@ const ForgotPassword = () => {
             if (res.data?.msg === "all ok") {
                 setOtpId(res.data.otpId);
             } else {
-                console.log(res.data.msg)
+                toast.error(res.data.msg)
             }
             setOtpSent(true);
         } catch (err) {
-            console.log(err);
+            toast.error("ERROR!!!!");
         }
         setLoading(false);
     }
@@ -47,13 +48,13 @@ const ForgotPassword = () => {
                     setOtpConfirm(true);
                 }
             } else {
-                console.log("otp should be of exactly 6-digit")
+                toast.error("otp should be of exactly 6-digit")
             }
         } catch (err) {
             if (err.response.status === 403) {
-                console.log("otp  mismatch");
+                toast.error("otp  mismatch");
             } else {
-                console.log(err)
+                toast.error("ERROR!!!!")
             }
         }
         setLoading(false);
@@ -70,10 +71,10 @@ const ForgotPassword = () => {
             if (res.data?.msg === "all ok") {
                 setOtpId(res.data.otpId);
             } else {
-                console.log(res.data.msg)
+                toast.error(res.data.msg)
             }
         } catch (err) {
-            console.log(err)
+            toast.error("ERROR!!!!")
         }
         setLoading(false);
     }
@@ -145,7 +146,7 @@ const ForgotPassword = () => {
                 navigate('/login');
             }
         } catch (err) {
-            console.log(err);
+            toast.error("ERROR!!!!");
         }
     }
     const PasswordArea = () => {
@@ -173,6 +174,7 @@ const ForgotPassword = () => {
     }
     return (
         <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
+            <Toaster position='top-center' reverseOrder={false} />
             <div className="w-[70%] flex gap-4 flex-col md:flex-row justify-around ">
                 <h1 className='md:hidden text-center text-8xl font-extrabold text-violet-900 cursor-default'>Social</h1>
                 <div className="hidden w-3/5 p-2 md:flex flex-col justify-center ">

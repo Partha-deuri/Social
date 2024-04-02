@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useUserStore } from '../../zustand'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast';
+
 
 const ChangePassword = () => {
     const user = useUserStore(s => s.user)
@@ -17,26 +19,27 @@ const ChangePassword = () => {
             if (newPswd === cnfPswd) {
                 const res = await axios.post('/auth/verify', { userId: user._id, password: currPswd })
                 if (res.status === 200) {
-                    const res2 = axios.put(`auth/change/${user.email}`, { password: newPswd })
-                    console.log(res2.data);
+                    axios.put(`auth/change/${user.email}`, { password: newPswd })
+                    // toast.error(res2.data);
                     navigate('/');
                 } else {
-                    console.log(res.data)
+                    toast.error(res.data)
                 }
             }
         } catch (err) {
-            console.log(err)
+            toast.error("ERROR!")
         }
         setLoading(false);
     }
     return (
         <div className='absolute w-full h-[calc(100vh-60px)]  z-10 p-2'>
+            <Toaster position='top-center' reverseOrder={false} />
             <div className=" p-2 flex  justify-center items-center h-full ">
                 <form
                     onSubmit={handleSubmit}
                     className="bg-violet-400 p-4 rounded-xl md:w-[30%] h-[50%] flex flex-col justify-between shadow-xl border relative z-40">
                     <div
-                        onClick={()=>navigate('/')}
+                        onClick={() => navigate('/')}
                         className='absolute font-bold bg-red text-white rounded-full bg-red-500 h-8 w-8 flex justify-center items-center aspect-square -top-4 -right-4 cursor-pointer border border-black'>
                         X
                     </div>

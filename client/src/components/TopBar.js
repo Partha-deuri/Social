@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import MessageIcon from '@mui/icons-material/Message';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useUserStore } from '../zustand';
 import Settings from './Settings';
 import CloseIcon from '@mui/icons-material/Close';

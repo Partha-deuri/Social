@@ -3,6 +3,8 @@ import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserStore } from '../../zustand';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -32,11 +34,11 @@ const Register = () => {
         setFirst(false);
         setSecond(true);
       } else {
-        console.log(res.data.msg)
+        toast.error(res.data.msg)
       }
     }
     catch (err) {
-      console.log(err);
+      toast.error(err);
     }
     setLoading(false);
   }
@@ -67,7 +69,7 @@ const Register = () => {
       // verify otp 
       if (otp.current.value.length === 6) {
         const res = await axios.post(`/auth/otp`, {
-          otpId, 
+          otpId,
           otp: otp.current.value,
           email
         })
@@ -76,14 +78,14 @@ const Register = () => {
           setThird(true);
         }
       } else {
-        console.log("otp should be of exactly 6-digit")
+        toast.error("otp should be of exactly 6-digit")
       }
       setLoading(false);
     } catch (err) {
       if (err.response.status === 403) {
-        console.log("otp  mismatch");
+        toast.error("otp Mismatch");
       } else {
-        console.log(err)
+        toast.error("Error!!!")
       }
       setLoading(false);
     }
@@ -97,11 +99,11 @@ const Register = () => {
         setFirst(false);
         setSecond(true);
       } else {
-        console.log(res.data.msg)
+        toast.error(res.data.msg)
       }
       setLoading(false);
     } catch (err) {
-      console.log(err)
+      toast.error(err)
       setLoading(false);
     }
   }
@@ -112,7 +114,7 @@ const Register = () => {
       setSecond(false);
       setFirst(true);
     } catch (err) {
-      console.log(err)
+      toast.error(err)
     }
   }
   const SecondSignup = () => {
@@ -161,7 +163,6 @@ const Register = () => {
       if (cnfPswd === pswrd) {
         // validate username
         const res = await axios.get(`/auth/username/${username.current.value.trim()}`);
-        console.log(res)
         if (res.data?.msg === "username exist") {
           // create account
           const res2 = await axios.post(`/auth/register`, {
@@ -176,7 +177,7 @@ const Register = () => {
           // redirect to edit profile
           navigate('/editprofile');
         } else {
-          console.log(res.data);
+          toast.error(res.data);
           setTimeout(() => {
             fullname.current.value = fname;
             password.current.value = pswrd;
@@ -184,13 +185,12 @@ const Register = () => {
           }, 10)
         }
       } else {
-        console.log("password mismatch")
+        toast.error("password mismatch")
       }
-      setLoading(false);
     } catch (err) {
-      console.log(err);
-      setLoading(false);
+      toast.error("ERROR!!!");
     }
+    setLoading(false);
   }
   const ThirdSignup = () => {
     return (
@@ -233,8 +233,10 @@ const Register = () => {
 
   return (
     <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
+      <Toaster position='top-center' reverseOrder={false} />
+
       <div className="w-[70%] flex md:flex-row flex-col gap-4 justify-around ">
-          <h1 className='md:hidden text-8xl font-extrabold text-violet-900 cursor-default text-center'>Social</h1>
+        <h1 className='md:hidden text-8xl font-extrabold text-violet-900 cursor-default text-center'>Social</h1>
         <div className="hidden w-3/5 p-2 md:flex flex-col justify-center ">
           <h1 className=' text-8xl font-extrabold text-violet-900 cursor-default'>Social</h1>
           <span className='text-2xl cursor-default'>

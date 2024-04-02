@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useUserStore } from '../../zustand';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +18,7 @@ const Login = () => {
       setUser(res.data);
       // navigate('/');
     } catch (err) {
-      console.log(err);
+      toast.error("ERROR!!!");
     }
     setLoading(false);
   }
@@ -24,6 +26,7 @@ const Login = () => {
 
   return (
     <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
+      <Toaster position='top-center' reverseOrder={false} />
       <div className="w-[70%] flex gap-4 md:flex-row flex-col justify-around ">
         <h1 className='text-center md:hidden text-8xl font-extrabold text-violet-900 cursor-default'>Social</h1>
         <div className="w-3/5 p-2 md:flex flex-col justify-center hidden">
