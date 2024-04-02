@@ -36,6 +36,7 @@ const ChangePassword = () => {
                     onSubmit={handleSubmit}
                     className="bg-violet-400 p-4 rounded-xl md:w-[30%] h-[50%] flex flex-col justify-between shadow-xl border relative z-40">
                     <div
+                        onClick={()=>navigate('/')}
                         className='absolute font-bold bg-red text-white rounded-full bg-red-500 h-8 w-8 flex justify-center items-center aspect-square -top-4 -right-4 cursor-pointer border border-black'>
                         X
                     </div>
