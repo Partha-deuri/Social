@@ -4,7 +4,6 @@ import ShareIcon from '@mui/icons-material/Share';
 import axios from 'axios';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useUserStore } from '../zustand';
-import TopBar from './TopBar';
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -33,7 +32,6 @@ const SearchPage = () => {
   }
   return (
     <>
-      <TopBar />
       <div className='flex justify-center  w-[100vw] p-2  max-h-[calc(100vh-70px)] overscroll-y-scroll'>
         <div className="w-[95%] sm:w-[80%] md:w-[50%] ">
           {

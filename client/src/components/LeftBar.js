@@ -32,7 +32,7 @@ const LeftBar = () => {
                     className='h-8 w-8 rounded-full'
                     src={f?.profilePic}
                     alt="" />
-                <span className="">{f?.username || "Loading..."}</span>
+                <span className="">{f?.fullname || "Loading..."}</span>
             </Link>
         )
     }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Post from '../../components/Post'
-import TopBar from '../../components/TopBar'
 import { useParams } from 'react-router-dom'
 import axios from "axios";
 import Comment from '../../components/Comment';
@@ -46,7 +45,6 @@ const PostPage = () => {
     }
     return (
         <>
-            <TopBar />
             <div className='p-2'>
                 {
                     post &&

@@ -9,7 +9,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import HelpIcon from '@mui/icons-material/Help';
 import InfoIcon from '@mui/icons-material/Info';
 
-const Settings = ({ socket }) => {
+const Settings = ({ socket, setSettings }) => {
     const user = useUserStore(s => s.user);
     const setUser = useUserStore(s => s.setUser);
     const navigate = useNavigate();
@@ -35,6 +35,7 @@ const Settings = ({ socket }) => {
     }
     return (
         <div
+            onClick={() => setSettings(false)}
             className='w-[250px] h-min absolute flex items-center justify-center -right-2 top-12 z-[10] min-w-fit'>
             <div className="bg-violet-500 w-full h-full p-2 rounded-lg z-8 flex flex-col gap-2">
                 <Link to={`/profile/${user._id}`} className=" p-2 rounded-lg bg-violet-700">

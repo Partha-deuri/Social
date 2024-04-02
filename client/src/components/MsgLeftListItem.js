@@ -1,20 +1,22 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { socket } from '../App';
 
-const MsgLeftListItem = ({ c, currUser, newMsgList, setNewMsgList }) => {
+const MsgLeftListItem = ({ c, currUser }) => {
     const [friend, setFriend] = useState(null);
     const [newMsg, setNewMsg] = useState(false);
-    let { convid } = useParams();
     useEffect(() => {
         const friendId = c.members.find(m => m !== currUser._id)
-        convid && convid === c._id &&
-            setNewMsgList(prev => prev.filter(u => u !== friendId)) &&
-            setNewMsg(false);
-        newMsgList?.includes(friendId) && setNewMsg(true);
+        socket.on("getMsg", data => {
+            if (data.senderId === friendId) setNewMsg(true);
+        })
+        // convid && convid === c._id &&
+        //     setNewMsgList(prev => prev.filter(u => u !== friendId)) &&
+        //     setNewMsg(false);
+        // newMsgList?.includes(friendId) && setNewMsg(true);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [convid]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         const friendId = c.members.find(m => m !== currUser._id)
@@ -29,20 +31,22 @@ const MsgLeftListItem = ({ c, currUser, newMsgList, setNewMsgList }) => {
         } catch (err) {
             console.log(err)
         }
-    }, [c._id, c.members, convid, currUser._id])
+    }, [c._id, c.members, currUser._id])
     return (
         <>
             {
-                friend?.username &&
+                friend?.fullname &&
 
-                <div className="flex items-center px-2 py-1 gap-2 border-b  rounded mx-1 cursor-pointer" >
+                <div
+                    onClick={() => setNewMsg(false)}
+                    className="flex items-center px-2 py-1 gap-2 border-b  rounded mx-1 cursor-pointer" >
                     <div className=" h-12 w-12 aspect-square ">
                         <img
                             className='h-12 w-12 rounded-full  border-2'
                             src={friend?.profilePic || ""}
                             alt="" />
                     </div>
-                    <span>{friend?.username || ""}</span>
+                    <span>{friend?.fullname || ""}</span>
                     {
                         newMsg &&
                         <div className='m-2 rounded-full bg-red-700 p-2'>

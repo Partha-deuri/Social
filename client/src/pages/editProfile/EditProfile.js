@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import TopBar from '../../components/TopBar'
 import { useUserStore } from '../../zustand'
 import VerifyPassword from '../../components/VerifyPassword';
 
@@ -55,7 +54,6 @@ const EditProfile = () => {
   }
   return (
     <div>
-      <TopBar />
       {
         save &&
         <VerifyPassword newUser={newUserCopy} setSave={setSave} />

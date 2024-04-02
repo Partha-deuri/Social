@@ -2,19 +2,16 @@ import React, { useEffect, useRef, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
 import { format } from 'timeago.js';
-// import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import Close from '@mui/icons-material/Close';
 import { Link, useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUserStore } from '../zustand';
-// import { io } from 'socket.io-client';
 
 
 const Conversation = () => {
     const currUser = useUserStore(s => s.user);
     const [messages, setMessages] = useState(null);
     const [friend, setFriend] = useState(null);
-    // const [onlineUsers, setOnlineUsers] = useState([]);
     const [newMsg, setNewMsg] = useState("");
     const [newImg, setNewImg] = useState("");
     const [sending, setSending] = useState(false);
@@ -35,11 +32,11 @@ const Conversation = () => {
         // socket.current = io(process.env.REACT_APP_SOCKET_URL);
     }, [])
     useEffect(() => {
-        socket.current?.emit("addUser", currUser._id);
+        socket.emit("addUser", currUser._id);
     }, [currUser._id, socket])
 
     useEffect(() => {
-        socket.current?.on("getMsg", data => {
+        socket.on("getMsg", data => {
             setArrivalMsg({
                 _id: Date.now(),
                 sender: data.senderId,
@@ -71,7 +68,8 @@ const Conversation = () => {
     useEffect(() => {
         const friendId = currChat?.members?.find(m => m !== currUser?._id)
         // setOnline(onlineUsers?.some(u => u.userId === friendId));
-        socket.current?.on("getAllUsers", users => {
+        socket.emit("sendUsers");
+        socket.on("getAllUsers", users => {
             setOnline(users.some(u => u.userId === friendId));
             // setOnlineUsers(users);
         })
@@ -128,7 +126,7 @@ const Conversation = () => {
                     text: newMsg,
                     image: newImg
                 })
-                socket.current?.emit("sendMsg", {
+                socket.emit("sendMsg", {
                     senderId: currUser._id,
                     receiverId: friend._id,
                     text: newMsg,
@@ -205,7 +203,7 @@ const Conversation = () => {
                                 alt="" />
                         </div>
                         <div className="flex flex-col">
-                            <span className='text-md font-bold'>{friend?.username}</span>
+                            <span className='text-md font-bold'>{friend?.fullname || "Loading..."}</span>
                             <span className='text-sm text-slate-500'>{online ? "Active" : "Offline"}</span>
                         </div>
                     </Link>

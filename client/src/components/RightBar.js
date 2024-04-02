@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import ChatIcon from '@mui/icons-material/Chat';
-// import Ads from './Ads';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -27,11 +26,11 @@ const RightBar = ({ onlineUsers, user }) => {
 
     const handleMsg = async ({ uid }) => {
         try {
-            await axios.post(`/conv`, {
+            const res = await axios.post(`/conv`, {
                 senderId: user._id,
                 receiverId: uid
             })
-            navigate('/messenger')
+            navigate(`/messenger/${res.data[0]._id}`)
         } catch (err) {
             console.log(err)
         }
@@ -60,7 +59,7 @@ const RightBar = ({ onlineUsers, user }) => {
                                                 alt="" />
                                             <span className='bg-green-400 border-2 border-white top-0 p-[4px] h-0.5 w-0.5 rounded-full absolute right-[-1px]'></span>
                                         </div>
-                                        <span className="">{i.username || "user"}</span>
+                                        <span className="">{i.fullname || "Loading..."}</span>
                                     </Link>
                                     <div
                                         onClick={() => handleMsg({ uid: i._id })}

@@ -157,7 +157,7 @@ router.get('/:id/followings', async (req, res) => {
         const currUser = await User.findById(req.params.id);
         const flwings = await Promise.all(
             currUser.followings.map(fid => {
-                return User.findById(fid, { _id: 1, username: 1, profilePic: 1 });
+                return User.findById(fid, { _id: 1, username: 1, profilePic: 1, fullname: 1 });
             })
         )
         return res.status(200).json(flwings);

@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
         addUser(userId, socket.id);
         io.emit("getAllUsers", users);
     });
-    
+
     // send and get message
     socket.on("sendMsg", ({ senderId, receiverId, text, image }) => {
         const user = getUser(receiverId);
@@ -48,7 +48,7 @@ io.on("connection", (socket) => {
         }
         io.emit("getAllUsers", users);
     })
-    
+
     socket.on("sendUsers", () => {
         io.emit("getAllUsers", users);
     })

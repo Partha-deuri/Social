@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import TopBar from '../../components/TopBar'
 import LeftBar from '../../components/LeftBar'
 import Feed from '../../components/Feed'
 import CoverProfile from '../../components/CoverProfile'
@@ -26,7 +25,6 @@ const Profile = () => {
   }, [uid])
   return (
     <div className='w-full'>
-      <TopBar />
       <div className="flex justify-between h-[calc(100vh-56px)] overflow-y-scroll">
         <LeftBar />
         <div className="h-[calc(100vh-56px)] w-full overflow-y-scroll">

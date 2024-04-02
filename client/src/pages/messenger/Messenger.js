@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import TopBar from '../../components/TopBar'
 import { useUserStore } from '../../zustand'
 import axios from 'axios'
 import MsgLeftListItem from '../../components/MsgLeftListItem'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
+import { socket } from '../../App'
 // import { io } from 'socket.io-client'
 
-const Messenger = ({ socket }) => {
+const Messenger = () => {
     const setUser = useUserStore(s => s.setUser);
     const user = useUserStore(s => s.user);
     const [allConv, setAllConv] = useState([]);
@@ -16,7 +16,6 @@ const Messenger = ({ socket }) => {
     const [openChat, setOpenChat] = useState(false);
     const navigate = useNavigate();
     let { convid } = useParams();
-    const [newMsgList, setNewMsgList] = useState([]);
     useEffect(() => {
         if (convid) {
             setOpenChat(true);
@@ -25,8 +24,8 @@ const Messenger = ({ socket }) => {
         }
     }, [convid])
     useEffect(() => {
-        // socket.current = io(process.env.REACT_APP_SOCKET_URL);
-        socket.current?.emit("addUser", user._id);
+        // socket= io(process.env.REACT_APP_SOCKET_URL);
+        socket.emit("addUser", user._id);
         const fetchUser = async () => {
             const res = await axios.get(`/users/${user._id}`);
             setUser(res.data);
@@ -44,17 +43,14 @@ const Messenger = ({ socket }) => {
         } catch (err) {
             console.log(err)
         }
-        socket.current?.emit("sendUsers");
-        socket.current?.on("getAllUsers", users => {
+        socket.emit("sendUsers");
+        socket.on("getAllUsers", users => {
             setOnlineUsers(
                 user.followings.filter(f => users.some(u => u.userId === f))
             );
             // console.log("user",users);
         });
-        socket.current?.on("getMsg", data => {
-            !newMsgList.includes(data.senderId) &&
-                setNewMsgList(prev => [...prev, data.senderId]);
-        })
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, user._id])
     // console.log(newMsgList);
@@ -89,7 +85,6 @@ const Messenger = ({ socket }) => {
 
     return (
         <div>
-            <TopBar />
             <div className="flex h-[calc(100dvh-56px)] ">
                 <div className={`${openChat ? "hidden" : "block"} w-full md:block  md:w-1/5 p-2 h-full`}>
                     <div className="shadow-lg border h-full rounded-lg">
@@ -135,8 +130,7 @@ const Messenger = ({ socket }) => {
                                         <MsgLeftListItem
                                             c={c}
                                             currUser={user}
-                                            newMsgList={newMsgList}
-                                            setNewMsgList={setNewMsgList}
+                                           
                                         />
                                     </div>
                                 ))

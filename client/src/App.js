@@ -12,22 +12,23 @@ import { useUserStore } from "./zustand";
 import Redirect from "./components/Redirect";
 import EditProfile from "./pages/editProfile/EditProfile";
 import Conversation from "./components/Conversation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import ChangePassword from "./pages/auth/ChangePassword";
 import SearchPage from "./components/SearchPage";
 import WakeUp from "./pages/loading/WakeUp";
+import TopBar from "./components/TopBar";
 
 
+export const socket = io(process.env.REACT_APP_SOCKET_URL);
 function App() {
   axios.defaults.baseURL = process.env.REACT_APP_API_URL
   const user = useUserStore(s => s.user);
-  const socket = useRef();
+  // const socket = useRef();
   const [serverAlive, setServerAlive] = useState(false);
 
   const wakeup = async () => {
     const res = await axios.get('/');
-    console.log(res.status);
     if (res.status === 200) {
       setServerAlive(true);
     } else {
@@ -39,22 +40,57 @@ function App() {
   }, [])
 
   useEffect(() => {
-    socket.current = io(process.env.REACT_APP_SOCKET_URL);
-  }, [user])
+  }, [])
 
   const pages = createBrowserRouter([
     {
       path: '/',
-      element: user ? <Home socket={socket} /> : <Redirect to={'/login'} />
+      element: user ? <TopBar /> : <Redirect to={'/login'} />,
+
+      children: [
+        {
+          path: '',
+          element: <Home />,
+        },
+        {
+          path: '/profile/:uid',
+          element: <Profile />
+        },
+        {
+          path: '/editprofile',
+          element: <EditProfile />
+        },
+        {
+          path: '/post/:postid',
+          element: <PostPage />
+        },
+        {
+          path: '/search/users/',
+          element: <SearchPage />
+        },
+        {
+          path: '/messenger',
+          element: <Messenger />,
+          children: [
+            {
+              path: '',
+              element:
+                <div className="hidden md:flex border-2 shadow h-full w-full rounded-lg items-center justify-center">
+                  <div className="text-3xl font-bold text-slate-400 cursor-default">
+                    <span>Open a Conversation to start Chat</span>
+                  </div>
+                </div>
+
+            },
+            {
+              path: ':convid',
+              element: <Conversation />,
+            }]
+        },
+
+      ]
     },
-    {
-      path: '/profile/:uid',
-      element: user ? <Profile /> : <Redirect to={'/login'} />
-    },
-    {
-      path: '/editprofile',
-      element: user ? <EditProfile /> : <Redirect to={'/'} />
-    },
+
     {
       path: '/login',
       element: user ? <Redirect to={'/'} /> : <Login />
@@ -70,34 +106,6 @@ function App() {
     {
       path: '/change-password',
       element: user ? <ChangePassword /> : <Redirect to={'/'} />
-    },
-    {
-      path: '/search/users/',
-      element: user ? <SearchPage /> : <Redirect to={'/'} />
-    },
-    {
-      path: '/messenger',
-      element: user ? <Messenger socket={socket} /> : <Redirect to={'/login'} />,
-      children: [
-        {
-          path: '',
-          element: user ?
-            <div className="hidden md:flex border-2 shadow h-full w-full rounded-lg items-center justify-center">
-              <div className="text-3xl font-bold text-slate-400 cursor-default">
-                <span>Open a Conversation to start Chat</span>
-              </div>
-            </div>
-            :
-            <Redirect to={'/login'} />,
-        },
-        {
-          path: ':convid',
-          element: user ? <Conversation /> : <Redirect to={'/login'} />,
-        }]
-    },
-    {
-      path: '/post/:postid',
-      element: user ? <PostPage /> : <Redirect to={'/login'} />
     },
     {
       path: '*',
