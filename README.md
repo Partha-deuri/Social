@@ -49,6 +49,9 @@ User can chat, send messages and images in real time with realtime messenger in 
         socket.io: For realtime communication.
     </li>
     <li>
+        Nodemailer: For sending verification emails(OTP).
+    </li>
+    <li>
         Material-UI: React UI framework for building responsive and attractive user interfaces.
     </li>
 </p>
