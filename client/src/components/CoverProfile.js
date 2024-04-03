@@ -3,7 +3,7 @@ import { useUserStore } from "../zustand"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CoverProfile = ({ currProfile }) => {
+const CoverProfile = ({ currProfile, fetchUser }) => {
     const user = useUserStore(s => s.user);
     const [owner, setOwner] = useState(false);
     const [followText, setFollowText] = useState(" ");
@@ -32,6 +32,7 @@ const CoverProfile = ({ currProfile }) => {
                 setFollowText("Follow");
                 user.followings = user.followings.filter(e => e !== currProfile._id);
             }
+            fetchUser();
         } catch (err) {
             console.log(err)
         }
@@ -43,7 +44,7 @@ const CoverProfile = ({ currProfile }) => {
                 senderId: user._id,
                 receiverId: currProfile._id
             })
-            navigate(`/messenger/${res.data[0]._id}`);            
+            navigate(`/messenger/${res.data[0]._id}`);
         } catch (err) {
             console.log(err)
         }
@@ -59,8 +60,13 @@ const CoverProfile = ({ currProfile }) => {
                         src={currProfile?.profilePic || ""}
                         alt="" />
                     <div className="">
-                        <div className="flex md:gap-4 flex-wrap">
-                            <h1 className="font-extrabold text-2xl mt-2">{currProfile?.username}</h1>
+                        <div className="flex md:gap-2 flex-wrap">
+                            <h1 className="font-extrabold text-2xl mt-2">
+                                {currProfile?.fullname || "Loading..."}
+                            </h1>
+                            <h1 className="font-bold text-xl mt-2">
+                                {`(${currProfile?.username || "Loading..."})`}
+                            </h1>
                             <div className="flex gap-2 md:ml-10 mt-1">
                                 {
                                     owner &&

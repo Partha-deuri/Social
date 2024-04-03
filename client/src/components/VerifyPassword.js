@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useUserStore } from '../zustand'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 const VerifyPassword = ({ newUser, setSave }) => {
     const user = useUserStore(s => s.user)
@@ -36,20 +37,22 @@ const VerifyPassword = ({ newUser, setSave }) => {
                     });
                     newUser = rest;
                 }
-                console.log(newUser);
                 const res2 = await axios.put(`/users/${user._id}`, newUser)
-                setUser(res2.data);
-                navigate(`/profile/${user._id}`);
+                setTimeout(() => {
+                    setUser(res2.data);
+                }, 10)
+                navigate(`/profile/${res2.data._id}`);
             } else {
-                console.log(res.data)
+                toast.error(res.data)
             }
         } catch (err) {
-            console.log(err)
+            toast.error(err.response.data);
         }
         setLoading(false);
     }
     return (
         <div className='absolute w-full h-[calc(100vh-60px)]  z-10 p-2'>
+
             <div className=" p-2 flex  justify-center items-center h-full ">
                 <form
                     onSubmit={handleSubmit}

@@ -42,7 +42,7 @@ const TopBar = () => {
 
   }
   return (
-    <div className="">
+    <div className="h-[100dvh]">
       <div className='sticky top-0 bg-violet-700 flex items-center z-10 justify-between h-14'>
         <Toaster position='top-center' reverseOrder={false} />
         {/* left */}
@@ -119,7 +119,9 @@ const TopBar = () => {
           </div>
         </div>
       </div>
-      <Outlet />
+      <div className="h-[calc(100dvh-3.5rem)]">
+        <Outlet />
+      </div>
     </div>
   )
 }

@@ -44,14 +44,12 @@ const Home = () => {
   }, [user?._id, user.followings])
 
   return (
-    <div className='h-screen'>
-      <div className="flex h-[calc(100vh-56px)] w-full">
-        <LeftBar />
-        <Feed />
-        <RightBar onlineUsers={onlineUsers} user={user} />
-      </div>
-
+    <div className="flex h-full w-full">
+      <LeftBar />
+      <Feed />
+      <RightBar onlineUsers={onlineUsers} user={user} />
     </div>
+
   )
 }
 

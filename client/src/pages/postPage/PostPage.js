@@ -25,9 +25,9 @@ const PostPage = () => {
         }
         fetchPost();
     }, [postid])
-    useEffect(()=>{
+    useEffect(() => {
         setCmntL(allComments.length);
-    },[allComments.length])
+    }, [allComments.length])
 
     const [newComment, setNewComment] = useState("");
     const handleComment = async (e) => {
@@ -44,42 +44,42 @@ const PostPage = () => {
         setCommenting(false);
     }
     return (
-        <>
-            <div className='p-2'>
-                {
-                    post &&
-                    <Post post={post} cmntL={cmntL} setCmntL={setCmntL} />
-                }
-                {post &&
-                    <div className="mt-4 p-2 border-2 rounded-lg relative ">
-                        <div className="w-full flex gap-2 sticky top-[56px] bg-white pt-2 pb-1">
-                            <input id="comment-box"
-                                onChange={(e) => setNewComment(e.target.value)}
-                                className='border-2 p-2 border-slate-400 w-full rounded'
-                                type='text'
-                                placeholder='Write someting here...'
-                            />
-                            <button
-                                onClick={(e) => handleComment()}
-                                className='px-2 bg-blue-500 rounded font-bold text-white'>
-                                {commenting ? "Commenting..." : "Comment"}
-                            </button>
-                        </div>
 
-                        <div className="flex flex-col-reverse w-full overflow-x-clip">
-                            {
-                                allComments.map(c => <Comment
-                                    key={c._id}
-                                    c={c}
-                                    p={post}
-                                    setAllComments={setAllComments}
-                                />)
-                            }
-                        </div>
+        <div className='p-2 h-full overflow-y-scroll'>
+            {
+                post &&
+                <Post post={post} cmntL={cmntL} setCmntL={setCmntL} />
+            }
+            {post &&
+                <div className="mt-4 p-2 border-2 rounded-lg relative ">
+                    <div className="w-full flex gap-2 sticky top-[56px] bg-white pt-2 pb-1">
+                        <input id="comment-box"
+                            onChange={(e) => setNewComment(e.target.value)}
+                            className='border-2 p-2 border-slate-400 w-full rounded'
+                            type='text'
+                            placeholder='Write someting here...'
+                        />
+                        <button
+                            onClick={(e) => handleComment()}
+                            className='px-2 bg-blue-500 rounded font-bold text-white'>
+                            {commenting ? "Commenting..." : "Comment"}
+                        </button>
                     </div>
-                }
-            </div>
-        </>
+
+                    <div className="flex flex-col-reverse w-full overflow-x-clip">
+                        {
+                            allComments.map(c => <Comment
+                                key={c._id}
+                                c={c}
+                                p={post}
+                                setAllComments={setAllComments}
+                            />)
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
     )
 }
 

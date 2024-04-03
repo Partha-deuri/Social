@@ -70,14 +70,14 @@ const Comment = ({ c, p, setAllComments }) => {
 
     return (
         <div className="px-1  mt-4 rounded flex items-start border shadow-md max-w-full">
-            <Link to={`profile/${commenter?.__id}`} className=" mx-1 my-2 h-12 w-12 aspect-square">
+            <Link to={`profile/${commenter?._id}`} className=" mx-1 my-2 h-12 w-12 aspect-square">
                 <img
                     className='h-12 w-12 aspect-square rounded-full'
                     src={commenter?.profilePic} alt="" />
             </Link>
             <div className="p-2 w-[calc(90%-3rem)]">
                 <div className="flex gap-2 items-center">
-                    <Link to={`/profile/${commenter?.__id}`} className='font-bold cursor-pointer'>{commenter?.username}</Link>
+                    <Link to={`/profile/${commenter?._id}`} className='font-bold cursor-pointer'>{commenter?.username||"Loading..."}</Link>
                     <span className='text-sm text-gray-400'>{format(c?.createdAt)}</span>
                 </div>
                 <div className="flex justify-between w-full">

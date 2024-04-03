@@ -11,6 +11,9 @@ const EditProfile = () => {
   const newUser = user;
   const [newUserCopy, setNewUserCopy] = useState();
   const [save, setSave] = useState(false);
+
+
+
   const base64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -25,6 +28,8 @@ const EditProfile = () => {
       }
     })
   }
+
+
   const handleDPChange = async (e) => {
     if (e.target.files[0]) {
       const cnvImg = await base64(e.target.files[0]);
@@ -39,21 +44,26 @@ const EditProfile = () => {
       setCover(e.target.files[0]);
     }
   }
+  console.log(`'${dpPreview}'`);
   const handleSubmit = (e) => {
+    console.log(user);
     e.preventDefault();
     newUser.profilePic = dp;
     newUser.coverPic = cover;
-    if(newUser.profilePic===""){
+    if (newUser.profilePic === "") {
+      setDpPreview(user.profilePic)
       delete newUser.profilePic;
     }
-    if(newUser.coverPic===""){
+    if (newUser.coverPic === "") {
+      setCoverPreview(user.coverPic)
       delete newUser.coverPic;
     }
+    console.log(user);
     setNewUserCopy(newUser);
     setSave(true);
   }
   return (
-    <div>
+    <div className='h-full overflow-y-scroll'>
       {
         save &&
         <VerifyPassword newUser={newUserCopy} setSave={setSave} />
@@ -134,41 +144,35 @@ const EditProfile = () => {
                       Gender:
                     </span>
                     <div
-                      className='border px-4 py-1 rounded bg-transparent w-2/3 flex gap-2 items-center'
+                      className='border px-4 py-1 rounded bg-transparent w-2/3 flex '
                     >
-                      <label className='cursor-pointer'
-                        htmlFor="male">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value="1"
-                          id="male"
-                          onChange={(e) => { newUser.gender = e.target.value }}
-                        />
-                        <span className='px-1'>Male</span>
-                      </label>
-                      <label className='cursor-pointer'
-                        htmlFor="female">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value="2"
-                          id="female"
-                          onChange={(e) => { newUser.gender = e.target.value }}
-                        />
-                        <span className='px-1'>Female</span>
-                      </label>
-                      <label className='cursor-pointer'
-                        htmlFor="other-g">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value="3"
-                          id="other-g"
-                          onChange={(e) => { newUser.gender = e.target.value }}
-                        />
-                        <span className='px-1'>Other</span>
-                      </label>
+                      <input
+                        type="radio"
+                        name="gender-g"
+                        value="1"
+                        id="male"
+                        defaultChecked={newUser.gender === 1}
+                        onChange={(e) => { newUser.gender = e.target.value }}
+                      />
+                      <label className='cursor-pointer ml-1 mr-4' htmlFor="male">Male</label>
+                      <input
+                        type="radio"
+                        name="gender-g"
+                        value="2"
+                        id="female"
+                        defaultChecked={newUser.gender === 2}
+                        onChange={(e) => { newUser.gender = e.target.value }}
+                      />
+                      <label className='cursor-pointer ml-1 mr-4' htmlFor="female">Female</label>
+                      <input
+                        type="radio"
+                        name="gender-g"
+                        value="3"
+                        id="other-g"
+                        defaultChecked={newUser.gender === 3}
+                        onChange={(e) => { newUser.gender = e.target.value }}
+                      />
+                      <label className='cursor-pointer ml-1 mr-4' htmlFor="other-g">Other</label>
                     </div>
                   </div>
 
@@ -202,53 +206,56 @@ const EditProfile = () => {
                       Relationship :
                     </span>
                     <div
-                      className='border px-4 py-1 rounded bg-transparent w-2/3 flex gap-2 items-center'
+                      className='border px-4 py-1 rounded bg-transparent w-2/3 flex '
                     >
-                      <label className='cursor-pointer'
+                      <input
+                        type="radio"
+                        name="relationship"
+                        value="1"
+                        id="single"
+                        defaultChecked={newUser.relationship === 1}
+                        onChange={(e) => { newUser.relationship = e.target.value }}
+                      />
+                      Single
+                      <label className='cursor-pointer ml-1 mr-4'
                         htmlFor="single">
-                        <input
-                          type="radio"
-                          name="relationship"
-                          value="1"
-                          id="single"
-                          onChange={(e) => { newUser.relationship = e.target.value }}
-                        />
-                        <span className='px-1'>Single</span>
                       </label>
-                      <label className='cursor-pointer'
+                      <input
+                        type="radio"
+                        name="relationship"
+                        value="2"
+                        id="taken"
+                        defaultChecked={newUser.relationship === 2}
+                        onChange={(e) => { newUser.relationship = e.target.value }}
+                      />
+                      <label className='cursor-pointer ml-1 mr-4'
                         htmlFor="taken">
-                        <input
-                          type="radio"
-                          name="relationship"
-                          value="2"
-                          id="taken"
-                          onChange={(e) => { newUser.relationship = e.target.value }}
-                        />
-                        <span className='px-1'>Taken</span>
+                        Taken
                       </label>
-                      <label className='cursor-pointer'
+                      <input
+                        type="radio"
+                        name="relationship"
+                        value="3"
+                        id="other-r"
+                        defaultChecked={newUser.relationship === 3}
+                        onChange={(e) => { newUser.relationship = e.target.value }}
+                      />
+                      <label className='cursor-pointer ml-1 mr-4'
                         htmlFor="other-r">
-                        <input
-                          type="radio"
-                          name="relationship"
-                          value="3"
-                          id="other-r"
-                          onChange={(e) => { newUser.relationship = e.target.value }}
-                        />
-                        <span className='px-1'>Hidden</span>
+                        Hidden
                       </label>
                     </div>
                   </div>
-
-
-
                 </div>
               </div>
             </div>
             <div className="p-4 md:w-1/3">
-              <div className=" flex flex-col items-center gap-1 ">
-                <div className="h-[17rem] ">
-                  <div className="rounded-full overflow-hidden h-60  hover:h-full">
+              <span className='text-sm p-2 font-semibold '>
+                Click on the images to edit
+              </span>
+              <div className=" flex flex-col items-center ">
+                <div className="">
+                  <div className="rounded-full overflow-hidden h-60  ">
 
                     <label
                       htmlFor="dp-inp"
@@ -266,14 +273,12 @@ const EditProfile = () => {
                         accept='image/*'
                         onChange={handleDPChange}
                       />
-                      <span className='text-sm p-2 font-semibold text-white hover:inline-block'>
-                        Click to edit Image</span>
                     </label>
 
                   </div>
                 </div>
                 <div className="w-full px-2 flex justify-center">
-                  <div className="h-[14.5rem] overflow-hidden hover:h-full">
+                  <div className="">
                     <label className="p-1 rounded shadow-2xl bg-yellow-400 flex flex-col items-center cursor-pointer">
                       <img
                         className=' object-contain h-56 aspect-auto rounded '
@@ -287,7 +292,6 @@ const EditProfile = () => {
                         accept='image/*'
                         onChange={handleCoverChange}
                       />
-                      <span className='text-sm p-1 font-semibold text-white mt-1'>Click to edit Image</span>
                     </label>
                   </div>
                 </div>
