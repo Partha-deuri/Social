@@ -31,7 +31,7 @@ const Profile = () => {
         <CoverProfile currProfile={currProfile} />
         <div className="flex flex-col-reverse md:flex-row">
           <Feed profile />
-          <ProfileRight currProfile={currProfile} fetchUser={fetchUser} />
+          <ProfileRight currProfile={currProfile}/>
         </div>
       </div>
     </div>
