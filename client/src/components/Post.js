@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -12,6 +12,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import ReportIcon from '@mui/icons-material/Report';
+import toast from 'react-hot-toast';
 
 const Post = ({ post, setPosts, cmntL }) => {
     const user = useUserStore(state => state.user);
@@ -21,6 +22,8 @@ const Post = ({ post, setPosts, cmntL }) => {
     const [deleting, setDeleting] = useState(false);
     const navigate = useNavigate();
     const [likeStatus, setLikeStatus] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const descEdit = useRef();
     if (!cmntL) {
         cmntL = post.comments.length;
     }
@@ -48,7 +51,7 @@ const Post = ({ post, setPosts, cmntL }) => {
                 await axios.put(`/posts/${post._id}/delete`, { userId: user._id })
                 setDeleting(false);
                 if (setPosts) {
-                    setPosts(p => p.filter(u=> u._id!==post._id));
+                    setPosts(p => p.filter(u => u._id !== post._id));
                 } else {
                     navigate('/')
                 }
@@ -66,6 +69,21 @@ const Post = ({ post, setPosts, cmntL }) => {
             console.log(err)
         }
     }
+    const handleEdit = () => {
+        setEditing(prev => !prev);
+        setMoreOpt(prev => !prev)
+    }
+    const handleSaveEdit = async () => {
+        const newDesc = descEdit.current.value;
+        try {
+            const res = await axios.put(`/posts/${post._id}`, { desc: newDesc + `\t(edited)`, userId: user._id })
+            toast.success(res.data)
+            document.getElementById("post-desc").innerText = newDesc + "\t(edited)";
+        } catch (err) {
+            toast.error(err.response.data);
+        }
+        setEditing(false);
+    }
     const OptionsList = () => {
         return (
             <div className="absolute top-2 right-6 w-max h-max z-[1]">
@@ -73,8 +91,8 @@ const Post = ({ post, setPosts, cmntL }) => {
                     {
                         user._id === postOwner._id &&
                         <>
-                            <div className="py-1 px-4 bg-violet-500 rounded cursor-pointer flex items-center gap-2 justify-center">
-                                <span className=''>Edit Post</span>
+                            <div onClick={handleEdit} className="py-1 px-4 bg-violet-500 rounded cursor-pointer flex items-center gap-2 justify-center">
+                                <span className=''>{editing ? "Cancel edit" : "Edit Post"}</span>
                                 <EditIcon />
                             </div>
                             <div
@@ -116,7 +134,7 @@ const Post = ({ post, setPosts, cmntL }) => {
                             src={postOwner.profilePic}
                             alt="" />
                         <div className='flex flex-col gap-0'>
-                            <span className="font-bold ">{postOwner.username}</span>
+                            <span className="font-bold ">{postOwner.username || "Loading..."}</span>
                             <span className='text-sm text-slate-400 cursor-default'>{format(post.createdAt)}</span>
                         </div>
                     </Link>
@@ -138,9 +156,28 @@ const Post = ({ post, setPosts, cmntL }) => {
                     </div>
                 </div>
                 {/* image */}
-                <div className="p-2">
-                    <span>{post.desc}</span>
+                <div className="p-2 cursor-default">
+                    <div id="post-desc" onClick={() => { navigate(`/post/${post._id}`) }} className='px-2'>
+                        {post.desc}
+                    </div>
+                    <div className={`${editing ? "flex" : "hidden"} mt-1 justify-between px-2 gap-2 `}>
+                        <input
+                            id="inp-desc"
+                            type='text'
+                            defaultValue={post.desc}
+                            placeholder='Edit your text here'
+                            className={`w-11/12 p-2 ${!editing && "hidden"}`}
+                            ref={descEdit}
+                        />
+                        <button
+                            onClick={handleSaveEdit}
+                            className={`flex items-center justify-center w-1/12 rounded-md bg-lime-500 text-white font-bold ${!editing && "hidden"}`}
+                        >
+                            <span>Save</span>
+                        </button>
+                    </div>
                     <img
+                        onClick={() => { navigate(`/post/${post._id}`) }}
                         className='w-full p-2 object-contain'
                         src={post.image}
                         alt="" />

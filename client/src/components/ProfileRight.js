@@ -45,6 +45,10 @@ const ProfileRight = ({ currProfile }) => {
                         <span className='font-bold'>{currProfile?.from}</span>
                     </div>
                     <div>
+                        <span>Gender </span>
+                        <span className='font-bold'>{currProfile?.gender === 1 ? "Male" : currProfile?.gender === 2 ? "Female" : "Others"}</span>
+                    </div>
+                    <div>
                         <span>Relationship: </span>
                         <span className='font-bold'>{currProfile?.relationship === 1 ? "Single" : currProfile?.relationship === 2 ? "Taken" : "Hidden"}</span>
                     </div>

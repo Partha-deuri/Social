@@ -165,7 +165,7 @@ router.get("/:id/comment/:comment", async (req, res) => {
 // update a comment
 router.put("/:id/comment/:comment", async (req, res) => {
     try {
-        const currPost = await Post.findById(req.params.id);
+        // const currPost = await Post.findById(req.params.id);
         const currComment = await Comment.findById(req.params.comment);
         if (currComment.postId === req.params.id) {
             if (currComment.userId === req.body.userId) {

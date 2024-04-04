@@ -17,6 +17,7 @@ const Profile = () => {
       const fetchUser = async () => {
         const res = await axios.get(`/users/${uid}`);
         setCurrProfile(res.data)
+        
       }
       fetchUser();
     } catch (err) {

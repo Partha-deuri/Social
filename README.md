@@ -10,7 +10,7 @@ User can chat, send messages and images in real time with realtime messenger in 
   The server goes to sleep mode when there are no activities for quite some time. 
   Once the server is live the website is fully functional.
 </p>
-<span><a href="https://social-by-partha.onrender.com/" target="_blank" rel="noopener noreferrer">Click here to visit the site</a></span>
+<span><a href="https://social-by-partha.onrender.com" target="_blank" rel="noopener noreferrer">Click here to visit the site</a></span>
 
 
 <h2>Features</h2>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useUserStore } from '../../zustand'
 import VerifyPassword from '../../components/VerifyPassword';
 
@@ -11,7 +11,12 @@ const EditProfile = () => {
   const newUser = user;
   const [newUserCopy, setNewUserCopy] = useState();
   const [save, setSave] = useState(false);
+  const [tempImg, setTempImg] = useState();
 
+
+  useEffect(() => {
+    setTempImg({ dp: user.profilePic, cover: user.coverPic });
+  }, [])
 
 
   const base64 = (file) => {
@@ -216,9 +221,9 @@ const EditProfile = () => {
                         defaultChecked={newUser.relationship === 1}
                         onChange={(e) => { newUser.relationship = e.target.value }}
                       />
-                      Single
                       <label className='cursor-pointer ml-1 mr-4'
                         htmlFor="single">
+                        Single
                       </label>
                       <input
                         type="radio"
@@ -263,7 +268,7 @@ const EditProfile = () => {
                     >
                       <img
                         className='rounded-full object-cover h-56 aspect-square pt-1'
-                        src={dpPreview || user.profilePic} alt="Add_image"
+                        src={dpPreview || user.profilePic || tempImg.dp} alt="Add_image"
                       />
                       <input
                         className='hidden'
@@ -282,7 +287,7 @@ const EditProfile = () => {
                     <label className="p-1 rounded shadow-2xl bg-yellow-400 flex flex-col items-center cursor-pointer">
                       <img
                         className=' object-contain h-56 aspect-auto rounded '
-                        src={coverPreview || user.coverPic} alt="Add_image"
+                        src={coverPreview || user.coverPic || tempImg.cover} alt="Add_image"
                       />
                       <input
                         className='hidden'
