@@ -12,9 +12,9 @@ import ProfileRight from '../../components/ProfileRight'
 const Profile = () => {
   let { uid } = useParams()
   const [currProfile, setCurrProfile] = useState();
-  const fetchUser = async () => {
-    useEffect(() => {
-      try {
+  useEffect(() => {
+    try {
+      const fetchUser = async () => {
         const res = await axios.get(`/users/${uid}`);
         setCurrProfile(res.data)
       }
