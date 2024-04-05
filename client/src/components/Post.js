@@ -80,9 +80,10 @@ const Post = ({ post, setPosts, cmntL }) => {
         try {
             if (newDesc !== document.getElementById(`post-desc-${post._id}`).innerText) {
 
-                const res = await axios.put(`/posts/${post._id}`, { desc: newDesc, userId: user._id })
+                const res = await axios.put(`/posts/${post._id}`,
+                    { desc: newDesc, userId: user._id, edited: true })
                 // console.log(res);
-                post.updatedAt = Date.now();
+                post.edited = true;
                 toast.success(res.data)
                 document.getElementById(`post-desc-${post._id}`).innerText = newDesc;
             }
@@ -144,7 +145,10 @@ const Post = ({ post, setPosts, cmntL }) => {
                             alt="" />
                         <div className='flex flex-col gap-0'>
                             <span className="font-bold ">{postOwner.username || "Loading..."}</span>
-                            <span className='text-sm text-slate-400 cursor-default'>{format(post.createdAt)}{post.createdAt !== post.updatedAt ? "\t\t(edited)" : ""}</span>
+                            <span className='text-sm text-slate-400 cursor-default'>
+                                {format(post.createdAt)}
+                                {post?.edited ? "\t\t(edited)" : ""}
+                            </span>
                         </div>
                     </Link>
                     <div className="relative">
@@ -157,7 +161,6 @@ const Post = ({ post, setPosts, cmntL }) => {
                             moreOpt && <CloseIcon
                                 onClick={() => setMoreOpt(!moreOpt)}
                                 className='cursor-pointer hover:text-red-200' />
-
                         }
                         {
                             moreOpt && <OptionsList />

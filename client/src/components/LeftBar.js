@@ -8,6 +8,7 @@ import { useUserStore } from '../zustand';
 import axios from 'axios';
 // import ExploreIcon from '@mui/icons-material/Explore';
 import EditIcon from '@mui/icons-material/Edit';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import InfoIcon from '@mui/icons-material/Info';
 import { Link } from 'react-router-dom';
 
@@ -33,6 +34,12 @@ const LeftBar = () => {
         },
         {
             id: 4,
+            icon: <PersonAddAlt1Icon />,
+            text: "Find Users",
+            to: "/find-users"
+        },
+        {
+            id: 5,
             icon: <InfoIcon />,
             text: "About",
             to: "/about"

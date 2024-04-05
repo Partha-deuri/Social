@@ -14,11 +14,12 @@ const SearchPage = () => {
   useEffect(() => {
     const searchUsers = async () => {
       const res = await axios.get(`/users/search?q=${searchText}`)
-      setList(res.data);
+      const userList = res.data.filter(u => u._id !== user._id)
+      setList(userList);
     }
     if (searchText.trim() !== "")
       searchUsers();
-  }, [searchText])
+  }, [searchText, user._id])
   const handleMsg = async ({ uid }) => {
     try {
       const res = await axios.post(`/conv`, {

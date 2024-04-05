@@ -12,13 +12,12 @@ import ProfileRight from '../../components/ProfileRight'
 const Profile = () => {
   let { uid } = useParams()
   const [currProfile, setCurrProfile] = useState();
+  const fetchUser = async () => {
+    const res = await axios.get(`/users/${uid}`);
+    setCurrProfile(res.data)
+  }
   useEffect(() => {
     try {
-      const fetchUser = async () => {
-        const res = await axios.get(`/users/${uid}`);
-        setCurrProfile(res.data)
-        
-      }
       fetchUser();
     } catch (err) {
       console.log(err);
@@ -29,10 +28,10 @@ const Profile = () => {
     <div className="flex justify-between h-[calc(100vh-56px)] overflow-y-scroll w-full">
       <LeftBar />
       <div className="h-[calc(100vh-56px)] w-full overflow-y-scroll">
-        <CoverProfile currProfile={currProfile} />
+        <CoverProfile currProfile={currProfile} fetchUser={fetchUser} />
         <div className="flex flex-col-reverse md:flex-row">
           <Feed profile />
-          <ProfileRight currProfile={currProfile}/>
+          <ProfileRight currProfile={currProfile} />
         </div>
       </div>
     </div>

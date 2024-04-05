@@ -38,7 +38,7 @@ const Feed = ({ profile }) => {
                     }
                 </div>
                 {
-                    !profile === 0 &&
+                    !profile &&
                     <FollowUsers />
                 }{
                     profile &&

@@ -20,6 +20,7 @@ import WakeUp from "./pages/loading/WakeUp";
 import TopBar from "./components/TopBar";
 import About from "./pages/about/About";
 import ConfirmDeleteUser from "./components/ConfirmDeleteUser";
+import FollowUsers from "./components/FollowUsers";
 
 
 export const socket = io(process.env.REACT_APP_SOCKET_URL);
@@ -70,7 +71,10 @@ function App() {
           path: '/search/users/',
           element: <SearchPage />
         },
-
+        {
+          path: '/find-users',
+          element: <FollowUsers />
+        },
         {
           path: '/messenger',
           element: <Messenger />,

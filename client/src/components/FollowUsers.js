@@ -47,12 +47,18 @@ const FollowUsers = () => {
     }
     return (
         <div className="p-4 mt-4 mb-2 border rounded-md shadow-xl">
-            <div className="pb-2 mb-2 flex justify-center">
+            <div className="p-2 mb-4 flex justify-center border bg-violet-300 font-semibold">
                 <span className='text-xl'>Follow Users to see their Posts </span>
             </div>
             {
+                list.length === 0 &&
+                <div className="flex justify-center text-xl font-semibold text-gray-500">
+                    <span>No users left to follow</span>
+                </div>
+            }
+            {
                 list.map((i) => (
-                    <div key={i._id} className=" bg-white rounded-lg shadow-xl border mb-2">
+                    <div key={i._id} className=" bg-violet-200 rounded-lg shadow-xl border mb-2">
                         <div className='flex  gap-2 items-center font-bold rounded border'>
                             <Link to={`/profile/${i._id}`} className=" w-1/5 flex justify-center">
                                 <img

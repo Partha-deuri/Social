@@ -12,6 +12,10 @@ const PostSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    edited: {
+        type: Boolean,
+        default: false,
+    },
     likes: {
         type: Array,
         default: [],
