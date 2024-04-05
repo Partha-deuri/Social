@@ -97,7 +97,7 @@ const TopBar = () => {
           {/* <div className="relative hidden md:block">
             <NotificationsIcon className='hover:text-white cursor-pointer' />
           </div> */}
-          <div className='relative'>
+          <div className='relative z-50'>
             {
               settings &&
               <CloseIcon
@@ -116,7 +116,9 @@ const TopBar = () => {
             }
             {
               settings &&
-              <Settings socket={socket} setSettings={setSettings} />
+              <div className=" z-50">
+                <Settings socket={socket} setSettings={setSettings} />
+              </div>
             }
           </div>
         </div>

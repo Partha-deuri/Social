@@ -50,9 +50,9 @@ const EditProfile = () => {
       setCover(e.target.files[0]);
     }
   }
-  console.log(`'${dpPreview}'`);
+  // console.log(`'${dpPreview}'`);
   const handleSubmit = (e) => {
-    console.log(user);
+    // console.log(user);
     e.preventDefault();
     newUser.profilePic = dp;
     newUser.coverPic = cover;
@@ -64,7 +64,7 @@ const EditProfile = () => {
       setCoverPreview(user.coverPic)
       delete newUser.coverPic;
     }
-    console.log(user);
+    // console.log(user);
     setNewUserCopy(newUser);
     setSave(true);
   }

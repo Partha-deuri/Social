@@ -10,12 +10,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const setUser = useUserStore(s => s.setUser);
+  const setToken = useUserStore(s => s.setToken);
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await axios.post(`/auth/login`, { email, password })
-      setUser(res.data);
+      setUser(res.data.data);
+      setToken(res.data.token);
       // navigate('/');
     } catch (err) {
       toast.error(err.response.data);

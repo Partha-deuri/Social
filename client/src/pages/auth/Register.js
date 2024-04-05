@@ -16,6 +16,7 @@ const Register = () => {
   const password = useRef();
   const confirmPassword = useRef();
   const setUser = useUserStore(s => s.setUser);
+  const setToken = useUserStore(s => s.setToken);
   const navigate = useNavigate();
   const [first, setFirst] = useState(true);
   const [second, setSecond] = useState(false);
@@ -46,7 +47,7 @@ const Register = () => {
   const FirstSignup = () => {
     return (
       <form className="p-4 " onSubmit={handleFirst}>
-        <input 
+        <input
           type="email"
           ref={emailRef}
           className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
@@ -173,7 +174,8 @@ const Register = () => {
             email,
           })
           // set user
-          setUser(res2.data);
+          setUser(res2.data.data);
+          setToken(res2.data.token)
           // sign in
           // redirect to edit profile
           navigate('/editprofile');

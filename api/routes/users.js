@@ -1,12 +1,18 @@
+
+
+
 const router = require("express").Router();
 const User = require("../models/User");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 
+const { authUser } = require("./verifyToken");
 
 const dotenv = require('dotenv');
 dotenv.config();
+
+
 
 const multer = require("multer");
 const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
@@ -45,10 +51,9 @@ router.get("/search", async (req, res) => {
 
 
 // update user
-router.put('/:id', async (req, res) => {
+router.put('/:id', authUser, async (req, res) => {
     try {
-
-        if (req.body._id === req.params.id || req.body.isAdmin) {
+        if (req.user.userId === req.params.id || req.body.isAdmin) {
             try {
                 const currUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body });
                 const { password, updatedAt, ...rest } = currUser._doc;
@@ -68,20 +73,23 @@ router.put('/:id', async (req, res) => {
 
 router.put("/:id/upload", upload.single("image"), async (req, res) => {
     try {
+
         const currUser = await User.findById(req.params.id);
-        const oldRand = currUser.profilePic.slice(-6);
+        const oldRand = req.body.type === "profile" ? currUser.profilePic.slice(-6) : currUser.coverPic.slice(-6);
         let randNo = 0;
         while (randNo < 100000) randNo = Math.floor((Math.random() * 1000000) + 1);
-
+        console.log(`social-web-app/public/users/${req.params.id}-${req.body.type}-${oldRand}`);
         const params2 = {
             Bucket: BUCKET_NAME,
-            Key: `social-web-app/public/posts/${req.params.id}-${req.body.type}-${oldRand}`
+            Key: `social-web-app/public/users/${req.params.id}-${req.body.type}-${oldRand}`
         }
         const command2 = new DeleteObjectCommand(params2);
         if (req.body.type === "profile" && currUser.profilePic !== "https://partha-s-bucket.s3.ap-south-1.amazonaws.com/social-web-app/public/users/default-avatar-profile.jpg") {
             await s3.send(command2);
         } else if (req.body.type === "cover" && currUser.coverPic !== "https://partha-s-bucket.s3.ap-south-1.amazonaws.com/social-web-app/public/users/default-cover.jpg") {
+            console.log("first")
             await s3.send(command2);
+            console.log("first")
         }
         const params = {
             Bucket: BUCKET_NAME,

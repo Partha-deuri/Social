@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const cors = require("cors");
-const userRoute = require("./routes/users"); 
+const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
 const convRoute = require("./routes/conversations");
@@ -48,9 +48,8 @@ const startApp = async () => {
 
 startApp();
 
-// socket 
-// socketConnect();
-
 app.get('/api', (req, res) => {
     res.status(200).json("i am alive");
 })
+
+

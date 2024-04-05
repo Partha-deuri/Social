@@ -3,6 +3,12 @@ const User = require("../models/User")
 const OTP = require("../models/Otp")
 const bcrypt = require("bcrypt");
 const { sendMail } = require("../mailer/mailer");
+const jwt = require('jsonwebtoken');
+
+const { authUser } = require("./verifyToken");
+const dotenv = require('dotenv');
+dotenv.config();
+
 
 // register user
 router.post('/register', async (req, res) => {
@@ -17,8 +23,9 @@ router.post('/register', async (req, res) => {
         })
 
         const currUser = await newUser.save();
+        const token = jwt.sign({ userId: currUser._id, email: currUser.email }, process.env.JWT_SECRET, { expiresIn: "12h" })
         const { password, updatedAt, ...rest } = currUser._doc;
-        res.status(200).json(rest);
+        res.status(200).json({ data: rest, token });
     }
     catch (err) {
         res.status(500).json(err);
@@ -34,16 +41,18 @@ router.post('/login', async (req, res) => {
         const validPassword = await bcrypt.compare(req.body.password, currUser.password);
         if (!validPassword) return res.status(400).json("invalid password");
         const { password, updatedAt, ...rest } = currUser._doc;
-        res.status(200).json(rest);
+        const token = jwt.sign({ userId: currUser._id, email: currUser.email }, process.env.JWT_SECRET, { expiresIn: "12h" })
+
+        res.status(200).json({ data: rest, token });
     }
     catch (err) {
         res.status(500).json(err);
     }
 })
 // verify passwword
-router.post('/verify', async (req, res) => {
+router.post('/verify', authUser, async (req, res) => {
     try {
-        const currUser = await User.findById(req.body.userId);
+        const currUser = await User.findById(req.user.userId);
         if (!currUser) return res.status(404).json("user not found");
 
         const validPassword = await bcrypt.compare(req.body.password, currUser.password);
@@ -55,6 +64,7 @@ router.post('/verify', async (req, res) => {
         res.status(500).json(err);
     }
 })
+
 // send otp
 router.get('/email/:email', async (req, res) => {
     try {
@@ -112,7 +122,7 @@ router.put('/change/:email', async (req, res) => {
         if (req.body.password) {
             const salt = await bcrypt.genSalt(10);
             req.body.password = await bcrypt.hash(req.body.password, salt);
-            const currUser = await User.findOneAndUpdate({email:req.params.email}, { $set: req.body });
+            const currUser = await User.findOneAndUpdate({ email: req.params.email }, { $set: req.body });
             const { password, updatedAt, ...rest } = currUser._doc;
             return res.status(200).json("password updated");
         }

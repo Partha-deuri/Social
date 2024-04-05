@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 
 const VerifyPassword = ({ newUser, setSave }) => {
     const user = useUserStore(s => s.user)
+    const token = useUserStore(s => s.token)
     const setUser = useUserStore(s => s.setUser)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -13,7 +14,8 @@ const VerifyPassword = ({ newUser, setSave }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post('/auth/verify', { userId: user._id, password: e.target[0].value })
+            const res = await axios.post('/auth/verify', { password: e.target[0].value },
+                { headers: { "Authorization": `Bearer ${token}` } })
             if (res.status === 200) {
                 const dpData = new FormData();
                 dpData.append("image", newUser.profilePic);
@@ -37,7 +39,8 @@ const VerifyPassword = ({ newUser, setSave }) => {
                     });
                     newUser = rest;
                 }
-                const res2 = await axios.put(`/users/${user._id}`, newUser)
+                const res2 = await axios.put(`/users/${user._id}`, newUser,
+                    { headers: { "Authorization": `Bearer ${token}` } })
                 setTimeout(() => {
                     setUser(res2.data);
                 }, 10)
@@ -46,7 +49,8 @@ const VerifyPassword = ({ newUser, setSave }) => {
                 toast.error(res.data)
             }
         } catch (err) {
-            toast.error(err.response.data);
+            console.log(err);
+            // toast.error(err.response.data);
         }
         setLoading(false);
     }

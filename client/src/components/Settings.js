@@ -25,9 +25,9 @@ const Settings = ({ socket, setSettings }) => {
 
 
     return (
-        <div
+        <div 
             onClick={() => setSettings(false)}
-            className='w-[250px] h-min absolute flex items-center justify-center -right-2 top-12 z-[10] min-w-fit'>
+            className='w-[250px] h-min absolute flex items-center justify-center -right-2 top-12 z-50 min-w-fit'>
             <div className="bg-violet-500 w-full h-full p-2 rounded-lg z-8 flex flex-col gap-2">
                 <Link to={`/profile/${user._id}`} className=" p-2 rounded-lg bg-violet-700">
                     <div className="flex items-center gap-2 cursor-pointer ">
