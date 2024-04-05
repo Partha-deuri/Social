@@ -23,6 +23,7 @@ const Post = ({ post, setPosts, cmntL }) => {
     const navigate = useNavigate();
     const [likeStatus, setLikeStatus] = useState(false);
     const [editing, setEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
     const descEdit = useRef();
     if (!cmntL) {
         cmntL = post.comments.length;
@@ -74,16 +75,23 @@ const Post = ({ post, setPosts, cmntL }) => {
         setMoreOpt(prev => !prev)
     }
     const handleSaveEdit = async () => {
-
+        setLoading(true);
         const newDesc = descEdit.current.value;
         try {
-            const res = await axios.put(`/posts/${post._id}`, { desc: newDesc, userId: user._id })
-            toast.success(res.data)
-            document.getElementById("post-desc").innerText = newDesc;
+            if (newDesc !== document.getElementById(`post-desc-${post._id}`).innerText) {
+
+                const res = await axios.put(`/posts/${post._id}`, { desc: newDesc, userId: user._id })
+                // console.log(res);
+                post.updatedAt = Date.now();
+                toast.success(res.data)
+                document.getElementById(`post-desc-${post._id}`).innerText = newDesc;
+            }
         } catch (err) {
+            // console.log(err);
             toast.error(err.response.data);
         }
         setEditing(false);
+        setLoading(false);
     }
     const OptionsList = () => {
         return (
@@ -136,7 +144,7 @@ const Post = ({ post, setPosts, cmntL }) => {
                             alt="" />
                         <div className='flex flex-col gap-0'>
                             <span className="font-bold ">{postOwner.username || "Loading..."}</span>
-                            <span className='text-sm text-slate-400 cursor-default'>{format(post.createdAt)}</span>
+                            <span className='text-sm text-slate-400 cursor-default'>{format(post.createdAt)}{post.createdAt !== post.updatedAt ? "\t\t(edited)" : ""}</span>
                         </div>
                     </Link>
                     <div className="relative">
@@ -158,23 +166,23 @@ const Post = ({ post, setPosts, cmntL }) => {
                 </div>
                 {/* image */}
                 <div className="p-2 cursor-default">
-                    <div id="post-desc" onClick={() => { navigate(`/post/${post._id}`) }} className='px-2'>
+                    <div id={`post-desc-${post._id}`} onClick={() => { navigate(`/post/${post._id}`) }} className='px-2'>
                         {post.desc}
                     </div>
                     <div className={`${editing ? "flex" : "hidden"} mt-1 justify-between px-2 gap-2 `}>
                         <input
-                            id="inp-desc"
+                            id={`inp-desc-${post._id}`}
                             type='text'
                             defaultValue={post.desc}
                             placeholder='Edit your text here'
-                            className={`w-11/12 p-2 ${!editing && "hidden"}`}
+                            className={`w-11/12 p-2 ${!editing && "hidden"} border`}
                             ref={descEdit}
                         />
                         <button
                             onClick={handleSaveEdit}
                             className={`flex items-center justify-center w-1/12 rounded-md bg-lime-500 text-white font-bold ${!editing && "hidden"}`}
                         >
-                            <span>Save</span>
+                            <span>{loading ? "Saving" : "Save"}</span>
                         </button>
                     </div>
                     <img

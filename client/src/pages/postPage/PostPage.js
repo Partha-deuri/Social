@@ -31,6 +31,7 @@ const PostPage = () => {
 
     const [newComment, setNewComment] = useState("");
     const handleComment = async (e) => {
+        e.preventDefault();
         if (newComment.trim() !== "") {
             setCommenting(true);
             const res3 = await axios.post(`/posts/${postid}/comment`, {
@@ -52,7 +53,7 @@ const PostPage = () => {
             }
             {post &&
                 <div className="mt-4 p-2 border-2 rounded-lg relative ">
-                    <div className="w-full flex gap-2 sticky top-[56px] bg-white pt-2 pb-1">
+                    <form onSubmit={handleComment} className="w-full flex gap-2 sticky -top-2 z-10 bg-white pt-2 pb-1">
                         <input id="comment-box"
                             onChange={(e) => setNewComment(e.target.value)}
                             className='border-2 p-2 border-slate-400 w-full rounded'
@@ -60,11 +61,11 @@ const PostPage = () => {
                             placeholder='Write someting here...'
                         />
                         <button
-                            onClick={(e) => handleComment()}
+
                             className='px-2 bg-blue-500 rounded font-bold text-white'>
                             {commenting ? "Commenting..." : "Comment"}
                         </button>
-                    </div>
+                    </form>
 
                     <div className="flex flex-col-reverse w-full overflow-x-clip">
                         {

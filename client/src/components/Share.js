@@ -29,12 +29,12 @@ const Share = ({ setPosts, posts }) => {
                     userId: currUser?._id,
                     desc: postDesc,
                 });
-                console.log(res.data);
+                // console.log(res.data);
                 if (postImg) {
                     const res2 = await axios.put(`/posts/${res.data._id}/upload`, formData, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     });
-                    console.log(res2.data);
+                    // console.log(res2.data);
                     setPosts([res2.data, ...posts]);
                 } else {
                     setPosts([res.data, ...posts]);

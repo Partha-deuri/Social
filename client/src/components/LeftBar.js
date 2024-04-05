@@ -8,6 +8,7 @@ import { useUserStore } from '../zustand';
 import axios from 'axios';
 // import ExploreIcon from '@mui/icons-material/Explore';
 import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
 import { Link } from 'react-router-dom';
 
 const LeftBar = () => {
@@ -29,6 +30,12 @@ const LeftBar = () => {
             icon: <EditIcon />,
             text: "Edit Profile",
             to: "/editprofile"
+        },
+        {
+            id: 4,
+            icon: <InfoIcon />,
+            text: "About",
+            to: "/about"
         },
     ]
     const user = useUserStore(s => s.user);
@@ -70,7 +77,7 @@ const LeftBar = () => {
                         )
                     }
 
-                  
+
                 </div>
                 {/* <button className='text-center w-full rounded mb-1 bg-slate-200 font-medium py-1'>Show More</button> */}
                 <hr className='my-1 bg-slate-700 p-[1px] ' />

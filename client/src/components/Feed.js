@@ -3,13 +3,15 @@ import Share from './Share'
 import Post from './Post'
 import axios from 'axios'
 import { useUserStore } from '../zustand'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import FollowUsers from './FollowUsers'
 
 
 const Feed = ({ profile }) => {
     const user = useUserStore((state) => state.user);
     let { uid } = useParams();
     const [posts, setPosts] = useState([]);
+
     useEffect(() => {
         const fetchF = async () => {
             try {
@@ -32,10 +34,20 @@ const Feed = ({ profile }) => {
                 }
                 <div className="">
                     {
-                        posts.map(p => <Post key={p._id} post={p} setPosts={setPosts}/>)
+                        posts.map(p => <Post key={p._id} post={p} setPosts={setPosts} />)
                     }
                 </div>
-
+                {
+                    !profile === 0 &&
+                    <FollowUsers />
+                }{
+                    profile &&
+                    <Link
+                        to={'/'}
+                        className="flex justify-center my-2 p-2 border rounded-md bg-violet-400 text-white font-semibold text-xl">
+                        <span>Go Home</span>
+                    </Link>
+                }
             </div>
         </div>
     )
