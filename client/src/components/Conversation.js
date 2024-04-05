@@ -6,6 +6,8 @@ import Close from '@mui/icons-material/Close';
 import { Link, useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUserStore } from '../zustand';
+import toast from 'react-hot-toast';
+
 
 
 const Conversation = () => {
@@ -21,16 +23,12 @@ const Conversation = () => {
     let { convid } = useParams();
     const scrollRef = useRef();
     const navigate = useNavigate();
-    // const socket = useRef();
     const [socket] = useOutletContext();
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages])
 
-    useEffect(() => {
-        // socket.current = io(process.env.REACT_APP_SOCKET_URL);
-    }, [])
     useEffect(() => {
         socket.emit("addUser", currUser._id);
     }, [currUser._id, socket])
@@ -87,15 +85,17 @@ const Conversation = () => {
     useEffect(() => {
         try {
             const getMsgs = async () => {
-                const res = await axios.get(`/msg/${currChat._id}`);
+                const friendId = currChat?.members?.find(m => m !== currUser?._id)
+                const res = await axios.post(`/msg/${currChat._id}`, { userId: currUser._id, friendId });
                 setMessages(res.data);
             }
             if (currChat._id !== undefined)
                 getMsgs();
         } catch (err) {
-            console.log(err)
+            // console.log(err);
+            toast.error(err.response.data);
         }
-    }, [currChat._id])
+    }, [currChat._id, currChat?.members, currUser._id])
 
     const base64 = (file) => {
         return new Promise((resolve, reject) => {

@@ -11,23 +11,23 @@ router.post("/", async (req, res) => {
         res.status(200).json(savedMsg);
     } catch (err) {
         res.status(500).json(err)
-    } 
-}) 
+    }
+})
 
 // get
-router.get("/:convId", async (req, res) => {
+router.post("/:convId", async (req, res) => {
     try {
         const sender = req.body.userId;
         const receiver = req.body.friendId;
         const conv = await Conv.findById(req.params.convId);
-        if(conv.members.includes(sender)&& conv.members.includes(receiver)){
+        if (conv?.members?.includes(sender) && conv?.members?.includes(receiver)) {
             const allMsg = await Msg.find({ convId: req.params.convId });
-            res.status(200).json(allMsg);
+            return res.status(200).json(allMsg);
         }
-        else{
-            res.status(404).json("conversation not found")
+        else {
+            return res.status(400).json("conversation not found")
         }
-        
+
     } catch (err) {
         res.status(500).json(err);
     }

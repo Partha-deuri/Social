@@ -18,7 +18,7 @@ const Login = () => {
       setUser(res.data);
       // navigate('/');
     } catch (err) {
-      toast.error("ERROR!!!");
+      toast.error(err.response.data);
     }
     setLoading(false);
   }
