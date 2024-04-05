@@ -74,11 +74,12 @@ const Post = ({ post, setPosts, cmntL }) => {
         setMoreOpt(prev => !prev)
     }
     const handleSaveEdit = async () => {
+
         const newDesc = descEdit.current.value;
         try {
-            const res = await axios.put(`/posts/${post._id}`, { desc: newDesc + `\t(edited)`, userId: user._id })
+            const res = await axios.put(`/posts/${post._id}`, { desc: newDesc, userId: user._id })
             toast.success(res.data)
-            document.getElementById("post-desc").innerText = newDesc + "\t(edited)";
+            document.getElementById("post-desc").innerText = newDesc;
         } catch (err) {
             toast.error(err.response.data);
         }

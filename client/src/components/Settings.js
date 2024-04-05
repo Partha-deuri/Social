@@ -1,7 +1,7 @@
 import React from 'react'
 import { useUserStore } from '../zustand'
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import ChatIcon from '@mui/icons-material/Chat';
 import PasswordIcon from '@mui/icons-material/Password';
@@ -23,16 +23,7 @@ const Settings = ({ socket, setSettings }) => {
         }
     }
 
-    const handleDeleteUser = () => {
-        try {
-            console.log(user._id)
-            const res = axios.put(`/users/${user._id}/delete`, { userId: user._id })
-            console.log(res.data);
-            handleLogout();
-        } catch (err) {
-            console.log(err)
-        }
-    }
+
     return (
         <div
             onClick={() => setSettings(false)}
@@ -64,22 +55,22 @@ const Settings = ({ socket, setSettings }) => {
                         <PasswordIcon />
                         <span>Change Password</span>
                     </div>
-                    <div
-                        onClick={handleDeleteUser}
+                    <Link
+                        to={`/confirm-delete`}
                         className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer
                         flex gap-2 hover:text-white items-center">
                         <DeleteForeverIcon />
                         <span>Delete Account</span>
-                    </div>
+                    </Link>
                     <div className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer
                     flex gap-2 hover:text-white items-center">
                         <HelpIcon />
                         <span>Help & support</span>
                     </div>
-                    <div className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer flex gap-2 hover:text-white items-center">
+                    <Link to={"/about"} className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer flex gap-2 hover:text-white items-center">
                         <InfoIcon />
                         <span>About</span>
-                    </div>
+                    </Link>
                 </div>
                 <div className="">
                     <button onClick={handleLogout}

@@ -46,7 +46,8 @@ const Register = () => {
   const FirstSignup = () => {
     return (
       <form className="p-4 " onSubmit={handleFirst}>
-        <input type="email"
+        <input 
+          type="email"
           ref={emailRef}
           className='border my-2 w-full border-black rounded text-xl p-2 bg-transparent'
           required

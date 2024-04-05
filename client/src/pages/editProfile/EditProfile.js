@@ -16,6 +16,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     setTempImg({ dp: user.profilePic, cover: user.coverPic });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

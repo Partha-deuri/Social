@@ -1,5 +1,8 @@
 const router = require("express").Router();
 const Msg = require('../models/Message');
+const Conv = require("../models/Conversation");
+
+
 // add
 router.post("/", async (req, res) => {
     try {
@@ -8,14 +11,23 @@ router.post("/", async (req, res) => {
         res.status(200).json(savedMsg);
     } catch (err) {
         res.status(500).json(err)
-    }
-})
+    } 
+}) 
 
 // get
 router.get("/:convId", async (req, res) => {
     try {
-        const allMsg = await Msg.find({ convId: req.params.convId });
-        res.status(200).json(allMsg);
+        const sender = req.body.userId;
+        const receiver = req.body.friendId;
+        const conv = await Conv.findById(req.params.convId);
+        if(conv.members.includes(sender)&& conv.members.includes(receiver)){
+            const allMsg = await Msg.find({ convId: req.params.convId });
+            res.status(200).json(allMsg);
+        }
+        else{
+            res.status(404).json("conversation not found")
+        }
+        
     } catch (err) {
         res.status(500).json(err);
     }

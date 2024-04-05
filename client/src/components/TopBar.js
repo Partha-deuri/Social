@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import MessageIcon from '@mui/icons-material/Message';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
+import HomeIcon from '@mui/icons-material/Home';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useUserStore } from '../zustand';
 import Settings from './Settings';
@@ -47,10 +48,11 @@ const TopBar = () => {
         <Toaster position='top-center' reverseOrder={false} />
         {/* left */}
         <div className="p-3  w-1/4 ">
-          <Link to={'/'}>
+          <Link to={'/'} className='flex gap-2'>
             <span className='text-white cursor-pointer font-bold text-xl outline-dashed hover:outline-red-400 '>
               <span className='text-green-400 p-1'>So</span>cial&nbsp;
             </span>
+            <HomeIcon className=' text-white hover:text-red-400 border-2 rounded-full aspect-square' />
           </Link>
         </div>
         {/* center */}

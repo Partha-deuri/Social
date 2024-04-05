@@ -9,7 +9,7 @@ import Messenger from "./pages/messenger/Messenger";
 import PostPage from "./pages/postPage/PostPage";
 import axios from "axios";
 import { useUserStore } from "./zustand";
-import Redirect from "./components/Redirect";
+import { Navigate } from "react-router-dom";
 import EditProfile from "./pages/editProfile/EditProfile";
 import Conversation from "./components/Conversation";
 import { useEffect, useState } from "react";
@@ -18,6 +18,8 @@ import ChangePassword from "./pages/auth/ChangePassword";
 import SearchPage from "./components/SearchPage";
 import WakeUp from "./pages/loading/WakeUp";
 import TopBar from "./components/TopBar";
+import About from "./pages/about/About";
+import ConfirmDeleteUser from "./components/ConfirmDeleteUser";
 
 
 export const socket = io(process.env.REACT_APP_SOCKET_URL);
@@ -45,7 +47,7 @@ function App() {
   const pages = createBrowserRouter([
     {
       path: '/',
-      element: user ? <TopBar /> : <Redirect to={'/login'} />,
+      element: user ? <TopBar /> : <Navigate to={'/login'} />,
 
       children: [
         {
@@ -68,6 +70,7 @@ function App() {
           path: '/search/users/',
           element: <SearchPage />
         },
+
         {
           path: '/messenger',
           element: <Messenger />,
@@ -90,22 +93,29 @@ function App() {
 
       ]
     },
-
+    {
+      path: '/about',
+      element: <About />
+    },
     {
       path: '/login',
-      element: user ? <Redirect to={'/'} /> : <Login />
+      element: user ? <Navigate to={'/'} /> : <Login />
     },
     {
       path: '/register',
-      element: user ? <Redirect to={'/editprofile'} /> : <Register />
+      element: user ? <Navigate to={'/editprofile'} /> : <Register />
     },
     {
       path: '/forgot-password',
-      element: user ? <Redirect to={'/'} /> : <ForgotPassword />
+      element: user ? <Navigate to={'/'} /> : <ForgotPassword />
     },
     {
       path: '/change-password',
-      element: user ? <ChangePassword /> : <Redirect to={'/'} />
+      element: user ? <ChangePassword /> : <Navigate to={'/'} />
+    },
+    {
+      path: '/confirm-delete',
+      element: user ? <ConfirmDeleteUser /> : <Navigate to={'/'} />
     },
     {
       path: '*',

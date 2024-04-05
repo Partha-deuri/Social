@@ -1,10 +1,12 @@
-import { create } from "zustand";   
-import { persist} from 'zustand/middleware'
+import { create } from "zustand";
+import { persist } from 'zustand/middleware'
 
 export const useUserStore = create(
     persist((set) => ({
         user: null,
-        setUser: (data) => set({ user: data })
+        token: null,
+        setUser: (data) => set({ user: data }),
+        setToken: (data) => set({ token: data }),
     }),
         {
             name: "keep-user-data-"
