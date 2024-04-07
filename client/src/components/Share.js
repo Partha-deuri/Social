@@ -6,10 +6,13 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import axios from 'axios';
 import { useUserStore } from '../zustand';
 import Close from '@mui/icons-material/Close';
+import toast from 'react-hot-toast';
+
 
 
 const Share = ({ setPosts, posts }) => {
     const currUser = useUserStore(s => s.user);
+    const token = useUserStore(s => s.token);
     const [postDesc, setPostDesc] = useState("");
     const [postImg, setPostImg] = useState(null);
     const [previewImg, setPreviewImg] = useState(null);
@@ -18,17 +21,17 @@ const Share = ({ setPosts, posts }) => {
 
     const handleShare = async (e) => {
         e.preventDefault();
+        setSharing(true);
         try {
             if (!sharing && (postImg !== null || postDesc !== "")) {
-                setSharing(true);
                 const formData = new FormData();
                 formData.append("userId", currUser._id);
-                formData.append("image", postImg); 
+                formData.append("image", postImg);
 
                 const res = await axios.post(`/posts`, {
                     userId: currUser?._id,
                     desc: postDesc,
-                });
+                }, { headers: { "Authorization": `Bearer ${token}` } });
                 // console.log(res.data);
                 if (postImg) {
                     const res2 = await axios.put(`/posts/${res.data._id}/upload`, formData, {
@@ -37,6 +40,7 @@ const Share = ({ setPosts, posts }) => {
                     // console.log(res2.data);
                     setPosts([res2.data, ...posts]);
                 } else {
+                    // toast.success("Posted successfully")
                     setPosts([res.data, ...posts]);
                 }
                 document.getElementById("text-area").value = "";
@@ -44,11 +48,12 @@ const Share = ({ setPosts, posts }) => {
                 setPostDesc("");
                 setPostImg(null);
                 setPreviewImg(null);
-                setSharing(false);
+                toast.success("Posted successfully")
             }
         } catch (err) {
             console.log(err);
         }
+        setSharing(false);
     }
 
     const base64 = (file) => {

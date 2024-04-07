@@ -9,6 +9,7 @@ dotenv.config();
 
 const multer = require("multer");
 const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { authUser } = require("./verifyToken");
 
 const BUCKET_NAME = process.env.BUCKET_NAME;
 const BUCKET_REGION = process.env.BUCKET_REGION;
@@ -27,11 +28,15 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // create a post
-router.post("/", async (req, res) => {
+router.post("/", authUser, async (req, res) => {
     try {
-        const newPost = new Post(req.body);
-        const savedPost = await newPost.save();
-        return res.status(200).json(savedPost);
+        if (req.body.userId === req.user.userId) {
+            const newPost = new Post(req.body);
+            const savedPost = await newPost.save();
+            return res.status(200).json(savedPost);
+        }
+        return res.status(403).json("you can not post for different user");
+
     } catch (err) {
         return res.status(500).json(err);
     }
@@ -64,10 +69,10 @@ router.put("/:id/upload", upload.single('image'), async (req, res) => {
 })
 
 // update a post
-router.put("/:id", async (req, res) => {
+router.put("/:id", authUser, async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
-        if (currPost.userId === req.body.userId) {
+        if (currPost.userId === req.user.userId) {
             await currPost.updateOne({ $set: req.body })
             return res.status(200).json("The  post has been updated");
         } else {
@@ -79,10 +84,10 @@ router.put("/:id", async (req, res) => {
 })
 
 // delete a post
-router.put("/:id/delete", async (req, res) => {
+router.put("/:id/delete", authUser, async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
-        if (currPost.userId === req.body.userId) {
+        if (req.body.userId === req.user.userId && currPost.userId === req.body.userId) {
             if (currPost.image && currPost.image !== "") {
                 const params = {
                     Bucket: BUCKET_NAME,
@@ -123,16 +128,16 @@ router.get("/:id", async (req, res) => {
 
 
 // like or unlike a post
-router.put("/:id/like", async (req, res) => {
+router.put("/:id/like", authUser, async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
-        if (!currPost.likes.includes(req.body.userId)) {
+        if (!currPost.likes.includes(req.user.userId)) {
             await currPost.updateOne({ $push: { likes: req.body.userId } })
             return res.status(200).json("liked successfully");
         }
         else {
             await currPost.updateOne({ $pull: { likes: req.body.userId } })
-            return res.status(200).json("unliked successfully");
+            return res.status(200).json("like removed successfully");
         }
     } catch (err) {
         return res.status(500).json(err);
@@ -140,11 +145,12 @@ router.put("/:id/like", async (req, res) => {
 })
 
 // comment in a post
-router.post("/:id/comment", async (req, res) => {
+router.post("/:id/comment", authUser, async (req, res) => {
     try {
+        
         const currPost = await Post.findById(req.params.id);
         const newComment = new Comment({
-            userId: req.body.userId,
+            userId: req.user.userId,
             postId: req.params.id,
             comment: req.body.comment,
         });
@@ -171,12 +177,13 @@ router.get("/:id/comment/:comment", async (req, res) => {
 })
 
 // update a comment
-router.put("/:id/comment/:comment", async (req, res) => {
+router.put("/:id/comment/:comment",authUser, async (req, res) => {
     try {
         // const currPost = await Post.findById(req.params.id);
+   
         const currComment = await Comment.findById(req.params.comment);
         if (currComment.postId === req.params.id) {
-            if (currComment.userId === req.body.userId) {
+            if (currComment.userId === req.user.userId) {
                 await currComment.updateOne({ $set: { comment: req.body.comment } });
                 return res.status(200).json("comment updated successfully");
             }
@@ -193,12 +200,12 @@ router.put("/:id/comment/:comment", async (req, res) => {
 })
 
 // delete a comment
-router.put("/:id/comment/:comment/delete", async (req, res) => {
+router.put("/:id/comment/:comment/delete",authUser, async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
         const currComment = await Comment.findById(req.params.comment);
         if (currComment.postId === req.params.id) {
-            if (currComment.userId === req.body.userId || currPost.userId === req.body.userId) {
+            if (currComment.userId === req.user.userId || currPost.userId === req.user.userId) {
                 let temp = currPost.comments.filter(items => items != req.params.comment);
                 await currPost.updateOne({ $set: { comments: temp } })
                 await currComment.deleteOne();
@@ -231,7 +238,7 @@ router.get("/:id/comments/all", async (req, res) => {
 router.get("/timeline/:userId", async (req, res) => {
     try {
         const currUser = await User.findById(req.params.userId);
-        const userPosts = await Post.find({ userId: req.params.userId });
+        const userPosts = await Post.find({ userId: currUser.userId });
         return res.status(200).json(userPosts);
     } catch (err) {
         return res.status(500).json(err);

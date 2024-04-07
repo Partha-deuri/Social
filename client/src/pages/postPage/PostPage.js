@@ -8,6 +8,7 @@ import { useUserStore } from '../../zustand';
 const PostPage = () => {
     let { postid } = useParams();
     const user = useUserStore(state => state.user);
+    const token = useUserStore(state => state.token);
     const [post, setPost] = useState();
     const [allComments, setAllComments] = useState([]);
     const [commenting, setCommenting] = useState(false);
@@ -37,7 +38,9 @@ const PostPage = () => {
             const res3 = await axios.post(`/posts/${postid}/comment`, {
                 userId: user._id,
                 comment: newComment
-            })
+            },
+            {headers: { "Authorization": `Bearer ${token}` } }
+        )
             setAllComments([...allComments, res3.data]);
         }
         document.querySelector("#comment-box").value = "";

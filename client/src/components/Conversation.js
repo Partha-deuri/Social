@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 
 const Conversation = () => {
     const currUser = useUserStore(s => s.user);
+    const token = useUserStore(s => s.token);
     const [messages, setMessages] = useState(null);
     const [friend, setFriend] = useState(null);
     const [newMsg, setNewMsg] = useState("");
@@ -48,7 +49,9 @@ const Conversation = () => {
 
         try {
             const fetchConv = async () => {
-                const resC = await axios.get(`/conv/one/${convid}`);
+                const resC = await axios.get(`/conv/one/${convid}`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
                 // console.log(resC.data);
                 setCurrChat(resC.data);
             }
@@ -56,7 +59,7 @@ const Conversation = () => {
         } catch (err) {
             console.log(err)
         }
-    }, [convid])
+    }, [convid, token])
 
     useEffect(() => {
         arrivalMsg && currChat?.members?.includes(arrivalMsg.sender) &&
@@ -86,7 +89,10 @@ const Conversation = () => {
         try {
             const getMsgs = async () => {
                 const friendId = currChat?.members?.find(m => m !== currUser?._id)
-                const res = await axios.post(`/msg/${currChat._id}`, { userId: currUser._id, friendId });
+                const res = await axios.post(`/msg/${currChat._id}`,
+                    { userId: currUser._id, friendId },
+                    { headers: { "Authorization": `Bearer ${token}` } }
+                );
                 setMessages(res.data);
             }
             if (currChat._id !== undefined)
@@ -95,7 +101,7 @@ const Conversation = () => {
             // console.log(err);
             toast.error(err.response.data);
         }
-    }, [currChat._id, currChat?.members, currUser._id])
+    }, [currChat._id, currChat?.members, currUser._id, token])
 
     const base64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -121,10 +127,12 @@ const Conversation = () => {
 
                 setSending(true);
                 const res = await axios.post(`/msg`, {
-                    sender: currUser?._id,
-                    convId: currChat?._id,
+                    sender: currUser._id,
+                    convId: currChat._id,
                     text: newMsg,
                     image: newImg
+                }, {
+                    headers: { "Authorization": `Bearer ${token}` }
                 })
                 socket.emit("sendMsg", {
                     senderId: currUser._id,

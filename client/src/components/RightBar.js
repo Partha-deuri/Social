@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import ChatIcon from '@mui/icons-material/Chat';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useUserStore } from '../zustand';
 
 
 const RightBar = ({ onlineUsers, user }) => {
     const [onlineFriends, setOnlineFriends] = useState([]);
     const [friendList, setFriendList] = useState([]);
     const navigate = useNavigate();
+    const token = useUserStore(s => s.token);
     useEffect(() => {
         try {
             const getFollowings = async () => {
@@ -29,7 +31,10 @@ const RightBar = ({ onlineUsers, user }) => {
             const res = await axios.post(`/conv`, {
                 senderId: user._id,
                 receiverId: uid
-            })
+            },
+                {
+                    headers: { "Authorization": `Bearer ${token}` }
+                })
             navigate(`/messenger/${res.data[0]._id}`)
         } catch (err) {
             console.log(err)

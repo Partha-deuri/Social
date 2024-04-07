@@ -71,9 +71,10 @@ router.put('/:id', authUser, async (req, res) => {
 })
 // upload iamge 
 
-router.put("/:id/upload", upload.single("image"), async (req, res) => {
+router.put("/:id/upload", authUser, upload.single("image"), async (req, res) => {
     try {
-
+        if (req.user.userId !== req.params.id)
+            return res.status(403).json("Access Denied");
         const currUser = await User.findById(req.params.id);
         const oldRand = req.body.type === "profile" ? currUser.profilePic.slice(-6) : currUser.coverPic.slice(-6);
         let randNo = 0;
@@ -120,9 +121,11 @@ router.put("/:id/upload", upload.single("image"), async (req, res) => {
 
 
 // delete user
-router.put('/:id/delete', async (req, res) => {
-    if (req.body.userId === req.params.id || req.body.isAdmin) {
-        try {
+router.put('/:id/delete', authUser, async (req, res) => {
+    try {
+        if (req.body.userId !== req.user.userId)
+            return res.status(403).json("You can delete only your account");
+        if (req.body.userId === req.params.id || req.body.isAdmin) {
             const currUser = await User.findById(req.params.id);
             const allPosts = await Post.find({ userId: req.params.id }, { _id: 1 })
             const allComments = await Comment.find({ userId: req.params.id }, { _id: 1 })
@@ -140,12 +143,12 @@ router.put('/:id/delete', async (req, res) => {
             )
             await currUser.deleteOne();
             return res.status(200).json("Account has been deleted");
-        } catch (err) {
-            return res.status(500).json(err);
         }
-    }
-    else {
-        return res.status(403).json("You can delete only your account");
+        else {
+            return res.status(403).json("You can delete only your account");
+        }
+    } catch (err) {
+        return res.status(500).json(err);
     }
 })
 

@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const ConfirmDeleteUser = () => {
     const user = useUserStore(s => s.user);
+    const token = useUserStore(s => s.token);
     const setUser = useUserStore(s => s.setUser);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ const ConfirmDeleteUser = () => {
         try {
             await socket.emit("logout", user._id);
             await setUser(null);
-            
+
             navigate('/login');
         } catch (err) {
             console.log(err);
@@ -26,7 +27,9 @@ const ConfirmDeleteUser = () => {
         setLoading(true);
         try {
             console.log(user._id)
-            const res = axios.put(`/users/${user._id}/delete`, { userId: user._id })
+            const res = axios.put(`/users/${user._id}/delete`, { userId: user._id }, {
+                headers: { "Authorization": `Bearer ${token}` }
+            })
             console.log(res.data);
             handleLogout();
         } catch (err) {

@@ -28,14 +28,14 @@ const VerifyPassword = ({ newUser, setSave }) => {
                 if (newUser.profilePic) {
                     const { profilePic, ...rest } = newUser;
                     await axios.put(`/users/${user._id}/upload`, dpData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
+                        headers: { "Authorization": `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
                     });
                     newUser = rest;
                 }
                 if (newUser.coverPic) {
                     const { coverPic, ...rest } = newUser;
                     await axios.put(`/users/${user._id}/upload`, coverData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
+                        headers: { "Authorization": `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
                     });
                     newUser = rest;
                 }

@@ -14,7 +14,7 @@ const authUser = async (req, res, next) => {
         next();
     }
     catch (err) {
-        res.status(401).json({ error: "auth failed" })
+        res.status(401).json("auth failed please login again")
     }
 }
 

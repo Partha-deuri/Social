@@ -9,6 +9,7 @@ import { socket } from '../../App'
 const Messenger = () => {
     const setUser = useUserStore(s => s.setUser);
     const user = useUserStore(s => s.user);
+    const token = useUserStore(s => s.token);
     const [allConv, setAllConv] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [onlineFriends, setOnlineFriends] = useState([]);
@@ -50,21 +51,22 @@ const Messenger = () => {
             );
             // console.log("user",users);
         });
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, user._id])
     // console.log(newMsgList);
     useEffect(() => {
         try {
             const fetchConv = async () => {
-                const res = await axios.get(`/conv/${user?._id}`)
+                const res = await axios.get(`/conv/${user?._id}`,
+                    { headers: { "Authorization": `Bearer ${token}` } })
                 setAllConv(res.data);
             }
             fetchConv();
         } catch (err) {
             console.log(err)
         }
-    }, [user])
+    }, [token, user])
     // console.log(allConv, "all");
     useEffect(() => {
         setOnlineFriends(friendList.filter(f => onlineUsers.includes(f._id)))
@@ -130,7 +132,7 @@ const Messenger = () => {
                                         <MsgLeftListItem
                                             c={c}
                                             currUser={user}
-                                           
+
                                         />
                                     </div>
                                 ))

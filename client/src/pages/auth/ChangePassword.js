@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const ChangePassword = () => {
     const user = useUserStore(s => s.user)
+    const token = useUserStore(s => s.token);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [currPswd, setCurrPswd] = useState(null);
@@ -17,7 +18,9 @@ const ChangePassword = () => {
         setLoading(true);
         try {
             if (newPswd === cnfPswd) {
-                const res = await axios.post('/auth/verify', { userId: user._id, password: currPswd })
+                const res = await axios.post('/auth/verify', { userId: user._id, password: currPswd }, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                })
                 if (res.status === 200) {
                     axios.put(`auth/change/${user.email}`, { password: newPswd })
                     // toast.error(res2.data);

@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 
 const Post = ({ post, setPosts, cmntL }) => {
     const user = useUserStore(state => state.user);
+    const token = useUserStore(state => state.token);
     const [postOwner, setPostOwner] = useState({});
     const [likes, setLikes] = useState(post?.likes?.length);
     const [moreOpt, setMoreOpt] = useState(false);
@@ -41,15 +42,22 @@ const Post = ({ post, setPosts, cmntL }) => {
 
 
     const handleLike = async () => {
-        const res = await axios.put(`/posts/${post._id}/like`, { userId: user._id })
+        const res = await axios.put(`/posts/${post._id}/like`,
+            { userId: user._id },
+            { headers: { "Authorization": `Bearer ${token}` } }
+        )
         res.data === "liked successfully" ? setLikes(p => p + 1) : setLikes(p => p - 1);
         setLikeStatus(!likeStatus);
+        toast.success(res.data);
     }
     const deletePost = async () => {
         try {
             setDeleting(true);
             if (postOwner._id === user._id) {
-                const res = await axios.put(`/posts/${post._id}/delete`, { userId: user._id })
+                const res = await axios.put(`/posts/${post._id}/delete`,
+                    { userId: user._id },
+                    { headers: { "Authorization": `Bearer ${token}` } }
+                )
                 toast.success(res.data);
                 if (setPosts) {
                     setPosts(p => p.filter(u => u._id !== post._id));
@@ -89,7 +97,7 @@ const Post = ({ post, setPosts, cmntL }) => {
             if (newDesc !== document.getElementById(`post-desc-${post._id}`).innerText) {
 
                 const res = await axios.put(`/posts/${post._id}`,
-                    { desc: newDesc, userId: user._id, edited: true })
+                    { desc: newDesc, edited: true }, { headers: { "Authorization": `Bearer ${token}` } })
                 // console.log(res);
                 post.edited = true;
                 toast.success(res.data)

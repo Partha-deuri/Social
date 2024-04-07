@@ -9,6 +9,7 @@ const SearchPage = () => {
   const navigate = useNavigate();
   const [list, setList] = useState(null);
   const user = useUserStore(s => s.user);
+  const token = useUserStore(s => s.token);
   const [searchParams] = useSearchParams();
   let searchText = searchParams.get('q');
   useEffect(() => {
@@ -25,6 +26,8 @@ const SearchPage = () => {
       const res = await axios.post(`/conv`, {
         senderId: user._id,
         receiverId: uid
+      }, {
+        headers: { "Authorization": `Bearer ${token}` }
       })
       navigate(`/messenger/${res.data[0]._id}`);
     } catch (err) {

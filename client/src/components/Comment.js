@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 
 const Comment = ({ c, p, setAllComments }) => {
     const user = useUserStore(s => s.user);
+    const token = useUserStore(s => s.token);
     const [commenter, setCommenter] = useState();
     const [mrOpt, setMrOpt] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -26,10 +27,10 @@ const Comment = ({ c, p, setAllComments }) => {
     const handleDelete = async (cmnt) => {
         setLoading(true);
         try {
-            await axios.put(`/posts/${p?._id}/comment/${cmnt?._id}/delete`, {
+            const res = await axios.put(`/posts/${p?._id}/comment/${cmnt?._id}/delete`, {
                 userId: user._id
-            })
-            // console.log(res.data);
+            }, { headers: { "Authorization": `Bearer ${token}` } })
+            toast.success(res.data);
             setAllComments(prev => prev.filter(c => c?._id !== cmnt?._id));
         } catch (err) {
             console.log(err)
@@ -46,7 +47,8 @@ const Comment = ({ c, p, setAllComments }) => {
         try {
             if (newCmnt !== document.getElementById(`comment-text-${c._id}`).innerText) {
                 const res = await axios.put(`/posts/${p?._id}/comment/${c?._id}`,
-                    { userId: user._id, comment: newCmnt })
+                    { userId: user._id, comment: newCmnt },
+                    { headers: { "Authorization": `Bearer ${token}` } })
                 c.updatedAt = Date.now();
                 toast.success(res.data);
                 document.getElementById(`comment-text-${c._id}`).innerText = newCmnt;

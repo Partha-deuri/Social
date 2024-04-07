@@ -1,11 +1,14 @@
 const router = require("express").Router();
 const Conv = require("../models/Conversation");
+const { authUser } = require("./verifyToken");
 
 
 // new conv
 
-router.post('/', async (req, res) => {
+router.post('/', authUser, async (req, res) => {
     try {
+        if (req.body.senderId !== req.user.userId)
+            return res.status(403).json("Access Denied");
         const oldConv = await Conv.find({
             members: { $in: [req.body.senderId] }
         })
@@ -30,8 +33,10 @@ router.post('/', async (req, res) => {
 })
 // get conv for a  user
 
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", authUser, async (req, res) => {
     try {
+        if (req.user.userId !== req.params.userId)
+            return res.status(403).json("Access Denied");
         const allConv = await Conv.find({
             members: { $in: [req.params.userId] }
         })
@@ -41,10 +46,12 @@ router.get("/:userId", async (req, res) => {
     }
 })
 
-router.get("/one/:convId", async (req, res) => {
+router.get("/one/:convId", authUser, async (req, res) => {
     try {
         const oneConv = await Conv.findById(req.params.convId)
-        return res.status(200).json(oneConv);
+        if (oneConv.members.includes(req.user.userId))
+            return res.status(200).json(oneConv);
+        return res.status(403).json("Access Denied");
     } catch (err) {
         return res.status(500).json(err);
     }
