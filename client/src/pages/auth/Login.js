@@ -20,7 +20,9 @@ const Login = () => {
       setToken(res.data.token);
       // navigate('/');
     } catch (err) {
-      toast.error(err.response.data);
+      console.log(err)
+      if (err?.response?.data)
+        toast.error(err.response.data);
     }
     setLoading(false);
   }
