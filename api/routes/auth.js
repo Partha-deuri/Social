@@ -28,8 +28,7 @@ router.post('/register', async (req, res) => {
         res.status(200).json({ userData: rest, token });
     }
     catch (err) {
-        console.log(err);
-        res.status(500).json("error");
+        res.status(500).json(err);
     }
 })
 
@@ -47,9 +46,7 @@ router.post('/login', async (req, res) => {
         res.status(200).json({ userData: rest, token });
     }
     catch (err) {
-        // res.status(500).json(err);
-        console.log(err);
-        res.status(500).json("error");
+        res.status(500).json(err);
     }
 })
 // verify passwword
