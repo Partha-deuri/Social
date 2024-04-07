@@ -27,7 +27,6 @@ export const socket = io(process.env.REACT_APP_SOCKET_URL);
 function App() {
   axios.defaults.baseURL = process.env.REACT_APP_API_URL
   const user = useUserStore(s => s.user);
-  // const socket = useRef();
   const [serverAlive, setServerAlive] = useState(false);
 
   const wakeup = async () => {
@@ -42,8 +41,6 @@ function App() {
     wakeup();
   }, [])
 
-  useEffect(() => {
-  }, [])
 
   const pages = createBrowserRouter([
     {
