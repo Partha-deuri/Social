@@ -16,7 +16,7 @@ const Login = () => {
     setLoading(true);
     try {
       const res = await axios.post(`/auth/login`, { email, password })
-      console.log(res.data);
+      // console.log(res.data);
       setUser(res.data.userData);
       setToken(res.data.token);
       // navigate('/');

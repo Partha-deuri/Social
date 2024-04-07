@@ -86,19 +86,26 @@ router.put("/:id/delete", async (req, res) => {
             if (currPost.image && currPost.image !== "") {
                 const params = {
                     Bucket: BUCKET_NAME,
-                    Key: `social-web-app/public/posts/${currPost._id}-image`
+                    Key: `social-web-app/public/posts/${req.params.id}-image`
                 }
                 const command = new DeleteObjectCommand(params);
-                await s3.send(command);
+                // const result = await s3.send(command);
+                // console.log(result);
+                s3.send(command)
+                    .then(async (data) => {
+                        await Comment.deleteMany({ postId: currPost._id });
+                        await currPost.deleteOne();
+                        return res.status(200).json("The  post has been deleted");
+                    }).catch(err => {
+                        console.log(err);
+                        return res.status(403).json("The post isn't deleted");
+                    })
             }
-            
-            await Comment.deleteMany({ postId: currPost._id });
-            await currPost.deleteOne();
-            return res.status(200).json("The  post has been deleted");
         } else {
             return res.status(403).json("You are not allowed to delete this post");
         }
     } catch (err) {
+        console.log(err, "catch");
         return res.status(500).json(err);
     }
 })

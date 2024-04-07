@@ -42,6 +42,7 @@ const VerifyPassword = ({ newUser, setSave }) => {
                 const res2 = await axios.put(`/users/${user._id}`, newUser,
                     { headers: { "Authorization": `Bearer ${token}` } })
                 setTimeout(() => {
+                    toast.success("Updated successfully")
                     setUser(res2.data);
                 }, 10)
                 navigate(`/profile/${res2.data._id}`);
@@ -50,7 +51,7 @@ const VerifyPassword = ({ newUser, setSave }) => {
             }
         } catch (err) {
             console.log(err);
-            // toast.error(err.response.data);
+            toast.error(err.response.data);
         }
         setLoading(false);
     }

@@ -47,20 +47,28 @@ const Post = ({ post, setPosts, cmntL }) => {
     }
     const deletePost = async () => {
         try {
+            setDeleting(true);
             if (postOwner._id === user._id) {
-                setDeleting(true);
-                await axios.put(`/posts/${post._id}/delete`, { userId: user._id })
-                setDeleting(false);
+                const res = await axios.put(`/posts/${post._id}/delete`, { userId: user._id })
+                toast.success(res.data);
                 if (setPosts) {
                     setPosts(p => p.filter(u => u._id !== post._id));
                 } else {
                     navigate('/')
                 }
 
+            } else {
+                toast.error("You can't delete someone else's post")
             }
         } catch (err) {
             console.log(err);
+            if (err?.response?.data)
+                if (err.response.data.name)
+                    toast.error(err.response.data.name);
+                else
+                    toast.error(err.response.data);
         }
+        setDeleting(false);
     }
     const handleCopy = async () => {
         try {
