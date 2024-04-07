@@ -174,13 +174,13 @@ const Register = () => {
             email,
           })
           // set user
-          setUser(res2.data.data);
+          setUser(res2.data.userData);
           setToken(res2.data.token)
           // sign in
           // redirect to edit profile
           navigate('/editprofile');
         } else {
-          toast.error(res.data);
+          toast.error("choose a different username");
           setTimeout(() => {
             fullname.current.value = fname;
             password.current.value = pswrd;

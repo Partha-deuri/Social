@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
         const currUser = await newUser.save();
         const token = jwt.sign({ userId: currUser._id, email: currUser.email }, process.env.JWT_SECRET, { expiresIn: "12h" })
         const { password, updatedAt, ...rest } = currUser._doc;
-        res.status(200).json({ data: rest, token });
+        res.status(200).json({ userData: rest, token });
     }
     catch (err) {
         res.status(500).json(err);
@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
         const { password, updatedAt, ...rest } = currUser._doc;
         const token = jwt.sign({ userId: currUser._id, email: currUser.email }, process.env.JWT_SECRET, { expiresIn: "12h" })
 
-        res.status(200).json({ data: rest, token });
+        res.status(200).json({ userData: rest, token });
     }
     catch (err) {
         res.status(500).json(err);
