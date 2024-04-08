@@ -3,11 +3,27 @@ import { useUserStore } from "../zustand"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CoverProfile = ({ currProfile, fetchUser }) => {
+const CoverProfile = ({ uid, userProfile }) => {
     const user = useUserStore(s => s.user);
     const [owner, setOwner] = useState(false);
+    const [currProfile, setCurrProfile] = useState(userProfile);
     const [followText, setFollowText] = useState(" ");
     const navigate = useNavigate();
+    // let { uid } = useParams()
+
+    const fetchUser = async () => {
+        const res = await axios.get(`/users/${uid}`);
+        setCurrProfile(res.data)
+    }
+    useEffect(() => {
+        try {
+            fetchUser();
+        } catch (err) {
+            console.log(err);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [uid])
+
     useEffect(() => {
         if (user?._id === currProfile?._id) {
             setOwner(true);

@@ -147,7 +147,7 @@ router.put("/:id/like", authUser, async (req, res) => {
 // comment in a post
 router.post("/:id/comment", authUser, async (req, res) => {
     try {
-        
+
         const currPost = await Post.findById(req.params.id);
         const newComment = new Comment({
             userId: req.user.userId,
@@ -177,10 +177,10 @@ router.get("/:id/comment/:comment", async (req, res) => {
 })
 
 // update a comment
-router.put("/:id/comment/:comment",authUser, async (req, res) => {
+router.put("/:id/comment/:comment", authUser, async (req, res) => {
     try {
         // const currPost = await Post.findById(req.params.id);
-   
+
         const currComment = await Comment.findById(req.params.comment);
         if (currComment.postId === req.params.id) {
             if (currComment.userId === req.user.userId) {
@@ -200,7 +200,7 @@ router.put("/:id/comment/:comment",authUser, async (req, res) => {
 })
 
 // delete a comment
-router.put("/:id/comment/:comment/delete",authUser, async (req, res) => {
+router.put("/:id/comment/:comment/delete", authUser, async (req, res) => {
     try {
         const currPost = await Post.findById(req.params.id);
         const currComment = await Comment.findById(req.params.comment);
@@ -238,7 +238,9 @@ router.get("/:id/comments/all", async (req, res) => {
 router.get("/timeline/:userId", async (req, res) => {
     try {
         const currUser = await User.findById(req.params.userId);
-        const userPosts = await Post.find({ userId: currUser.userId });
+        if (!currUser)
+            return res.status(404).json("User not found");
+        const userPosts = await Post.find({ userId: currUser._id });
         return res.status(200).json(userPosts);
     } catch (err) {
         return res.status(500).json(err);
