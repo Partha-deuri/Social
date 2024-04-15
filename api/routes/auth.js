@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
         })
 
         const currUser = await newUser.save();
-        const token = jwt.sign({ userId: currUser._id, email: currUser.email }, process.env.JWT_SECRET, { expiresIn: "12h" })
+        const token = jwt.sign({ userId: currUser._id, email: currUser.email }, process.env.JWT_SECRET)
         const { password, updatedAt, ...rest } = currUser._doc;
         res.status(200).json({ userData: rest, token });
     }
@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
         const validPassword = await bcrypt.compare(req.body.password, currUser.password);
         if (!validPassword) return res.status(400).json("invalid password");
         const { password, updatedAt, ...rest } = currUser._doc;
-        const token = jwt.sign({ userId: currUser._id, email: currUser.email }, process.env.JWT_SECRET, { expiresIn: "12h" })
+        const token = jwt.sign({ userId: currUser._id, email: currUser.email }, process.env.JWT_SECRET)
 
         res.status(200).json({ userData: rest, token });
     }

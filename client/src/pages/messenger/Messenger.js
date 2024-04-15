@@ -77,7 +77,10 @@ const Messenger = () => {
                 senderId: user._id,
                 receiverId: fid
             },
-                { headers: { "Authorization": `Bearer ${token}` } })
+                {
+                    headers: { "Authorization": `Bearer ${token}` }
+                }
+            )
             navigate(`/messenger/${res.data[0]._id}`);
             // setCurrChat(res.data[0]);
         } catch (err) {
