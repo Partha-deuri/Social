@@ -4,11 +4,10 @@ dotenv.config();
 
 const authUser = async (req, res, next) => {
     try {
-        // console.log(req);
         const token = req.headers.authorization.split(" ")[1];
 
+        // console.log(token);
         const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
-
         req.user = decodedToken;
         
         next();

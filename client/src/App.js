@@ -87,6 +87,16 @@ function App() {
 
             },
             {
+              path: 'undefined',
+              element:
+                <div className="hidden md:flex border-2 shadow h-full w-full rounded-lg items-center justify-center">
+                  <div className="text-3xl font-bold text-slate-400 cursor-default">
+                    <span>Open a Conversation to start Chat</span>
+                  </div>
+                </div>
+
+            },
+            {
               path: ':convid',
               element: <Conversation />,
             }]

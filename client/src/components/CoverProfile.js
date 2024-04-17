@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const CoverProfile = ({ uid, userProfile }) => {
     const user = useUserStore(s => s.user);
+    const token = useUserStore(s => s.token);
     const [owner, setOwner] = useState(false);
     const [currProfile, setCurrProfile] = useState(userProfile);
     const [followText, setFollowText] = useState(" ");
@@ -57,10 +58,11 @@ const CoverProfile = ({ uid, userProfile }) => {
     const handleMsg = async () => {
         try {
             const res = await axios.post(`/conv`, {
-                senderId: user._id,
-                receiverId: currProfile._id
-            })
-            navigate(`/messenger/${res.data[0]._id}`);
+                senderId: user?._id,
+                receiverId: currProfile?._id
+            }
+        , { headers: { "Authorization": `Bearer ${token}` } })
+            navigate(`/messenger/${res.data[0]?._id}`);
         } catch (err) {
             console.log(err)
         }
