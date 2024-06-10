@@ -30,7 +30,7 @@ const Login = () => {
 
 
   return (
-    <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
+    <div className='flex justify-center items-center h-screen '>
       <Toaster position='top-center' reverseOrder={false} />
       <div className="w-[70%] flex gap-4 md:flex-row flex-col justify-around ">
         <h1 className='text-center md:hidden text-8xl font-extrabold text-violet-900 cursor-default'>Social</h1>

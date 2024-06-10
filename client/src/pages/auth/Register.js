@@ -235,7 +235,7 @@ const Register = () => {
   }
 
   return (
-    <div className='flex justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-violet-500'>
+    <div className='flex justify-center items-center h-screen '>
       <Toaster position='top-center' reverseOrder={false} />
 
       <div className="w-[70%] flex md:flex-row flex-col gap-4 justify-around ">
