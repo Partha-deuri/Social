@@ -22,15 +22,15 @@ const WakeUp = ({ wakeup }) => {
                 </svg>
             </div>
             <div className='sr-only font-bold my-4' >Loading...</div>
-            <div className="p-4">
-                Since the server is currently in free tier therefore the free instance will spin down with inactivity, which can delay requests by 50 seconds or more.
-            </div>
             <div className="">
                 {
                     seconds > 0 ?
                         `Please wait for ${seconds} seconds.` :
                         `Please reload the page`
                 }
+            </div>
+            <div className="p-4">
+                Since the server is currently in free tier therefore the free instance will spin down with inactivity, which can delay requests by 50 seconds or more.
             </div>
         </div>
     )
