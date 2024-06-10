@@ -46,6 +46,9 @@ User can chat, send messages and images in real time with realtime messenger in 
         Node.js: JavaScript runtime environment for running server-side code.
     </li>
     <li>
+        jws-token: For user security.
+    </li>
+    <li>
         socket.io: For realtime communication.
     </li>
     <li>
