@@ -58,7 +58,7 @@ const Settings = ({ socket, setSettings }) => {
                     <Link
                         to={`/confirm-delete`}
                         className="rounded bg-violet-300 p-2 font-semibold text-slate-700 cursor-pointer
-                        flex gap-2 hover:text-white items-center">
+                        flex gap-2 hover:text-red-500 items-center">
                         <DeleteForeverIcon />
                         <span>Delete Account</span>
                     </Link>
@@ -74,7 +74,7 @@ const Settings = ({ socket, setSettings }) => {
                 </div>
                 <div className="">
                     <button onClick={handleLogout}
-                        className='text-center w-full bg-violet-800 rounded py-1 font-semibold text-white'
+                        className='text-center w-full bg-violet-800 rounded py-1 font-semibold text-white hover:text-red-500'
                     >Logout</button>
                 </div>
             </div>
