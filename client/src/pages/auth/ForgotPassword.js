@@ -20,10 +20,12 @@ const ForgotPassword = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            setEmail(emailRef.current.value);
+            setEmail(emailRef.current.value.trim());
             const res = await axios.get(`/auth/forgot/${emailRef.current.value.trim()}`);
             if (res.data?.msg === "all ok") {
                 setOtpId(res.data.otpId);
+                toast.success("mail service is  not working")
+                toast.success("OTP sent");
             } else {
                 toast.error(res.data.msg)
             }
@@ -67,9 +69,10 @@ const ForgotPassword = () => {
     const handleResendOtp = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(`/auth/email/${email}`);
+            const res = await axios.get(`/auth/forgot/${email}`);
             if (res.data?.msg === "all ok") {
                 setOtpId(res.data.otpId);
+                toast.success("OTP resent")
             } else {
                 toast.error(res.data.msg)
             }

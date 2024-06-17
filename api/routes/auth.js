@@ -74,14 +74,13 @@ router.get('/email/:email', async (req, res) => {
             while (otp < 100000) otp = Math.floor((Math.random() * 1000000) + 1);
             const newOTP = new OTP({
                 email: req.params.email,
-                otp,
+                otp, 
             })
             const savedOtp = await newOTP.save();
             sendMail({
                 userEmail: req.params.email,
                 code: otp,
             })
-            console.log(savedOtp);
             return res.status(200).json({ msg: "all ok", otpId: savedOtp._id });
         } else {
             return res.status(200).json({ msg: "email already in use" });
@@ -106,7 +105,6 @@ router.get('/forgot/:email', async (req, res) => {
                 userEmail: req.params.email,
                 code: otp,
             })
-            console.log(savedOtp);
             return res.status(200).json({ msg: "all ok", otpId: savedOtp._id });
         } else {
             return res.status(200).json({ msg: "email doesn't exist" });

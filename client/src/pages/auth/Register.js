@@ -122,8 +122,8 @@ const Register = () => {
   const SecondSignup = () => {
     return (
       <form className="p-4 " onSubmit={handleSecond}>
-        <div className='text-white'> {`A 6-digit otp has been sent to `}
-          <span className="font-semibold text-lime-400 text-xl">{email}</span>
+        <div className=''> {`A 6-digit otp has been sent to `}
+          <span className="font-semibold text-lime-300 text-xl">{email}</span>
         </div>
         <div className="flex justify-between">
           <div
